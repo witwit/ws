@@ -1,0 +1,15 @@
+{
+  "name": "ws-example-node",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "node"
+  },
+  "devDependencies": {
+    "expect": "^1.18.0"
+  }
+}

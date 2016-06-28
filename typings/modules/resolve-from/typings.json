@@ -1,0 +1,11 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/typed-typings/typed-resolve-from/183ecbeca1b93aef8e57c8faffcf1f145303b82a/typings.json",
+    "raw": "registry:npm/resolve-from#1.0.0+20160331175254",
+    "main": "index.d.ts",
+    "global": false,
+    "name": "resolve-from",
+    "type": "typings"
+  }
+}

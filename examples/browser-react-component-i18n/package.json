@@ -1,0 +1,38 @@
+{
+  "name": "ws-example-browser-react-component-i18n",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "webpack": "src/index.tsx",
+  "less": "src/style.less",
+  "typings": "dist/src/index.d.ts",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "browser",
+    "externals": {
+      "react":{
+        "root": "React",
+        "commonjs2": "react",
+        "commonjs": "react",
+        "amd": "react"
+      }
+    },
+    "i18n": {
+      "locales": [
+        "en_GB",
+        "en_US",
+        "de_DE",
+        "de_AT"
+      ]
+    }
+  },
+  "dependencies": {
+    "react": "^15.0.0"
+  },
+  "devDependencies": {
+    "expect": "^1.18.0",
+    "react-addons-test-utils": "^15.0.0"
+  }
+}

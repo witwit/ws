@@ -1,0 +1,23 @@
+{
+  "name": "ws-example-spa",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "less": "src/style.less",
+  "typings": "dist/src/index.d.ts",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "spa"
+  },
+  "dependencies": {
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
+    "ws-example-browser-react-component": "file:../browser-react-component"
+  },
+  "devDependencies": {
+    "expect": "^1.18.0",
+    "react-addons-test-utils": "^15.0.0"
+  }
+}

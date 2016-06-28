@@ -1,0 +1,13 @@
+{
+  "name": "ws-example-browser-less-component",
+  "version": "1.0.0",
+  "webpack": "src/index.js",
+  "less": "src/style.less",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "browser"
+  }
+}

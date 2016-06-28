@@ -1,0 +1,17 @@
+{
+  "name": "ws-example-browser-js-component",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "webpack": "src/index.ts",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "browser"
+  },
+  "typings": "dist/src/index.d.ts",
+  "devDependencies": {
+    "expect": "^1.18.0"
+  }
+}

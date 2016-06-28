@@ -1,0 +1,32 @@
+{
+  "name": "ws-example-browser-react-component",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "webpack": "src/index.tsx",
+  "less": "src/style.less",
+  "typings": "dist/src/index.d.ts",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "browser",
+    "externals": {
+      "react":{
+        "root": "React",
+        "commonjs2": "react",
+        "commonjs": "react",
+        "amd": "react"
+      }
+    }
+  },
+  "dependencies": {
+    "react": "^15.0.0",
+    "ws-example-browser-less-component": "file:../browser-less-component",
+    "ws-example-browser-js-component": "file:../browser-js-component"
+  },
+  "devDependencies": {
+    "expect": "^1.18.0",
+    "react-addons-test-utils": "^15.0.0"
+  }
+}
