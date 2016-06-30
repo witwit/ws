@@ -73,6 +73,29 @@ export interface IProject {
      */
     distReleaseDir: string;
     /**
+     * Our selenium settings. Only needed if you run tests in selenium.
+     */
+    selenium?: {
+      /**
+       * The host of selenium.
+       */
+      host: string;
+      /**
+       * The port of selenium.
+       */
+      port: number;
+      /**
+       * A list of browser which should *never* be used for tests. Use browser id's like
+       * `[ 'chrome-50', 'firefox-45', 'internet explorer-9' ]`.
+       */
+      blacklist: string[];
+      /**
+       * A list of browser which should *only* be used for tests (if available). Use browser id's
+       * like `[ 'chrome-50', 'firefox-45', 'internet explorer-9' ]`.
+       */
+      whitelist: string[];
+    };
+    /**
      * Our i18n settings. Only needed for translated projects.
      */
     i18n?: {
@@ -173,6 +196,16 @@ export function validate(pkg): IProject {
     pkg.ws.entryExtension = 'ts';
   } else {
     pkg.ws.entryExtension = 'tsx';
+  }
+
+  // defaults for selenium
+  if (pkg.ws.selenium) {
+    if (!pkg.ws.selenium.blacklist) {
+      pkg.ws.selenium.blacklist = [];
+    }
+    if (!pkg.ws.selenium.whitelist) {
+      pkg.ws.selenium.whitelist = [];
+    }
   }
 
   return pkg;

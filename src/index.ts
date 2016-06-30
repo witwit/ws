@@ -117,15 +117,19 @@ switch (project.ws.type) {
         lintAction().catch(handleError);
       });
 
-    commander
+    const unitCommand = commander
       .command('unit')
       .alias('u')
       .description('run unit tests')
       // .option('-c, --coverage', 'generates code coverage')
       .action(options => {
         handleGlobalOptions(options);
-        unitAction().catch(handleError);
+        unitAction(options).catch(handleError);
       });
+
+    if (project.ws.selenium) {
+      unitCommand.option('-g, --grid', 'run on selenium grid');
+    }
     break;
 }
 
