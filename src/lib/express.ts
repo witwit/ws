@@ -1,10 +1,8 @@
-import log from 'npmlog';
+import { info } from 'loglevel';
 import { cyan } from 'chalk';
 import express from 'express';
 import { project } from '../project';
 import { findAsync } from './openport';
-
-const NAME = 'serve';
 
 export async function listenAsync(middlewares = [], root = project.ws.distDir) {
   const app = express();
@@ -18,7 +16,7 @@ export async function listenAsync(middlewares = [], root = project.ws.distDir) {
   const port = await findAsync();
   return new Promise((resolve, reject) => {
     const server = app.listen(port);
-    server.on('listening', () => log.info(NAME, `Serving from ${cyan(`http://localhost:${port}`)}.`));
+    server.on('listening', () => info(`Serving from ${cyan(`http://localhost:${port}`)}.`));
     server.on('error', reject);
     server.on('close', resolve);
   });

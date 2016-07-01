@@ -1,4 +1,5 @@
-import log from 'npmlog';
+import { debug } from 'loglevel';
+import { yellow } from 'chalk';
 import { join } from 'path';
 import { ConfigOptions, Server } from 'karma';
 import getIpAddress from './ip-address';
@@ -50,6 +51,7 @@ const defaultConfig: ConfigOptionsWithMocha = {
   browsers: [
     'PhantomJS'
   ],
+  logLevel: 'WARN',
   singleRun: true
 };
 
@@ -66,9 +68,10 @@ export async function testAsync(options: { grid?: boolean } = {}) {
 
   if (options.grid) {
     const browsers = await getBrowsers();
-    log.verbose('karma', `Available browsers: ${browsers.map(browser => browser.id)}`);
+    debug(`Available browsers: ${browsers.map(browser => browser.id)}`);
     if (browsers.length === 0) {
-      throw `No browsers are available on ${project.ws.selenium.host}:${project.ws.selenium.port}.`;
+      const whitelistInfo = project.ws.selenium.whitelist.length ? ' matching your whitelist' : '';
+      throw `No browsers are available on ${yellow(project.ws.selenium.host + ':' + project.ws.selenium.port)}${whitelistInfo}.`
     }
     Object.assign(karmaConfig, {
       hostname: getIpAddress(),
@@ -78,13 +81,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
   }
 
   return new Promise((resolve, reject) => {
-    const server = new Server(karmaConfig, exitCode => {
-      if (exitCode === 0) {
-        resolve(exitCode);
-      } else {
-        reject(exitCode);
-      }
-    });
+    const server = new Server(karmaConfig, resolve);
     server.start();
   });
 }

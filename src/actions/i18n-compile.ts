@@ -1,16 +1,14 @@
-import log from 'npmlog';
+import { debug } from 'loglevel';
 import { parse } from 'properties';
 import { join } from 'path';
 import { readFileAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
 import { concatLanguages, isMatchingLocaleOrLanguage } from '../lib/i18n';
 import { project } from '../project';
 
-const NAME = 'i18n:compile';
-
 function readTranslation(locale: string, feature: string) {
   const readPath = join(process.cwd(), project.ws.i18n.dir, feature, `${locale}.properties`);
 
-  log.verbose(NAME, `Read from ${readPath}.`);
+  debug(`Read from ${readPath}.`);
 
   return readFileAsync(readPath, 'utf8')
     .then(parse)
@@ -33,8 +31,6 @@ module.exports.translation = ${JSON.stringify(translation.data, null, '  ')};`;
 }
 
 export default async function i18nCompile() {
-  log.info(NAME, 'Compile translations...');
-
   const features = project.ws.i18n.features || [ '' ];
   const locales = project.ws.i18n.locales;
   const localesAndLanguages = concatLanguages(locales);
@@ -62,6 +58,4 @@ const specificTranslation = require(\`./\${process.env.LOCALE}\`).translation;
 
 export const translation${project.ws.entryExtension !== 'js' ? ': { [key: string]: string }' : ''} = specificTranslation;
 `);
-
-  log.info(NAME, 'Compiled translations. ♥');
 };

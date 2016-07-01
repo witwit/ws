@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { cyan } from 'chalk';
+import { yellow } from 'chalk';
 import { readJsonSync } from 'fs-extra-promise';
 
 const unvalidatedProject = readJsonSync(join(process.cwd(), 'package.json'));
@@ -144,7 +144,7 @@ export interface IProject {
 export function validate(pkg): IProject {
   if (!pkg.ws) {
     throw (
-`Your ${cyan('package.json')} needs a ${cyan('ws')} config. It could look like this:
+`Your ${yellow('package.json')} needs a ${yellow('ws')} config. It could look like this:
   {
     "ws": {
       "type": "${TYPES.join('" | "')}"
@@ -154,15 +154,15 @@ export function validate(pkg): IProject {
   }
 
   if (!pkg.ws.type) {
-    throw `You need to specify a ${cyan('type')}. This can be any of the following values: ${cyan(TYPES.join(', '))}.`;
+    throw `You need to specify a ${yellow('type')}. This can be any of the following values: ${yellow(TYPES.join(', '))}.`;
   }
 
   if (!TYPES.some(type => type === pkg.ws.type)) {
-    throw `Your type ${cyan(pkg.ws.type)} doesn't match any of the valid values: ${cyan(TYPES.join(', '))}.`;
+    throw `Your type ${yellow(pkg.ws.type)} doesn't match any of the valid values: ${yellow(TYPES.join(', '))}.`;
   }
 
   if (!pkg.name) {
-    throw `You need to specify a ${cyan('name')} in your packae.json.`;
+    throw `You need to specify a ${yellow('name')} in your packae.json.`;
   }
 
   if (!pkg.ws.srcDir) {

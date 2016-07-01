@@ -5,7 +5,7 @@ import globby from 'globby';
 // relative from dist/index.js
 const configuration = require('../tslint.json');
 const options = {
-  formatter: 'prose',
+  formatter: 'json',
   configuration,
   rulesDirectory: '',
   formattersDirectory: ''

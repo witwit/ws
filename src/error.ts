@@ -1,6 +1,6 @@
-import log from 'npmlog';
+import { red } from 'chalk';
+import { error } from 'loglevel';
 
-const NAME = 'ws';
 const IGNORED_TRACE_LINES = [
   // our bin
   'bin/ws.js:2:1)',
@@ -22,29 +22,16 @@ const IGNORED_TRACE_LINES = [
   '(internal/module.js'
 ];
 
-export class ActionError extends Error {
-  constructor(name: string, message: string) {
-    super(message);
-    this.name = name;
-    this.message = message;
-
-    const error = new Error();
-    this.stack = error.stack;
-  }
-}
-
 export function handleError(err: Error) {
-  if (err instanceof ActionError) {
-    log.error(err.name, err.message);
-  } else if (err.stack) {
+  if (err.stack) {
     err.stack.split('\n')
       .filter(line => !IGNORED_TRACE_LINES.some(ignoredLine => line.includes(ignoredLine)))
-      .forEach(line => log.error(NAME, line));
+      .forEach(line => error(line));
   } else {
-    log.error(NAME, err);
+    error(err);
   }
 
-  log.error(NAME, '(╯°□°）╯︵ ┻━┻');
+  error(`${red('error!')} ( ╯°□°)╯ ┻━━┻`);
   process.exit(1);
 }
 

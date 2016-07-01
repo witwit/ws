@@ -1,4 +1,4 @@
-import log from 'npmlog';
+import { debug } from 'loglevel';
 import { join } from 'path';
 import { get } from 'https';
 import { outputFileAsync, removeAsync } from 'fs-extra-promise';
@@ -6,7 +6,6 @@ import urlTemplate from 'url-template';
 import { project } from '../project';
 import { concatLanguages } from '../lib/i18n';
 
-const NAME = 'i18n:import';
 const IGNORED_CONTENTS = [
   '404: Not Found\n' // e.g. used by raw.githubusercontent.com
 ];
@@ -16,7 +15,7 @@ function importTranslation(locale: string, feature: string) {
     .expand({ locale, feature });
   const outputPath = join(process.cwd(), project.ws.i18n.dir, feature, `${locale}.properties`);
 
-  log.verbose(NAME, `Import from ${url}.`);
+  debug(`Import from ${url}.`);
 
   return new Promise((resolve, reject) => {
     get(url, (res) => {
@@ -35,8 +34,6 @@ function importTranslation(locale: string, feature: string) {
 }
 
 export default async function i18nImport() {
-  log.info(NAME, 'Import translations...');
-
   const features = project.ws.i18n.features || [ '' ];
   const locales = project.ws.i18n.locales;
   const localesAndLanguages = concatLanguages(locales);
@@ -48,6 +45,4 @@ export default async function i18nImport() {
   }));
 
   await Promise.all(importPromises);
-
-  log.info(NAME, 'Imported translations. ♥');
 };

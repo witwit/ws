@@ -1,5 +1,5 @@
+import { warn, error } from 'loglevel';
 import { join } from 'path';
-import log from 'npmlog';
 import webpack, { DefinePlugin } from 'webpack';
 import spaOptions from './spa-options';
 import nodeOptions from './node-options';
@@ -10,8 +10,6 @@ import browserUnitOptions from './browser-unit-options';
 import spaReleaseOptions from './spa-release-options';
 import browserReleaseOptions from './browser-release-options';
 import { project } from '../../project';
-
-const NAME = 'build';
 
 export {
   spaOptions,
@@ -64,7 +62,7 @@ function onBuild(resolve, reject, err, stats, watcher?) {
   }
 
   if (stats.hasWarnings()) {
-    log.warn(NAME, stats.toString(statsStringifierOptions));
+    warn(stats.toString(statsStringifierOptions));
   }
 
   // note: watcher is optional
@@ -75,16 +73,16 @@ function onBuild(resolve, reject, err, stats, watcher?) {
 function onChange(err, stats, livereloadServer, onChangeSuccess?) {
   if (err) {
     // "hard" error
-    return log.error(NAME, err);
+    return error(err);
   }
 
   if (stats.hasErrors()) {
     // "soft" error
-    return log.error(NAME, stats.toString(statsStringifierOptions));
+    return error(stats.toString(statsStringifierOptions));
   }
 
   if (stats.hasWarnings()) {
-    log.warn(NAME, stats.toString(statsStringifierOptions));
+    warn(stats.toString(statsStringifierOptions));
   }
 
   // filter changes for live reloading

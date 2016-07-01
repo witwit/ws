@@ -1,6 +1,4 @@
-import { join } from 'path';
-import webpack from 'webpack';
-import log from 'npmlog';
+import { info } from 'loglevel';
 import { removeAsync } from 'fs-extra-promise';
 import { project, TYPE } from '../project';
 import {
@@ -13,11 +11,7 @@ import {
   browserReleaseOptions
 } from '../lib/webpack';
 
-const NAME = 'build';
-
 export default async function build(options) {
-  log.info(NAME, 'Build project...');
-
   switch (project.ws.type) {
     case TYPE.NODE:
       await removeAsync(project.ws.distDir);
@@ -28,7 +22,7 @@ export default async function build(options) {
         await removeAsync(project.ws.distReleaseDir);
         if (project.ws.i18n) {
           for (const locale of project.ws.i18n.locales) {
-            log.info(NAME, `...for locale ${locale}.`);
+            info(`...for locale ${locale}.`);
             await compileAsync(createLocaleSpecificOptions(spaReleaseOptions, locale));
           }
         } else {
@@ -47,11 +41,11 @@ export default async function build(options) {
       await removeAsync(project.ws.distDir);
       if (project.ws.i18n) {
         for (const locale of project.ws.i18n.locales) {
-          log.info(NAME, `...for locale ${locale}.`);
+          info(`...for locale ${locale}.`);
           await compileAsync(createLocaleSpecificOptions(browserOptions, locale));
           await compileAsync(createLocaleSpecificOptions(browserReleaseOptions, locale));
         }
-        log.info(NAME, `...with all locales.`);
+        info(`...with all locales.`);
       }
       // even when we use locales, we create a default build containing *all* translations
       // users can select a locale with `window.process = { env: { LOCALE: 'en_GB' } };`, before they load
@@ -60,6 +54,4 @@ export default async function build(options) {
       await compileAsync(browserReleaseOptions);
       break;
   }
-
-  log.info(NAME, 'Finished build.');
 };

@@ -1,7 +1,7 @@
 import { handleError } from './error';
 import commander from 'commander';
-import log from 'npmlog';
-import { yellow } from 'chalk';
+import { info, setLevel, levels } from 'loglevel';
+import { yellow, cyan } from 'chalk';
 import { project, TYPE } from './project';
 import serveAction from './actions/serve';
 import buildAction from './actions/build';
@@ -12,23 +12,30 @@ import i18nImportAction from './actions/i18n-import';
 import i18nCompileAction from './actions/i18n-compile';
 
 // common setup
-const NAME = 'ws';
 const pkg = require('../package.json');
 commander.version(pkg.version);
 commander.usage('<command> [options]');
 
 // global options
-const allowedLogLevels = [ 'silly', 'verbose', 'info', 'warn', 'error', 'silent' ];
-commander.option('-l, --log-level <level>', 'set log level', value => {
+const allowedLogLevels = Object.keys(levels).map(level => level.toLocaleLowerCase());
+commander.option('-l, --log-level <level>', 'set log level', (value) => {
   if (allowedLogLevels.some(allowedValue => value === allowedValue)) {
     return value;
   } else {
-    throw `Log level must be one of the following values: ${allowedLogLevels.join(', ')}.`;
+    throw `Your log level  ${yellow(value)} doesn't match any of the valid values: ${yellow(allowedLogLevels.join(', '))}.`;
   }
 }, 'info');
 
-function handleGlobalOptions(options) {
-  log.level = options.parent.logLevel;
+function handleAction(action: (options?: any) => Promise<any>) {
+  return (options) => {
+    // handle global options
+    setLevel(levels[options.parent.logLevel.toUpperCase()]);
+    // handle specific action
+    info(`run ${cyan(options.name())}...`);
+    return action(options)
+      .then(() => info(`finished ${cyan(options.name())} ♥`))
+      .catch(handleError);
+  }
 }
 
 // specific setup
@@ -41,10 +48,7 @@ switch (project.ws.type) {
       .alias('s')
       .description('serve the project')
       .option('-p, --production', 'serve production build')
-      .action(options => {
-        handleGlobalOptions(options);
-        serveAction(options).catch(handleError);
-      });
+      .action(handleAction(serveAction));
     break;
   case TYPE.NODE:
     commander.description('We build your Node module!');
@@ -61,10 +65,7 @@ if (project.ws.i18n) {
     .description('compile translations')
     // .option('--feature <feature>', 'feature to import')
     // .option('-l, --locale <locale>', 'locale to import')
-    .action(options => {
-      handleGlobalOptions(options);
-      i18nCompileAction().catch(handleError);
-    });
+    .action(handleAction(i18nCompileAction));
 
   if (project.ws.i18n.importUrl) {
     commander
@@ -73,10 +74,7 @@ if (project.ws.i18n) {
       .description('import translations')
       // .option('--feature <feature>', 'feature to import')
       // .option('-l, --locale <locale>', 'locale to import')
-      .action(options => {
-        handleGlobalOptions(options);
-        i18nImportAction().catch(handleError);
-    });
+      .action(handleAction(i18nImportAction));
   }
 }
 
@@ -89,10 +87,7 @@ switch (project.ws.type) {
       .command('build')
       .alias('b')
       .description('build the project')
-      .action(options => {
-        handleGlobalOptions(options);
-        buildAction(options).catch(handleError);
-      });
+      .action(handleAction(buildAction));
 
     if (project.ws.type === TYPE.SPA) {
       buildCommand.option('-p, --production', 'create production build');
@@ -103,29 +98,20 @@ switch (project.ws.type) {
       .alias('w')
       .description('continuously build and serve the project')
       // .option('-H, --hot', 'enables hot reloading (experimental)')
-      .action(options => {
-        handleGlobalOptions(options);
-        watchAction().catch(handleError);
-      });
+      .action(handleAction(watchAction));
 
     commander
       .command('lint')
       .alias('l')
       .description('run linter')
-      .action(options => {
-        handleGlobalOptions(options);
-        lintAction().catch(handleError);
-      });
+      .action(handleAction(lintAction));
 
     const unitCommand = commander
       .command('unit')
       .alias('u')
       .description('run unit tests')
       // .option('-c, --coverage', 'generates code coverage')
-      .action(options => {
-        handleGlobalOptions(options);
-        unitAction(options).catch(handleError);
-      });
+      .action(handleAction(unitAction));
 
     if (project.ws.selenium) {
       unitCommand.option('-g, --grid', 'run on selenium grid');
@@ -134,9 +120,9 @@ switch (project.ws.type) {
 }
 
 // handle unknown commands
-commander.on('*', name => {
+commander.on('*', (unknownCommand) => {
   commander.outputHelp();
-  log.error(NAME, `${yellow(name)} is not a known command.`);
+  throw `${yellow(unknownCommand)} is not a known command. You can see all supported commands above.`;
 });
 
 // invoke commands
