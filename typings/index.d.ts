@@ -8,6 +8,7 @@
 /// <reference path="globals/mime/index.d.ts" />
 /// <reference path="globals/mocha/index.d.ts" />
 /// <reference path="globals/node/index.d.ts" />
+/// <reference path="globals/semver/index.d.ts" />
 /// <reference path="globals/serve-static/index.d.ts" />
 /// <reference path="globals/source-map/index.d.ts" />
 /// <reference path="globals/uglify-js/index.d.ts" />

@@ -1,3 +1,4 @@
+import { info } from 'loglevel';
 import path from 'path';
 import { removeAsync } from 'fs-extra-promise';
 import { cyan } from 'chalk';
@@ -45,4 +46,9 @@ export default async function unit(options) {
   if (exitCode !== 0) {
     throw `${cyan('unit')} failed.`;
   }
+
+  // Karma sometimes doesn't stop :(
+  // see https://github.com/karma-runner/karma/issues/1428
+  info(`finished ${cyan('unit')} ♥`);
+  process.exit();
 };

@@ -4,6 +4,29 @@
 //   ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void) => void;
 // };
 
+declare module 'browserslist' {
+  function browserslist(browsers: string, options?: any): string[];
+
+  namespace browserslist {
+    export let data: any;
+  }
+
+  export = browserslist;
+}
+
+declare module 'sauce-connect-launcher' {
+  export interface SauceConnectOptions {
+    username: string;
+    accessKey: string;
+  }
+
+  export interface SauceConnectProcess {
+    close: () => void;
+  }
+
+  export default function sauceConnectLauncher(options: SauceConnectOptions, callback: (error: any, sauceConnectProcess: SauceConnectProcess) => void): void;
+}
+
 declare module 'properties' {
   export interface ParseOptions {
     path?: boolean;

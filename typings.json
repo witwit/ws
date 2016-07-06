@@ -10,6 +10,7 @@
     "mime": "registry:dt/mime#0.0.0+20160316155526",
     "mocha": "registry:dt/mocha#2.2.5+20160317120654",
     "node": "registry:dt/node#4.0.0+20160319033040",
+    "semver": "registry:dt/semver#4.3.4+20160608054219",
     "serve-static": "registry:dt/serve-static#0.0.0+20160317120654",
     "source-map": "registry:dt/source-map#0.0.0+20160317120654",
     "uglify-js": "registry:dt/uglify-js#2.6.1+20160316155526",

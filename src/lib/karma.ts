@@ -3,21 +3,21 @@ import { yellow } from 'chalk';
 import { join } from 'path';
 import { ConfigOptions, Server } from 'karma';
 import getIpAddress from './ip-address';
-import { getBrowsers } from './selenium-grid';
+import { getBrowsers, getBrowsersFilteredByAvailability, isSauceLabsHost } from './selenium-grid';
 import { project } from '../project';
-
-function createCustomLauncherId({ browserName, version }) {
-  return `grid-${browserName}-${version}`;
-}
+import { launchSauceConnect } from './sauce-connect';
 
 function toCustomLaunchersObject(customLaunchers, browser) {
-  customLaunchers[createCustomLauncherId(browser)] = Object.assign({}, browser, {
+  const id = `grid-${browser.browserName}-${browser.version}`;
+  customLaunchers[id] = Object.assign({}, browser, {
     base: 'WebDriver',
     // allways inject <meta> to use edge mode for IE
     'x-ua-compatible': 'IE=edge',
     config: {
       hostname: project.ws.selenium.host,
-      port: project.ws.selenium.port
+      port: project.ws.selenium.port,
+      user: project.ws.selenium.user,
+      pwd: project.ws.selenium.password
     }
   });
   return customLaunchers;
@@ -56,6 +56,7 @@ const defaultConfig: ConfigOptionsWithMocha = {
 };
 
 export async function testAsync(options: { grid?: boolean } = {}) {
+  debug(`Configure Karma...`);
   const karmaConfig = Object.assign({}, defaultConfig, {
     basePath: process.cwd(),
     files: [
@@ -66,22 +67,51 @@ export async function testAsync(options: { grid?: boolean } = {}) {
     }
   });
 
+  let sauceConnectProcess;
   if (options.grid) {
-    const browsers = await getBrowsers();
-    debug(`Available browsers: ${browsers.map(browser => browser.id)}`);
+    const {
+      browsers: browsersQuery,
+      host,
+      port,
+      filterForAvailability
+    } = project.ws.selenium;
+    const browsers = filterForAvailability ? await getBrowsersFilteredByAvailability() : getBrowsers();
+
     if (browsers.length === 0) {
-      const whitelistInfo = project.ws.selenium.whitelist.length ? ' matching your whitelist' : '';
-      throw `No browsers are available on ${yellow(project.ws.selenium.host + ':' + project.ws.selenium.port)}${whitelistInfo}.`
+      throw `No browsers are available on ${yellow(`${host}:${port}`)} given ${yellow(browsersQuery)}.`
     }
+
+    const customLaunchers = browsers.reduce(toCustomLaunchersObject, {});
     Object.assign(karmaConfig, {
       hostname: getIpAddress(),
-      customLaunchers: browsers.reduce(toCustomLaunchersObject, {}),
-      browsers: browsers.map(createCustomLauncherId)
+      customLaunchers,
+      browsers: Object.keys(customLaunchers)
     });
+
+    if (isSauceLabsHost(host)) {
+      const {
+        user: username,
+        password: accessKey
+      } = project.ws.selenium;
+      sauceConnectProcess = await launchSauceConnect({ username, accessKey });
+    }
   }
 
   return new Promise((resolve, reject) => {
-    const server = new Server(karmaConfig, resolve);
+    const server = new Server(karmaConfig, (exitCode) => {
+      debug(`Karma finished.`);
+      if (sauceConnectProcess) {
+        debug(`Tries to close Sauce Connect.`);
+        sauceConnectProcess.close(() => {
+          debug(`Closed Sauce Connect.`);
+          resolve(exitCode)
+        });
+      } else {
+        resolve(exitCode);
+      }
+    });
+
+    debug(`Start Karma.`);
     server.start();
   });
 }

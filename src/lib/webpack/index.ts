@@ -88,7 +88,7 @@ function onChange(err, stats, livereloadServer, onChangeSuccess?) {
   // filter changes for live reloading
   const changedModules = stats.compilation.modules.filter(module => module.built && module.resource);
   const changedStyleModules = changedModules.filter(module => module.resource.match(/\.(css|less|sass)$/));
-  var hasOnlyStyleChanges = changedModules.length === changedStyleModules.length;
+  let hasOnlyStyleChanges = changedModules.length === changedStyleModules.length;
   if (hasOnlyStyleChanges) {
     livereloadServer.refresh('style.css');
   } else {

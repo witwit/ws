@@ -85,15 +85,33 @@ export interface IProject {
        */
       port: number;
       /**
-       * A list of browser which should *never* be used for tests. Use browser id's like
-       * `[ 'chrome-50', 'firefox-45', 'internet explorer-9' ]`.
+       * User name which should be used to access selenium (e.g. needed for Sauce Labs).
+       *
+       * You can also set `envUser` in in your `package.json` and we get the user from `process.env`.
+       * E.g. when `"envUser": "SAUCE_USERNAME"` is set we use `process.env['SAUCE_USERNAME']` as `user`.
        */
-      blacklist: string[];
+      user?: string;
       /**
-       * A list of browser which should *only* be used for tests (if available). Use browser id's
-       * like `[ 'chrome-50', 'firefox-45', 'internet explorer-9' ]`.
+       * Password which should be used to access selenium (e.g. needed for Sauce Labs).
+       *
+       * You can also set `envPassword` in in your `package.json` and we get the password from
+       * `process.env`. E.g. when `"envPassword": "SAUCE_ACCESS_KEY"` is set we use
+       * `process.env['SAUCE_ACCESS_KEY']` as `password`.
        */
-      whitelist: string[];
+      password?: string;
+      /**
+       * A [browserslist](https://github.com/ai/browserslist) compatible string to specify which
+       * browsers should be used for testing. Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
+       */
+      browsers: string;
+      /**
+       * Tries to use the `browsers` query only against available browsers on the selenium grid.
+       * E.g. `"last 2 Chrome versions"` would return the last 2 chrome versions available on the
+       * grid, not the last 2 released chrome versions. Defaults to `false`.
+       *
+       * This is experimental!
+       */
+      filterForAvailability: boolean;
     };
     /**
      * Our i18n settings. Only needed for translated projects.
@@ -200,11 +218,17 @@ export function validate(pkg): IProject {
 
   // defaults for selenium
   if (pkg.ws.selenium) {
-    if (!pkg.ws.selenium.blacklist) {
-      pkg.ws.selenium.blacklist = [];
+    if (!pkg.ws.selenium.filterForAvailability) {
+      pkg.ws.selenium.filterForAvailability = false;
     }
-    if (!pkg.ws.selenium.whitelist) {
-      pkg.ws.selenium.whitelist = [];
+    if (!pkg.ws.selenium.browsers) {
+      pkg.ws.selenium.browsers = '> 1%, last 2 versions, Firefox ESR';
+    }
+    if (pkg.ws.selenium.envUser) {
+      pkg.ws.selenium.user = process.env[pkg.ws.selenium.envUser];
+    }
+    if (pkg.ws.selenium.envPassword) {
+      pkg.ws.selenium.password = process.env[pkg.ws.selenium.envPassword];
     }
   }
 
