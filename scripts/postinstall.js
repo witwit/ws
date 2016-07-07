@@ -16,7 +16,7 @@ if (!existsSync(join(cwd, 'dist')) && !existsSync(isWithinPostinstallFile)) {
     const stdio = 'inherit';
     const execOptions = { cwd, stdio };
 
-    execSync('npm install --only=dev', execOptions);
+    execSync('npm install', execOptions);
     // surprise! `npm install` will also trigger `npm prepublish` which will build our package
     unlinkSync(isWithinPostinstallFile);
   } catch (err) {
