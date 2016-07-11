@@ -1,6 +1,6 @@
 import React from 'react';
-import { NameComponent, ImageTestComponent } from 'ws-example-browser-react-component';
-import { SomeComponent } from 'ws-example-browser-react-component-i18n';
+import { NameComponent, ImageTestComponent } from 'ws-examples-browser-ts-react';
+import { SomeComponent } from 'ws-examples-browser-ts-react-i18n';
 import { translation } from './i18n';
 
 require('./style.less');

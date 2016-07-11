@@ -1,5 +1,5 @@
 {
-  "name": "ws-example-browser-react-component-i18n",
+  "name": "ws-examples-browser-ts-react-i18n",
   "version": "1.0.0",
   "main": "dist/index.js",
   "webpack": "src/index.tsx",

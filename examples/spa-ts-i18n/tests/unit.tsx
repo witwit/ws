@@ -1,8 +1,8 @@
 import expect from 'expect';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import { NameComponent, ImageTestComponent } from 'ws-example-browser-react-component';
-import { SomeComponent } from 'ws-example-browser-react-component-i18n';
+import { NameComponent, ImageTestComponent } from 'ws-examples-browser-ts-react';
+import { SomeComponent } from 'ws-examples-browser-ts-react-i18n';
 import { AppComponent } from '../src/app';
 
 describe('test my code', () => {

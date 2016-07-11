@@ -1,5 +1,5 @@
 {
-  "name": "ws-example-browser-js-component",
+  "name": "ws-examples-browser-ts",
   "version": "1.0.0",
   "main": "dist/index.js",
   "webpack": "src/index.ts",

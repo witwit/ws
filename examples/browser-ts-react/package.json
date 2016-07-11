@@ -1,5 +1,5 @@
 {
-  "name": "ws-example-browser-react-component",
+  "name": "ws-examples-browser-ts-react",
   "version": "1.0.0",
   "main": "dist/index.js",
   "webpack": "src/index.tsx",
@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "react": "^15.0.0",
-    "ws-example-browser-less-component": "file:../browser-less-component",
-    "ws-example-browser-js-component": "file:../browser-js-component"
+    "ws-examples-browser-less": "file:../browser-less",
+    "ws-examples-browser-ts": "file:../browser-ts"
   },
   "devDependencies": {
     "expect": "^1.18.0",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { add } from 'ws-example-browser-js-component';
+import { add } from 'ws-examples-browser-ts';
 
 require('./style.less');
 const smileSrc = require('./smile.png');

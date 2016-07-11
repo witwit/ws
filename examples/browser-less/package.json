@@ -1,5 +1,5 @@
 {
-  "name": "ws-example-browser-less-component",
+  "name": "ws-examples-browser-less",
   "version": "1.0.0",
   "webpack": "src/index.js",
   "less": "src/style.less",

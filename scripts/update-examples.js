@@ -5,13 +5,13 @@ const execSync = require('child_process').execSync;
 const rimrafSync = require('rimraf').sync;
 
 const examples = [
-  'browser-js-component',
-  'browser-less-component',
-  'browser-react-component',
-  'browser-react-component-i18n',
-  'spa',
-  'spa-i18n',
-  'node'
+  'browser-less',
+  'browser-ts',
+  'browser-ts-react',
+  'browser-ts-react-i18n',
+  'spa-ts',
+  'spa-ts-i18n',
+  'node-ts'
 ];
 
 const stdio = 'inherit';

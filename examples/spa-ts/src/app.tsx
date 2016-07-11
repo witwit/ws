@@ -1,7 +1,5 @@
 import React from 'react';
-import { NameComponent, ImageTestComponent } from 'ws-example-browser-react-component';
-
-require('./style.less');
+import { NameComponent, ImageTestComponent } from 'ws-examples-browser-ts-react';
 
 /**
  * This is our app component.

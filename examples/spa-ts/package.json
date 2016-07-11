@@ -1,5 +1,5 @@
 {
-  "name": "ws-example-spa",
+  "name": "ws-examples-spa-ts",
   "version": "1.0.0",
   "main": "dist/index.js",
   "less": "src/style.less",
@@ -12,9 +12,10 @@
     "type": "spa"
   },
   "dependencies": {
+    "normalize.css": "^4.2.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
-    "ws-example-browser-react-component": "file:../browser-react-component"
+    "ws-examples-browser-ts-react": "file:../browser-ts-react"
   },
   "devDependencies": {
     "expect": "^1.18.0",
