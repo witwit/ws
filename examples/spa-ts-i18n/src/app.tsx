@@ -8,6 +8,7 @@ const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
 require('intl');
 require(`intl/locale-data/jsonp/${INTL_LOCALE}.js`);
 
+require('normalize.css/normalize.css');
 require('./style.less');
 
 /**
