@@ -25,7 +25,13 @@ examples.forEach(example => {
     rimrafSync(join(cwd, 'dist-tests'));
     rimrafSync(join(cwd, 'dist-release'));
     execSync('npm install', { cwd, stdio });
+    if (example.includes('i18n')) {
+      execSync('npm run -s ws -- i18n:c', { cwd, stdio });
+    }
     execSync('npm run -s ws -- build', { cwd, stdio });
+    if (example.includes('spa')) {
+      execSync('npm run -s ws -- build --production', { cwd, stdio });
+    }
     execSync('npm run -s ws -- lint', { cwd, stdio });
     if (
       existsSync(join(cwd, 'tests', 'unit.ts')) ||

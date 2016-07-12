@@ -12,11 +12,17 @@
   "ws": {
     "type": "browser",
     "externals": {
-      "react":{
+      "react": {
         "root": "React",
         "commonjs2": "react",
         "commonjs": "react",
         "amd": "react"
+      },
+      "intl-messageformat": {
+        "root": "IntlMessageFormat",
+        "commonjs2": "intl-messageformat",
+        "commonjs": "intl-messageformat",
+        "amd": "intl-messageformat"
       }
     },
     "i18n": {
@@ -29,10 +35,12 @@
     }
   },
   "dependencies": {
+    "intl-messageformat": "^1.3.0",
     "react": "^15.0.0"
   },
   "devDependencies": {
     "expect": "^1.18.0",
+    "intl": "^1.2.4",
     "react-addons-test-utils": "^15.0.0"
   }
 }

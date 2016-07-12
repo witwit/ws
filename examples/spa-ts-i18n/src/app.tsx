@@ -1,7 +1,12 @@
 import React from 'react';
 import { NameComponent, ImageTestComponent } from 'ws-examples-browser-ts-react';
-import { SomeComponent } from 'ws-examples-browser-ts-react-i18n';
-import { translation } from './i18n';
+import { SomeComponent, OtherComponent } from 'ws-examples-browser-ts-react-i18n';
+import { i18n } from './i18n';
+
+// use intl polyfill for old browsers
+const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
+require('intl');
+require(`intl/locale-data/jsonp/${INTL_LOCALE}.js`);
 
 require('./style.less');
 
@@ -22,12 +27,21 @@ export const AppComponent = () => (
         ? <p>en_GB Build</p>
         : <p>NOT en_GB Build</p>
     }
-    <p>{translation['common.hello']}</p>
-    <p>{translation['common.describe']}</p>
-    <p>{translation['common.color']}</p>
-    <p>{translation['common.january']}</p>
-    <p>{translation['app.loading']}</p>
     <SomeComponent />
+    <OtherComponent />
+    <p>{i18n['common.hello']()}</p>
+    <p>{i18n['common.describe']()}</p>
+    <p>{i18n['common.color']()}</p>
+    <p>{i18n['common.january']()}</p>
+    <p>{i18n['app.loading']()}</p>
+    <p>{i18n['app.message-format.example']({ numPhotos: 0})}</p>
+    <p>{i18n['app.message-format.example']({ numPhotos: 1})}</p>
+    <p>{i18n['app.message-format.example']({ numPhotos: 2})}</p>
+    <p>{i18n['app.message-format.gender']({ gender: 'f' })}</p>
+    <p>{i18n['app.message-format.gender']({ gender: 'm' })}</p>
+    <p>{i18n['app.message-format.homer']({ name: 'Homer' })}</p>
+    <p>{i18n['app.message-format.homer']({ name: 'Foo' })}</p>
+    <p>{i18n['app.message-format.name']({ first: 'John', last: 'Snow' })}</p>
   </div>
 );
 

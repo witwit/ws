@@ -37,6 +37,7 @@
     "fs-extra-promise": "^0.3.1",
     "globby": "^4.0.0",
     "html-webpack-plugin": "^2.9.0",
+    "intl-messageformat-parser": "^1.2.0",
     "json-loader": "^0.5.4",
     "karma": "^1.1.0",
     "karma-mocha": "^1.1.1",

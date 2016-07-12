@@ -2,12 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <% const translation = require('./i18n/' + process.env.LOCALE + '.js').translation; %>
+  <% const i18n = require('./i18n/index.tsx').i18n; %>
   <title>App</title>
 </head>
 <body>
   <section id="app">
-    <p><%= translation['app.loading'] %></p>
+    <p><%= i18n['app.loading']() %></p>
   </section>
 </body>
 </html>

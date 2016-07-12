@@ -25,6 +25,8 @@
     }
   },
   "dependencies": {
+    "intl": "^1.2.4",
+    "intl-messageformat": "^1.3.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
     "ws-examples-browser-ts-react": "file:../browser-ts-react",
