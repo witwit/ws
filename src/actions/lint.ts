@@ -56,7 +56,7 @@ export default async function lint() {
     error('');
   }
 
-  if (typescriptFileFailures.length) {
+  if (typescriptFileFailures.length || documentationFailures.length) {
     throw `${cyan('lint')} failed.`;
   }
 };
