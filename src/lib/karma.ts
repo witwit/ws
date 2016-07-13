@@ -78,7 +78,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
     const browsers = filterForAvailability ? await getBrowsersFilteredByAvailability() : getBrowsers();
 
     if (browsers.length === 0) {
-      throw `No browsers are available on ${yellow(`${host}:${port}`)} given ${yellow(browsersQuery)}.`
+      throw `No browsers are available on ${yellow(`${host}:${port}`)} given ${yellow(browsersQuery)}.`;
     }
 
     const customLaunchers = browsers.reduce(toCustomLaunchersObject, {});
@@ -104,7 +104,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
         debug(`Tries to close Sauce Connect.`);
         sauceConnectProcess.close(() => {
           debug(`Closed Sauce Connect.`);
-          resolve(exitCode)
+          resolve(exitCode);
         });
       } else {
         resolve(exitCode);

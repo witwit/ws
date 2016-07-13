@@ -35,6 +35,14 @@ export interface IProject {
    */
   dependencies?: { [dependency: string]: string; };
   /**
+   * Flags if this package is private.
+   */
+  private?: boolean;
+  /**
+   * Keywords which describe your project.
+   */
+  keywords?: string[];
+  /**
    * This is the `ws` configuration used in the projects `package.json`.
    */
   ws: {

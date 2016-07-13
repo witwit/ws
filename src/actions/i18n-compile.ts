@@ -86,7 +86,7 @@ function getArguments(ast) {
 
 function writeIndexTranslation(translations: ParsedTranslation[]) {
   const filename = join(project.ws.srcDir, project.ws.i18n.dir, `index.${project.ws.entryExtension}`);
-  const interfaceString = project.ws.entryExtension === 'js' ? '' : `export interface TranslationData {${Object.keys(translations[0].data).map(key =>`
+  const interfaceString = project.ws.entryExtension === 'js' ? '' : `export interface TranslationData {${Object.keys(translations[0].data).map(key => `
   /**${translations.map(translation => `
    * \`${translation.locale}\`: ${translation.data[key]}` ).join('')}
    */
@@ -145,7 +145,7 @@ export default async function i18nCompile() {
       const ast = parser.parse(translation.data[key]);
       asts[key] = ast;
     });
-    return Object.assign({ asts }, translation)
+    return Object.assign({ asts }, translation);
   });
 
   await removeAsync(join(project.ws.srcDir, project.ws.i18n.dir));

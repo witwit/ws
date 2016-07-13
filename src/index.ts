@@ -35,7 +35,7 @@ function handleAction(action: (options?: any) => Promise<any>) {
     return action(options)
       .then(() => info(`finished ${cyan(options.name())} ♥`))
       .catch(handleError);
-  }
+  };
 }
 
 // specific setup
