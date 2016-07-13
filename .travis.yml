@@ -12,9 +12,7 @@ cache:
     - node_modules
 
 before_install:
-  # Update Node.js modules
   - "test ! -d node_modules || npm prune"
-  - "test ! -d node_modules || npm rebuild"
 
 before_script:
   - npm run build
