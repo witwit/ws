@@ -70,5 +70,10 @@
   },
   "devDependencies": {
     "rimraf": "^2.5.3"
-  }
+  },
+  "keywords": [
+    "build",
+    "test",
+    "tool"
+  ]
 }
