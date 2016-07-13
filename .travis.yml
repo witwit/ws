@@ -17,7 +17,8 @@ before_install:
 install:
   - npm install --no-optional
 
-before_script:
-  - npm run build
+# build is triggered by prepublish hook which is triggered by npm install
+#before_script:
+#  - npm run build
 
 script: npm run -s ws -- lint

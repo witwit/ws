@@ -3,6 +3,17 @@ const webpack = require('webpack');
 const WebpackNodeExternals = require('webpack-node-externals');
 
 module.exports = {
+  // `stats` only available when used with webpack cli
+  stats: {
+    assets: false,
+    colors: true,
+    version: false,
+    hash: false,
+    timings: false,
+    chunks: false,
+    chunkModules: false,
+    children: false
+  },
   entry: [
     'source-map-support/register',
     './src/index.ts'
