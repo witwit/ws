@@ -8,8 +8,8 @@
   "scripts": {
     "build": "rimraf dist/ && webpack",
     "ws": "node ./bin/ws.js",
-    "prepublish": "npm run build",
-    "postinstall": "node scripts/postinstall"
+    "postinstall": "node scripts/postinstall",
+    "prepublish": "node scripts/prepublish"
   },
   "ws": {
     "type": "node"

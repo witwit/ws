@@ -17,8 +17,7 @@ before_install:
 install:
   - npm install --no-optional
 
-# "build" is currently triggered by postinstall script
-#before_script:
-#  - npm run build
+before_script:
+  - npm run build
 
 script: npm run -s ws -- lint

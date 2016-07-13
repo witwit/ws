@@ -1,26 +1,29 @@
-// called by postinstall hook
 const join = require('path').join;
 const existsSync = require('fs').existsSync;
 const writeFileSync = require('fs').writeFileSync;
-const unlinkSync = require('fs').unlinkSync;
+const execSync = require('child_process').execSync;
 
 const cwd = join(__dirname, '..');
-const isWithinPostinstallFile = join(__dirname, 'is-within-postinstall'); // avoid infinite loop
+const pkgPath = join(cwd, 'package.json');
+const pkg = require(pkgPath);
+const stdio = 'inherit';
+const execOptions = { cwd, stdio };
 
-if (!existsSync(join(cwd, 'dist')) && !existsSync(isWithinPostinstallFile)) {
-  console.log(`It seems ${require('../package.json').name} was installed with Git. We need to build the package now.`);
+// check if this package is installed as a dependency of another package
+// if this is the case "npm i" was called from a different directoy
+const isInstalledAsDependency = process.cwd() !== cwd;
+
+pkg.wasCalledByInstall = true;
+writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
+
+if (isInstalledAsDependency && !existsSync(join(cwd, 'dist'))) {
+  console.log(`It seems ${pkg.name} was installed with Git. We need to build the package now.`);
   try {
-    writeFileSync(isWithinPostinstallFile, '');
-    const execSync = require('child_process').execSync;
-
-    const stdio = 'inherit';
-    const execOptions = { cwd, stdio };
-
-    execSync('npm install --no-optional', execOptions);
-    // surprise! `npm install` will also trigger `npm prepublish` which will build our package
-    unlinkSync(isWithinPostinstallFile);
+    execSync('npm install', execOptions);
+    execSync('npm run build', execOptions);
   } catch (err) {
-    unlinkSync(isWithinPostinstallFile);
+    delete pkg.wasCalledByInstall;
+    writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
     throw err;
   }
 }
