@@ -133,7 +133,7 @@ export function getBrowsers(browsersQuery: string = project.ws.selenium.browsers
 function getNodes(): Promise<grid.SeleniumNode[]> {
   const { host, port } = project.ws.selenium;
   debug(`Get nodes from ${host}:${port}.`);
-  return new Promise((resolve, reject) => {
+  return new Promise<grid.SeleniumNode[]>((resolve, reject) => {
     grid.available({ host, port }, (err, nodes) => {
       if (err) {
         reject(err);

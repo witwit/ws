@@ -10,6 +10,11 @@
     "type": "node"
   },
   "devDependencies": {
+    "@types/expect": "^1.13.29",
+    "@types/mocha": "^2.2.27",
     "expect": "^1.18.0"
+  },
+  "dependencies": {
+    "@types/node": "^4.0.29"
   }
 }

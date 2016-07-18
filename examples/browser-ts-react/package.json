@@ -12,7 +12,7 @@
   "ws": {
     "type": "browser",
     "externals": {
-      "react":{
+      "react": {
         "root": "React",
         "commonjs2": "react",
         "commonjs": "react",
@@ -21,11 +21,15 @@
     }
   },
   "dependencies": {
+    "@types/react": "^0.14.27",
+    "@types/react-dom": "^0.14.13",
     "react": "^15.0.0",
     "ws-examples-browser-less": "file:../browser-less",
     "ws-examples-browser-ts": "file:../browser-ts"
   },
   "devDependencies": {
+    "@types/expect": "^1.13.29",
+    "@types/mocha": "^2.2.27",
     "expect": "^1.18.0",
     "react-addons-test-utils": "^15.0.0"
   }

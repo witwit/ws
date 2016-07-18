@@ -6,7 +6,9 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "declaration": true,
-    "outDir": "./"
+    "types": [
+      "mocha"
+    ]
   },
   "exclude": [
     "node_modules"

@@ -5,7 +5,9 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "outDir": "./"
+    "types": [
+      "mocha"
+    ]
   },
   "exclude": [
     "node_modules"

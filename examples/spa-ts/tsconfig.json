@@ -4,7 +4,10 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "react"
+    "jsx": "react",
+    "types": [
+      "mocha"
+    ]
   },
   "exclude": [
     "node_modules"

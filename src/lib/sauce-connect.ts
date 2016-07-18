@@ -3,7 +3,7 @@ import sauceConnectLauncher, { SauceConnectOptions, SauceConnectProcess } from '
 
 export function launchSauceConnect(options: SauceConnectOptions): Promise<SauceConnectProcess> {
   debug('Tries to launch Sauce Connect.');
-  return new Promise((resolve, reject) => {
+  return new Promise<SauceConnectProcess>((resolve, reject) => {
     sauceConnectLauncher(options, (err, sauceConnectProcess) => {
       if (err) {
         reject(err);

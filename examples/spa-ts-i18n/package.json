@@ -25,6 +25,8 @@
     }
   },
   "dependencies": {
+    "@types/react": "^0.14.27",
+    "@types/react-dom": "^0.14.13",
     "intl": "^1.2.4",
     "intl-messageformat": "^1.3.0",
     "normalize.css": "^4.2.0",
@@ -34,6 +36,8 @@
     "ws-examples-browser-ts-react-i18n": "file:../browser-ts-react-i18n"
   },
   "devDependencies": {
+    "@types/expect": "^1.13.29",
+    "@types/mocha": "^2.2.27",
     "expect": "^1.18.0",
     "react-addons-test-utils": "^15.0.0"
   }
