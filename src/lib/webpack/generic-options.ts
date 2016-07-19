@@ -10,11 +10,12 @@ export default {
     sourcePrefix: ''  // removes tabs before multiline strings
   },
   resolveLoader: {
-    root: [
+    modules: [
       // if you symlink the ws tool (e.g. while development), you want to resolve loaders
       // relative to the ws tool first (just like a normale `require()` would work)
       path.join(__dirname, '..', 'node_modules'), // relative to `dist/index.js`
-      path.join(process.cwd(), 'node_modules')
+      path.join(process.cwd(), 'node_modules'),
+      'node_modules'
     ]
   },
   resolve: {
@@ -24,6 +25,10 @@ export default {
       '.ts',
       '.tsx',
       '.js'
+    ],
+    mainFields: [
+      'webpack',
+      'main'
     ]
   },
   devtool: 'cheap-module-inline-source-map'

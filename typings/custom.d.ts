@@ -96,10 +96,6 @@ declare module 'html-webpack-plugin' {
   export default function HtmlWebpackPlugin(...params: any[]): void;
 }
 
-declare module 'omit-tilde-webpack-plugin' {
-  export default function OmitTildeWebpackPlugin(param?: any): void;
-}
-
 declare module 'webpack-node-externals' {
   import webpack from 'webpack';
   export default function WebpackNodeExternals(...params: any[]): webpack.ExternalsFunctionElement;

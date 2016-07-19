@@ -10,16 +10,13 @@ export default Object.assign({}, browserOptions, {
   plugins: browserOptions.plugins.filter(plugin => !(plugin instanceof ExtractTextWebpackPlugin)).concat([
     new ExtractTextWebpackPlugin('style.min.css'),
     new DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       }
-    }),
-    new optimize.OccurenceOrderPlugin(true)
+    })
   ]),
   devtool: 'source-map'
 });

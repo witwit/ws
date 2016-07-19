@@ -2,7 +2,6 @@ import path from 'path';
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
-import OmitTildeWebpackPlugin from 'omit-tilde-webpack-plugin';
 import { resolve } from '../resolve';
 import genericOptions from './generic-options';
 import { project } from '../../project';
@@ -18,7 +17,7 @@ export default Object.assign({}, genericOptions, {
         test: /\.ts(x?)$/,
         loader:
           `babel-loader?` +
-          `presets[]=${resolve('babel-preset-es2015')},` +
+          `presets[]=${resolve('babel-preset-es2015-webpack')},` +
           `presets[]=${resolve('babel-preset-react')},` +
           `presets[]=${resolve('babel-preset-stage-0')}&` +
           `plugins[]=${resolve('babel-plugin-transform-decorators-legacy')}` +
@@ -61,9 +60,6 @@ export default Object.assign({}, genericOptions, {
     ]
   },
   plugins: [
-    new OmitTildeWebpackPlugin({
-      include: [ 'package.json' ]
-    }),
     new HtmlWebpackPlugin({
       template: './src/index.html'
     }),

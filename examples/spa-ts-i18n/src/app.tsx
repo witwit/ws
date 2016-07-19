@@ -4,9 +4,8 @@ import { SomeComponent, OtherComponent } from 'ws-examples-browser-ts-react-i18n
 import { i18n } from './i18n';
 
 // use intl polyfill for old browsers
-const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
 require('intl');
-require(`intl/locale-data/jsonp/${INTL_LOCALE}.js`);
+require(`intl/locale-data/jsonp/${process.env.LOCALE.replace('_', '-')}.js`); // must be inlined
 
 require('normalize.css/normalize.css');
 require('./style.less');

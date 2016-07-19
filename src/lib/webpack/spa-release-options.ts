@@ -12,16 +12,13 @@ export default Object.assign({}, spaOptions, {
   plugins: spaOptions.plugins.filter(plugin => !(plugin instanceof ExtractTextWebpackPlugin)).concat([
     new ExtractTextWebpackPlugin('style-[contenthash].css'),
     new DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       }
-    }),
-    new optimize.OccurenceOrderPlugin(true)
+    })
   ]),
   devtool: 'source-map'
 });

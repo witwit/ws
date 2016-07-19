@@ -41,9 +41,7 @@ export function createLocaleSpecificOptions(options: webpack.Configuration, loca
     }),
     plugins: [
       new DefinePlugin({
-        'process.env': {
-          'LOCALE': JSON.stringify(locale)
-        }
+        'process.env.LOCALE': JSON.stringify(locale)
       })
     ].concat(options.plugins || [])
   });
