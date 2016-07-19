@@ -12,7 +12,8 @@ cache:
     - node_modules
 
 before_install:
-  - "test ! -d node_modules || npm prune"
+  - test ! -d node_modules || npm prune
+  - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
 
 install:
   - npm install --no-optional
