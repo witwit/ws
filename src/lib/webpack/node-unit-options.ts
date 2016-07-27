@@ -1,13 +1,10 @@
-import path from 'path';
+import { Configuration } from 'webpack';
 import nodeOptions from './node-options';
-import { project } from '../../project';
+import { entryNodeUnit, outputTest } from './generic';
 
-export default Object.assign({}, nodeOptions, {
-  entry:[
-    'source-map-support/register',
-    `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`
-  ],
-  output: Object.assign({}, nodeOptions.output, {
-    path: path.join(process.cwd(), project.ws.distTestsDir) // must be absolute
-  })
+const options: Configuration = Object.assign({}, nodeOptions, {
+  entry: entryNodeUnit,
+  output: outputTest
 });
+
+export default options;

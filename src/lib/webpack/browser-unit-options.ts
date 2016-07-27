@@ -1,15 +1,16 @@
-import { join } from 'path';
-import genericOptions from './generic-options';
+import { Configuration } from 'webpack';
 import browserOptions from './browser-options';
-import { project } from '../../project';
+import {
+  entryUnit,
+  outputTest,
+  devtoolTest
+} from './generic';
 
-export default Object.assign({}, browserOptions, {
-  entry: [
-    `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`
-  ],
-  output: Object.assign({}, genericOptions.output, {
-    path: join(process.cwd(), project.ws.distTestsDir) // must be absolute
-  }),
+const options: Configuration = Object.assign({}, browserOptions, {
+  entry: entryUnit,
+  output: outputTest,
   externals: [],
-  devtool: 'inline-source-map'
+  devtool: devtoolTest
 });
+
+export default options;

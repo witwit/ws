@@ -1,15 +1,15 @@
-import { join } from 'path';
-// import genericOptions from './generic-options';
+import { Configuration } from 'webpack';
 import spaOptions from './spa-options';
-import { project } from '../../project';
+import {
+  entryUnit,
+  outputTest,
+  devtoolTest
+} from './generic';
 
-export default Object.assign({}, spaOptions, {
-  entry: [
-    `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`
-  ],
-  output: Object.assign({}, spaOptions.output, {
-    path: join(process.cwd(), project.ws.distTestsDir) // must be absolute
-  }),
-  // module: spaOptions.module,
-  devtool: 'inline-source-map'
+const options: Configuration = Object.assign({}, spaOptions, {
+  entry: entryUnit,
+  output: outputTest,
+  devtool: devtoolTest
 });
+
+export default options;

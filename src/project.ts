@@ -1,6 +1,7 @@
 import { join } from 'path';
 import { yellow } from 'chalk';
 import { readJsonSync } from 'fs-extra-promise';
+import { CompilerOptions } from 'typescript';
 
 const unvalidatedProject = readJsonSync(join(process.cwd(), 'package.json'));
 let tsconfig;
@@ -54,6 +55,10 @@ export interface IProject {
      * The file extension of your entry file. Either `js`, `ts` or `tsx`.
      */
     entryExtension: 'js' | 'ts' | 'tsx';
+    /**
+     * If this is a TypeScript project, we will save the `tsconfig.json` here.
+     */
+    tsconfig?: CompilerOptions;
     /**
      * Probably only needed for 'browser' projects currently.
      * See https://webpack.github.io/docs/configuration.html#externals.
@@ -215,13 +220,16 @@ export function validate(pkg): IProject {
     pkg.ws.i18n.dir = 'i18n';
   }
 
-  // check if this project is using typescript and tsx
+  // check if this project is using typescript (and tsx)
   if (!tsconfig) {
     pkg.ws.entryExtension = 'js';
-  } else if (!(tsconfig.compilerOptions && tsconfig.compilerOptions.jsx)) {
-    pkg.ws.entryExtension = 'ts';
   } else {
-    pkg.ws.entryExtension = 'tsx';
+    pkg.ws.tsconfig = tsconfig;
+    if (!(tsconfig.compilerOptions && tsconfig.compilerOptions.jsx)) {
+      pkg.ws.entryExtension = 'ts';
+    } else {
+      pkg.ws.entryExtension = 'tsx';
+    }
   }
 
   // defaults for selenium

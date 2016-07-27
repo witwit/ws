@@ -1,22 +1,21 @@
-import { join } from 'path';
-import { DefinePlugin, optimize } from 'webpack';
-import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
+import { Configuration } from 'webpack';
 import browserOptions from './browser-options';
+import {
+  outputUmdMin,
+  extractCssMinPlugin,
+  defineProductionPlugin,
+  minifyJsPlugin,
+  devtoolProduction
+} from './generic';
 
-export default Object.assign({}, browserOptions, {
-  output: Object.assign({}, browserOptions.output, {
-    filename: 'index.min.js'
-  }),
-  plugins: browserOptions.plugins.filter(plugin => !(plugin instanceof ExtractTextWebpackPlugin)).concat([
-    new ExtractTextWebpackPlugin('style.min.css'),
-    new DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  ]),
-  devtool: 'source-map'
+const options: Configuration = Object.assign({}, browserOptions, {
+  output: outputUmdMin,
+  plugins: [
+    extractCssMinPlugin,
+    defineProductionPlugin,
+    minifyJsPlugin
+  ],
+  devtool: devtoolProduction
 });
+
+export default options;

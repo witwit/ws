@@ -1,24 +1,23 @@
-import { join } from 'path';
-import { DefinePlugin, optimize } from 'webpack';
-import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
+import { Configuration } from 'webpack';
 import spaOptions from './spa-options';
-import { project } from '../../project';
+import {
+  outputSpaRelease,
+  indexHtmlPlugin,
+  extractCssHashPlugin,
+  defineProductionPlugin,
+  minifyJsPlugin,
+  devtoolProduction
+} from './generic';
 
-export default Object.assign({}, spaOptions, {
-  output: Object.assign({}, spaOptions.output, {
-    path: join(process.cwd(), project.ws.distReleaseDir), // must be absolute
-    filename: 'index-[hash].js'
-  }),
-  plugins: spaOptions.plugins.filter(plugin => !(plugin instanceof ExtractTextWebpackPlugin)).concat([
-    new ExtractTextWebpackPlugin('style-[contenthash].css'),
-    new DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  ]),
-  devtool: 'source-map'
+const options: Configuration = Object.assign({}, spaOptions, {
+  output: outputSpaRelease,
+  plugins: [
+    indexHtmlPlugin,
+    extractCssHashPlugin,
+    defineProductionPlugin,
+    minifyJsPlugin
+  ],
+  devtool: devtoolProduction
 });
+
+export default options;
