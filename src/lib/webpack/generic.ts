@@ -146,13 +146,13 @@ export const resolveLoader = {
 // defaults
 // see https://github.com/webpack/webpack/blob/dc50c0360e87204ea77172910e877f8c510f3bfb/lib/WebpackOptionsDefaulter.js#L75
 const defaultExtensions = [
-  '.js',
+  '.js'
   // '.json' // supported by us?
 ];
 
 const tsExtensions = [
   '.ts',
-  '.tsx',
+  '.tsx'
 ].concat(defaultExtensions);
 
 const mainFieldsNode = [
