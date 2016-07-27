@@ -1,6 +1,6 @@
 {
   "name": "@mercateo/ws",
-  "version": "1.0.1-0",
+  "version": "1.0.1-1",
   "main": "./dist/index.js",
   "bin": {
     "ws": "./bin/ws.js"
