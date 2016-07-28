@@ -33,7 +33,10 @@
         "singleline": "never"
       }
     ],
-    "triple-equals": true,
+    "triple-equals":  [
+      true,
+      "allow-null-check"
+    ],
     "whitespace": [
       true,
       "check-branch",
