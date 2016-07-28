@@ -156,7 +156,7 @@ declare module 'babel-core' {
 }
 
 declare module 'livereload' {
-  export function createServer(): void;
+  export function createServer(options?: { port: number }): void;
 }
 
 declare module 'connect-livereload' {

@@ -5,7 +5,7 @@ const DEFAULT_FIND_OPTIONS = {
 };
 
 export function findAsync(options: FindOptions = DEFAULT_FIND_OPTIONS) {
-  return new Promise((resolve, reject) => {
+  return new Promise<number>((resolve, reject) => {
     find(options, (err, port) => {
       if (err) {
         reject(err);
