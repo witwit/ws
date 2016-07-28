@@ -1,7 +1,7 @@
 import { Configuration } from 'webpack';
 import {
   entryNode,
-  output,
+  outputCommon2,
   tsLoader,
   externalsNode,
   resolveLoader,
@@ -11,7 +11,7 @@ import {
 
 const options: Configuration = {
   entry: entryNode,
-  output,
+  output: outputCommon2,
   module: {
     loaders: [
       tsLoader

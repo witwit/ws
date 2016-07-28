@@ -39,6 +39,10 @@ export const outputTest = Object.assign({}, output, {
   path: join(process.cwd(), project.ws.distTestsDir)
 });
 
+export const outputCommon2 = Object.assign({}, output, {
+  libraryTarget: 'commonjs2'
+});
+
 export const outputUmd = Object.assign({}, output, {
   libraryTarget: 'umd',
   library: project.name
