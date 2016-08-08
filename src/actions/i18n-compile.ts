@@ -1,6 +1,7 @@
 import { debug } from 'loglevel';
 import { parse } from 'properties';
 import { join } from 'path';
+import { camelCase } from 'lodash';
 import { readFileAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
 import { concatLanguages, isMatchingLocaleOrLanguage } from '../lib/i18n';
 import { project } from '../project';
@@ -33,6 +34,13 @@ interface ParsedTranslation {
   asts: AstMap;
 }
 
+function camelCaseKeys(data) {
+  return Object.keys(data).reduce((acc, key) => {
+    acc[camelCase(key)] = data[key];
+    return acc;
+  }, {});
+}
+
 async function readTranslation(locale: string, feature: string): Promise<Translation> {
   const readPath = join(process.cwd(), project.ws.i18n.dir, feature, `${locale}.properties`);
 
@@ -48,6 +56,7 @@ async function readTranslation(locale: string, feature: string): Promise<Transla
         throw err;
       }
     })
+    .then(camelCaseKeys)
     .then(data => ({ data, locale }));
 
   return translation;
@@ -84,15 +93,16 @@ function getArguments(ast) {
   }
 }
 
+function getDocumentation(translations: ParsedTranslation[], key: string) {
+  return `
+/**${translations.map(translation => `
+ * \`${translation.locale}\`: ${translation.data[key]}` ).join('')}
+ */`;
+}
+
 function writeIndexTranslation(translations: ParsedTranslation[]) {
   const filename = join(project.ws.srcDir, project.ws.i18n.dir, `index.${project.ws.entryExtension}`);
-  const interfaceString = project.ws.entryExtension === 'js' ? '' : `export interface TranslationData {${Object.keys(translations[0].data).map(key => `
-  /**${translations.map(translation => `
-   * \`${translation.locale}\`: ${translation.data[key]}` ).join('')}
-   */
-  '${key}': (${hasArguments(translations[0].asts[key]) ? 'data: ' : ''}${getArguments(translations[0].asts[key])}) => string;`).join('')}
-}`;
-const interfaceName = project.ws.entryExtension === 'js' ? '' : ': TranslationData';
+  const hasTypes = project.ws.entryExtension !== 'js';
 
   const data =
 `${GENERATED_WARNING}
@@ -100,19 +110,15 @@ const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
 const asts = require(\`./\${process.env.LOCALE}\`).asts;
 const IntlMessageFormat = require('intl-messageformat');
 
-${interfaceString}
-
-const lazyMessages = {};
-
-export const i18n${interfaceName} = {${Object.keys(translations[0].data).map(key => `
-  '${key}': (${hasArguments(translations[0].asts[key]) ? 'data' : ''}) => {
-    if (!lazyMessages['${key}']) {
-      lazyMessages['${key}'] = new IntlMessageFormat(asts['${key}'], INTL_LOCALE);
-    }
-    return lazyMessages['${key}'].format(${hasArguments(translations[0].asts[key]) ? 'data' : ''});
-  }`
-)}
-};
+const lazyMessages = {};${Object.keys(translations[0].data).map(key => `
+${getDocumentation(translations, key)}
+export const ${key} = (${hasArguments(translations[0].asts[key]) ? `data${hasTypes ? `: ${getArguments(translations[0].asts[key])}` : ''}` : ''})${hasTypes ? ': string' : ''} => {
+  if (!lazyMessages['${key}']) {
+    lazyMessages['${key}'] = new IntlMessageFormat(asts['${key}'], INTL_LOCALE);
+  }
+  return lazyMessages['${key}'].format(${hasArguments(translations[0].asts[key]) ? 'data' : ''});
+};`
+).join('')}
 `;
 
   return outputFileAsync(filename, data);

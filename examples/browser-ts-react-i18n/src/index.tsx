@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { i18n } from './i18n';
+import { someContent, contentWithMessageFormat } from './i18n';
 
 /**
  * This component shows a translated message.
  */
 export class SomeComponent extends Component<{}, {}> {
   render() {
-    return <p>{i18n['some-content']()}</p>;
+    return <p>{someContent()}</p>;
   }
 }
 
@@ -15,6 +15,6 @@ export class SomeComponent extends Component<{}, {}> {
  */
 export class OtherComponent extends Component<{}, {}> {
   render() {
-    return <p>{i18n['content-with-message-format']({ count: 1 })}</p>;
+    return <p>{contentWithMessageFormat({ count: 1 })}</p>;
   }
 }

@@ -1,7 +1,17 @@
 import React from 'react';
 import { NameComponent, ImageTestComponent } from 'ws-examples-browser-ts-react';
 import { SomeComponent, OtherComponent } from 'ws-examples-browser-ts-react-i18n';
-import { i18n } from './i18n';
+import {
+  commonHello,
+  commonDescribe,
+  commonColor,
+  commonJanuary,
+  appLoading,
+  appMessageFormatExample,
+  appMessageFormatGender,
+  appMessageFormatHomer,
+  appMessageFormatName
+} from './i18n';
 
 // use intl polyfill for old browsers
 require('intl');
@@ -29,19 +39,19 @@ export const AppComponent = () => (
     }
     <SomeComponent />
     <OtherComponent />
-    <p>{i18n['common.hello']()}</p>
-    <p>{i18n['common.describe']()}</p>
-    <p>{i18n['common.color']()}</p>
-    <p>{i18n['common.january']()}</p>
-    <p>{i18n['app.loading']()}</p>
-    <p>{i18n['app.message-format.example']({ numPhotos: 0})}</p>
-    <p>{i18n['app.message-format.example']({ numPhotos: 1})}</p>
-    <p>{i18n['app.message-format.example']({ numPhotos: 2})}</p>
-    <p>{i18n['app.message-format.gender']({ gender: 'f' })}</p>
-    <p>{i18n['app.message-format.gender']({ gender: 'm' })}</p>
-    <p>{i18n['app.message-format.homer']({ name: 'Homer' })}</p>
-    <p>{i18n['app.message-format.homer']({ name: 'Foo' })}</p>
-    <p>{i18n['app.message-format.name']({ first: 'John', last: 'Snow' })}</p>
+    <p>{commonHello()}</p>
+    <p>{commonDescribe()}</p>
+    <p>{commonColor()}</p>
+    <p>{commonJanuary()}</p>
+    <p>{appLoading()}</p>
+    <p>{appMessageFormatExample({ numPhotos: 0})}</p>
+    <p>{appMessageFormatExample({ numPhotos: 1})}</p>
+    <p>{appMessageFormatExample({ numPhotos: 2})}</p>
+    <p>{appMessageFormatGender({ gender: 'f' })}</p>
+    <p>{appMessageFormatGender({ gender: 'm' })}</p>
+    <p>{appMessageFormatHomer({ name: 'Homer' })}</p>
+    <p>{appMessageFormatHomer({ name: 'Foo' })}</p>
+    <p>{appMessageFormatName({ first: 'John', last: 'Snow' })}</p>
   </div>
 );
 

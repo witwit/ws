@@ -1,6 +1,6 @@
 // this file was generated - do not modify it manually
 module.exports.asts = {
-  "common.hello": {
+  "commonHello": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -9,7 +9,7 @@ module.exports.asts = {
       }
     ]
   },
-  "common.describe": {
+  "commonDescribe": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -18,7 +18,7 @@ module.exports.asts = {
       }
     ]
   },
-  "common.color": {
+  "commonColor": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -27,7 +27,7 @@ module.exports.asts = {
       }
     ]
   },
-  "common.january": {
+  "commonJanuary": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -36,7 +36,7 @@ module.exports.asts = {
       }
     ]
   },
-  "app.loading": {
+  "appLoading": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -45,7 +45,7 @@ module.exports.asts = {
       }
     ]
   },
-  "app.message-format.example": {
+  "appMessageFormatExample": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -104,7 +104,7 @@ module.exports.asts = {
       }
     ]
   },
-  "app.message-format.name": {
+  "appMessageFormatName": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -131,7 +131,7 @@ module.exports.asts = {
       }
     ]
   },
-  "app.message-format.gender": {
+  "appMessageFormatGender": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -175,7 +175,7 @@ module.exports.asts = {
       }
     ]
   },
-  "app.message-format.homer": {
+  "appMessageFormatHomer": {
     "type": "messageFormatPattern",
     "elements": [
       {

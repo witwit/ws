@@ -1,6 +1,6 @@
 // this file was generated - do not modify it manually
 module.exports.asts = {
-  "some-content": {
+  "someContent": {
     "type": "messageFormatPattern",
     "elements": [
       {
@@ -9,7 +9,7 @@ module.exports.asts = {
       }
     ]
   },
-  "content-with-message-format": {
+  "contentWithMessageFormat": {
     "type": "messageFormatPattern",
     "elements": [
       {

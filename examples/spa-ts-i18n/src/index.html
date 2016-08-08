@@ -2,12 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <% const i18n = require('./i18n/index.tsx').i18n; %>
+  <% const appLoading = require('./i18n/index.tsx').appLoading; %>
   <title>App</title>
 </head>
 <body>
   <section id="app">
-    <p><%= i18n['app.loading']() %></p>
+    <p><%= appLoading() %></p>
   </section>
 </body>
 </html>
