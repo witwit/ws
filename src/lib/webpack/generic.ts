@@ -58,16 +58,26 @@ export const outputSpaRelease = Object.assign({}, output, {
   filename: 'index-[hash].js'
 });
 
-const babelNode =
-  `presets[]=${resolveFile('babel-preset-nodejs-lts')},` +
-  `presets[]=${resolveFile('babel-preset-stage-0')}&` +
-  `plugins[]=${resolveFile('babel-plugin-transform-decorators-legacy')}`;
+const babelNode = JSON.stringify({
+  presets: [
+    resolveFile('@niftyco/babel-node'),
+    resolveFile('babel-preset-stage-0')
+  ],
+  plugins: [
+    resolveFile('babel-plugin-transform-decorators-legacy')
+  ]
+});
 
-const babelBrowser =
-  `presets[]=${resolveFile('babel-preset-es2015-webpack')},` +
-  `presets[]=${resolveFile('babel-preset-react')},` +
-  `presets[]=${resolveFile('babel-preset-stage-0')}&` +
-  `plugins[]=${resolveFile('babel-plugin-transform-decorators-legacy')}`;
+const babelBrowser = JSON.stringify({
+  presets: [
+    [ resolveFile('babel-preset-es2015') , { modules: false } ],
+    resolveFile('babel-preset-react'),
+    resolveFile('babel-preset-stage-0')
+  ],
+  plugins: [
+    resolveFile('babel-plugin-transform-decorators-legacy')
+  ]
+});
 
 export const tsLoader = {
   test: /\.ts(x?)$/,

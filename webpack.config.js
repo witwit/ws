@@ -31,7 +31,7 @@ module.exports = {
         test: /\.ts(x?)$/,
         loader:
           `babel?` +
-          `presets[]=babel-preset-nodejs-lts,` +
+          `presets[]=@niftyco/babel-node,` +
           `presets[]=babel-preset-stage-0&` +
           `plugins[]=babel-plugin-transform-decorators-legacy` +
           `!ts?silent=true`
