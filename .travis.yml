@@ -4,8 +4,8 @@ language: node_js
 
 node_js:
   - "6"
-  - "5"
-  - "4"
+#  - "5"
+#  - "4"
 
 cache:
   directories:
@@ -13,7 +13,7 @@ cache:
 
 before_install:
   - test ! -d node_modules || npm prune
-  - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+#  - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
 
 install:
   - npm install --no-optional
@@ -22,4 +22,6 @@ install:
 #before_script:
 #  - npm run build
 
-script: npm run -s ws -- lint
+script:
+  - npm run -s ws lint
+  - node scripts/update-examples.js
