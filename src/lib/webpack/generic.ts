@@ -48,7 +48,7 @@ export const outputUmd = Object.assign({}, output, {
   library: project.name
 });
 
-export const outputUmdMin = Object.assign({}, output, {
+export const outputUmdMin = Object.assign({}, outputUmd, {
   filename: 'index.min.js'
 });
 
