@@ -105,7 +105,7 @@ const originalData = Object.assign({}, browserslist.data);
 //     { browserName: 'Internet Explorer', version: '10',}
 //     { browserName: 'Internet Explorer', version: '9',}
 //     { browserName: 'Safari', version: '9.1'} ]
-export function getBrowsers(browsersQuery: string = project.ws.selenium.browsers): Browser[] {
+export function getBrowsers(browsersQuery: string = project.ws.browsers): Browser[] {
   debug(`Parse browsers from query: ${browsersQuery}.`);
   const browsers = browserslist(browsersQuery)
     .map(browser => {
@@ -216,7 +216,7 @@ async function getAvailableBrowsers(): Promise<Browser[]> {
   return browsers;
 }
 
-export async function getBrowsersFilteredByAvailability(browsers: string = project.ws.selenium.browsers): Promise<Browser[]> {
+export async function getBrowsersFilteredByAvailability(browsers: string = project.ws.browsers): Promise<Browser[]> {
   const availableBrowsers = await getAvailableBrowsers();
   const availableBrowsersData = availableBrowsers
     .filter(({ browserName }) => supportedBrowsers.some(({ selenium }) => selenium === browserName))

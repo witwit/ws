@@ -3,6 +3,7 @@ import { DefinePlugin, optimize } from 'webpack';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
 import { project } from '../../project';
 
@@ -99,7 +100,7 @@ export const cssLoader = {
 
 export const lessLoader = {
   test: /\.less/,
-  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap!less-loader?sourceMap')
+  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap!postcss-loader?sourceMap!less-loader?sourceMap')
 };
 
 export const imageLoader = {
@@ -131,6 +132,12 @@ export const extractCssPlugin = new ExtractTextWebpackPlugin('style.css');
 export const extractCssMinPlugin = new ExtractTextWebpackPlugin('style.min.css');
 
 export const extractCssHashPlugin = new ExtractTextWebpackPlugin('style-[contenthash].css');
+
+export const postcss = () => [
+  autoprefixer({
+    browsers: project.ws.browsers
+  })
+];
 
 export const defineProductionPlugin = new DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify('production')

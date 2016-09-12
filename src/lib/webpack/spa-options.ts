@@ -14,10 +14,11 @@ import {
   extractCssPlugin,
   resolveLoader,
   resolve,
-  devtool
+  devtool,
+  postcss
 } from './generic';
 
-const options: Configuration = {
+const options: Configuration & { postcss: any } = {
   entry,
   output,
   module: {
@@ -38,7 +39,8 @@ const options: Configuration = {
   ],
   resolveLoader,
   resolve,
-  devtool
+  devtool,
+  postcss
 };
 
 export default options;

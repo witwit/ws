@@ -86,6 +86,13 @@ export interface IProject {
      */
     distReleaseDir: string;
     /**
+     * A [browserslist](https://github.com/ai/browserslist) compatible string to specify which
+     * browsers should be used for selenium testing (if it is enabled) and for
+     * [autoprefixer](https://github.com/postcss/autoprefixer).
+     * Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
+     */
+    browsers: string;
+    /**
      * Our selenium settings. Only needed if you run tests in selenium.
      */
     selenium?: {
@@ -112,11 +119,6 @@ export interface IProject {
        * `process.env['SAUCE_ACCESS_KEY']` as `password`.
        */
       password?: string;
-      /**
-       * A [browserslist](https://github.com/ai/browserslist) compatible string to specify which
-       * browsers should be used for testing. Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
-       */
-      browsers: string;
       /**
        * Tries to use the `browsers` query only against available browsers on the selenium grid.
        * E.g. `"last 2 Chrome versions"` would return the last 2 chrome versions available on the
@@ -232,13 +234,15 @@ export function validate(pkg): IProject {
     }
   }
 
+  // defaults for browsers
+  if (!pkg.ws.browsers) {
+    pkg.ws.browsers = '> 1%, last 2 versions, Firefox ESR';
+  }
+
   // defaults for selenium
   if (pkg.ws.selenium) {
     if (!pkg.ws.selenium.filterForAvailability) {
       pkg.ws.selenium.filterForAvailability = false;
-    }
-    if (!pkg.ws.selenium.browsers) {
-      pkg.ws.selenium.browsers = '> 1%, last 2 versions, Firefox ESR';
     }
     if (pkg.ws.selenium.envUser) {
       pkg.ws.selenium.user = process.env[pkg.ws.selenium.envUser];

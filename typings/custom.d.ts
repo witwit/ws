@@ -4,6 +4,8 @@
 //   ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void) => void;
 // };
 
+declare module 'autoprefixer';
+
 declare module 'globby' {
   export interface Options {
     cwd?: string;

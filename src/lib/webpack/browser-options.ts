@@ -14,10 +14,11 @@ import {
   externalsBrowser,
   resolveLoader,
   resolve,
-  devtool
+  devtool,
+  postcss
 } from './generic';
 
-const options: Configuration = {
+const options: Configuration & { postcss: any } = {
   entry,
   output: outputUmd,
   module: {
@@ -38,7 +39,8 @@ const options: Configuration = {
   externals: externalsBrowser,
   resolveLoader,
   resolve,
-  devtool: 'cheap-module-inline-source-map'
+  devtool,
+  postcss
 };
 
 export default options;

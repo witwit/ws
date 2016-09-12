@@ -70,11 +70,11 @@ export async function testAsync(options: { grid?: boolean } = {}) {
   let sauceConnectProcess;
   if (options.grid) {
     const {
-      browsers: browsersQuery,
       host,
       port,
       filterForAvailability
     } = project.ws.selenium;
+    const browsersQuery = project.ws.browsers;
     const browsers = filterForAvailability ? await getBrowsersFilteredByAvailability() : getBrowsers();
 
     if (browsers.length === 0) {
