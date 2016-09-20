@@ -8,7 +8,8 @@
   "scripts": {
     "build": "rimraf dist/ && webpack",
     "ws": "node ./bin/ws.js",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "release:next": "npm version prerelease && git push && npm publish --tag next --access public"
   },
   "ws": {
     "type": "node"
