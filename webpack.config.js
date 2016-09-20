@@ -22,7 +22,7 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: 'index.js',
     // don't use webpack:/// protocol for source maps
-    devtoolModuleFilenameTemplate: './[resource-path]',
+    // devtoolModuleFilenameTemplate: () => './[resource-path]',
     sourcePrefix: ''  // removes tabs before multiline strings
   },
   module: {
@@ -34,7 +34,7 @@ module.exports = {
           `presets[]=@niftyco/babel-node,` +
           `presets[]=babel-preset-stage-0&` +
           `plugins[]=babel-plugin-transform-decorators-legacy` +
-          `!ts?silent=true`
+          `!awesome-typescript-loader`
       }
     ]
   },
@@ -59,6 +59,6 @@ module.exports = {
   devtool: 'cheap-module-inline-source-map',
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
-    extensions: [ '', '.ts', '.tsx', '.js' ]
+    extensions: [ '.ts', '.tsx', '.js' ]
   }
 };

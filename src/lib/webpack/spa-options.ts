@@ -15,10 +15,10 @@ import {
   resolveLoader,
   resolve,
   devtool,
-  postcss
+  postcssPlugin
 } from './generic';
 
-const options: Configuration & { postcss: any } = {
+const options: Configuration = {
   entry,
   output,
   module: {
@@ -35,12 +35,12 @@ const options: Configuration & { postcss: any } = {
   },
   plugins: [
     indexHtmlPlugin,
-    extractCssPlugin
+    extractCssPlugin,
+    postcssPlugin
   ],
   resolveLoader,
   resolve,
-  devtool,
-  postcss
+  devtool
 };
 
 export default options;

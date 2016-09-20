@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { DefinePlugin, optimize } from 'webpack';
+import webpack, { DefinePlugin, optimize } from 'webpack';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -30,7 +30,7 @@ export const output = {
   // must be absolute
   path: join(process.cwd(), project.ws.distDir),
   // don't use webpack:/// protocol for source maps
-  devtoolModuleFilenameTemplate: './[resource-path]',
+  // devtoolModuleFilenameTemplate: (() => './[resource-path]') as any, // use as any because of old typings
   // removes tabs before multiline strings
   sourcePrefix: ''
 };
@@ -85,7 +85,7 @@ export const tsLoader = {
   loader:
     `babel-loader?` +
     (project.ws.type === 'node' ? babelNode : babelBrowser) +
-    `!ts-loader?silent=true`
+    `!awesome-typescript-loader`
 };
 
 export const jsonLoader = {
@@ -95,21 +95,17 @@ export const jsonLoader = {
 
 export const cssLoader = {
   test: /\.css$/,
-  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap')
+  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap&context=/')
 };
 
 export const lessLoader = {
   test: /\.less/,
-  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap!postcss-loader?sourceMap!less-loader?sourceMap')
+  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap&context=/!postcss-loader?sourceMap!less-loader?sourceMap')
 };
 
 export const imageLoader = {
   test: /\.(png|jpg|gif|svg)$/,
-  loader: 'url-loader',
-  query: {
-    limit: 10000,
-    name: '[name]-[hash].[ext]'
-  }
+  loader: 'url-loader?limit=1000&name=[name]-[hash].[ext]'
 };
 
 export const eotLoader = {
@@ -133,11 +129,21 @@ export const extractCssMinPlugin = new ExtractTextWebpackPlugin('style.min.css')
 
 export const extractCssHashPlugin = new ExtractTextWebpackPlugin('style-[contenthash].css');
 
-export const postcss = () => [
-  autoprefixer({
-    browsers: project.ws.browsers
-  })
-];
+// export const postcss = () => [
+//   autoprefixer({
+//     browsers: project.ws.browsers
+//   })
+// ];
+
+export const postcssPlugin = new (webpack as any).LoaderOptionsPlugin({
+  options: {
+    postcss: () => [
+      autoprefixer({
+        browsers: project.ws.browsers
+      })
+    ]
+  }
+});
 
 export const defineProductionPlugin = new DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify('production')
@@ -150,6 +156,7 @@ export const minifyJsPlugin = new optimize.UglifyJsPlugin({
 });
 
 export const indexHtmlPlugin = new HtmlWebpackPlugin({
+  filename: 'index.html',
   template: './src/index.html'
 });
 

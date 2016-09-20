@@ -15,10 +15,10 @@ import {
   resolveLoader,
   resolve,
   devtool,
-  postcss
+  postcssPlugin
 } from './generic';
 
-const options: Configuration & { postcss: any } = {
+const options: Configuration = {
   entry,
   output: outputUmd,
   module: {
@@ -34,13 +34,13 @@ const options: Configuration & { postcss: any } = {
     ]
   },
   plugins: [
-    extractCssPlugin
+    extractCssPlugin,
+    postcssPlugin
   ],
   externals: externalsBrowser,
   resolveLoader,
   resolve,
-  devtool,
-  postcss
+  devtool
 };
 
 export default options;
