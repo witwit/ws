@@ -162,7 +162,11 @@ declare module 'livereload' {
 }
 
 declare module 'connect-livereload' {
-  export default function livereloadMiddleware(): void;
+  export interface LivereloadMiddlewareOptions {
+    port: number;
+  }
+
+  export default function livereloadMiddleware(options?: LivereloadMiddlewareOptions): void;
 }
 
 declare module 'extract-text-webpack-plugin' {

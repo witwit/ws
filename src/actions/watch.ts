@@ -21,6 +21,7 @@ export default async function watch() {
   const port = await findAsync({
     startingPort: 35729
   });
+
   const livereloadServer = livereload.createServer({ port });
   const onChangeSuccess = (stats) => info(`Finished build at ${cyan(moment(stats.endTime).format('HH:mm:ss'))}.`);
   switch (project.ws.type) {
@@ -46,7 +47,7 @@ export default async function watch() {
   info('Finished initial build.');
 
   const middlewares = [
-    livereloadMiddleware()
+    livereloadMiddleware({ port })
   ];
   await listenAsync(middlewares);
 };
