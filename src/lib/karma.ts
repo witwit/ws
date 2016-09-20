@@ -23,13 +23,16 @@ function toCustomLaunchersObject(customLaunchers, browser) {
   return customLaunchers;
 }
 
-interface ConfigOptionsWithMocha extends ConfigOptions {
+interface EnhancedConfigOptions extends ConfigOptions {
+  // with mocha
   mochaReporter: {
     showDiff: boolean
   };
+  // with new formatError added in 1.3
+  formatError?(msg: string): string;
 }
 
-const defaultConfig: ConfigOptionsWithMocha = {
+const defaultConfig: EnhancedConfigOptions = {
   // explicitly set plugins here, so they aren't just loaded from karmas sibling directories
   // (this is less error prone)
   plugins: [
@@ -52,7 +55,24 @@ const defaultConfig: ConfigOptionsWithMocha = {
     'PhantomJS'
   ],
   logLevel: 'WARN',
-  singleRun: true
+  singleRun: true,
+  // see https://github.com/karma-runner/karma/issues/2119#issuecomment-239615791
+  formatError(msg) {
+    return msg
+      .split('\n')
+      .reduce((list, line) => {
+        // filter node_modules
+        if (line.includes('/~/')) {
+          return list;
+        }
+
+        // show only source line (without webpack protocol)
+        const sourceLine = line.split(' <- ')[0].replace('webpack:///', './');
+        list.push(`    ${sourceLine}`);
+        return list;
+      }, [])
+      .join('\n');
+  }
 };
 
 export async function testAsync(options: { grid?: boolean } = {}) {

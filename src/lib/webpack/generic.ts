@@ -205,7 +205,7 @@ export const resolve = {
   mainFields: project.ws.type === 'node' ? mainFieldsNode : mainFieldsBrowser
 };
 
-export const devtool = 'cheap-module-inline-source-map';
+export const devtool = 'inline-source-map';
 
 export const devtoolProduction = 'source-map';
 
