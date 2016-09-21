@@ -26,6 +26,31 @@ Maybe one day we could have a `@standard/ws` which could be used for 90% of all 
 
 Our `ws` tool helps you writing single page applications (SPAs), browser components or Node modules. You can write every project in TypeScript. Non-Node code is tested in real browsers via using Selenium directly or Sauce Labs. All projects can be localized.
 
+# Why one tool for such different projects like a Node module or a SPA?
+
+We want to make it *really* easy to create examples for your projects. Writing tests and documentation for your project is great and you should still do it, but in our experience the best way _to get started_ with a different project is by reading examples.
+
+Mabe you write a Node server with a REST API. Now you can create several standalone SPAs as clients in your examples - all using different frameworks or dependencies (an `Angular` app using `$http` or a `React` app using `fetch`) and every example shows how your server is used. Or you write a _date picker_ component with `React` and you create different examples how you can use it. A little bit like [`react-storybook`](https://github.com/kadirahq/react-storybook), but not tied to `React` and more generic.
+
+Best thing about it: You write your library and all your example with the same tool.
+
+And you could use your examples to test a component with Selenium as an E2E test, because your example is a standalone SPA.
+
+Besides that we think that most of our code and our dependencies of `ws` are shared between all project types.
+
+# How to get started?
+
+1. `$ npm install --save-dev @mercateo/ws@next`
+2. Add `"ws": { "type": "spa" }` (or `"node"` or `"browser"`) to your `package.json`, depending on the project you have.
+3. Optionally: Create a `tsconfig.json` to use TypeScript. Highly recommended!
+4. Optionally: Add a `"jsx"` setting to your `tsconfig.json`.
+
+If you use TypeScript your entry point to your project will be `src/index.ts`. If you use TypeScript with JSX your entry point will be `src/index.tsx`. If you don't use TypeScript, your entry point will be `src/index.js`.
+
+If you create a SPA you'll want to add a `src/index.html`, too.
+
+Have a look at our [`examples/`](examples) to find out more.
+
 # Documentation
 
 Currently we have no in-depth documentation for `ws` as long as we try to add more features to it and use several frameworks like TypeScript oder Webpack which are currently in a beta phase. But you can check out the included examples to get started.
