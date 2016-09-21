@@ -10,7 +10,7 @@ We used `ws` internally for years and it used Grunt, Gulp and now we switched to
 
 # Should I use it?
 
-Have your `npm install`'ed and `require`'d a `Gruntfile.js` from a different project? I guess the chances for that are pretty low. But maybe you wanted to do that.
+Have you `npm install`'ed and `require`'d a `Gruntfile.js` from a different project in the past? I guess the chances for that are pretty low. But maybe you _wanted_ to do that.
 
 To answer the question. You _can_ use it. If you need or want the same tools like we use, you can install `ws`. But it is **highly possible** that we make a change in the future which you don't want. So use it at your own risk.
 
