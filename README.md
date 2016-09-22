@@ -41,15 +41,113 @@ Besides that we think that most of our code and our dependencies of `ws` are sha
 # How to get started?
 
 1. `$ npm install --save-dev @mercateo/ws@next`
-2. Add `"ws": { "type": "spa" }` (or `"node"` or `"browser"`) to your `package.json`, depending on the project you have.
-3. Optionally: Create a `tsconfig.json` to use TypeScript. Highly recommended!
-4. Optionally: Add a `"jsx"` setting to your `tsconfig.json`.
+1. Add `"ws": { "type": "spa" }` (or `"node"` or `"browser"`) to your `package.json`, depending on the project you have.
+1. Optionally: Create a `tsconfig.json` to use TypeScript. Highly recommended!
+1. Optionally: Add a `"jsx"` setting to your `tsconfig.json`.
 
 If you use TypeScript your entry point to your project will be `src/index.ts`. If you use TypeScript with JSX your entry point will be `src/index.tsx`. If you don't use TypeScript, your entry point will be `src/index.js`.
 
 If you create a SPA you'll want to add a `src/index.html`, too.
 
 Have a look at our [`examples/`](examples) to find out more.
+
+We recommend to add `"ws": "ws"` to your `"scripts"` object in your `package.json` E.g.:
+
+```json
+{
+  "name": "example",
+  "version": "1.0.0",
+  "scripts": {
+    "ws": "ws"
+  },
+  "ws": {
+    "type": "browser"
+  },
+  "devDependencies": {
+    "@mercateo/ws": "^1.0.1-13"
+  }
+}
+```
+
+Now you can start `ws` with `$ npm run ws`. It should print the help:
+
+```
+$ npm run ws
+
+> example@1.0.0 ws /Users/foo/Workspace/example
+> ws
+
+
+  Usage: ws <command> [options]
+
+
+  Commands:
+
+    build|b   build the project
+    watch|w   continuously build and serve the project
+    lint|l    run linter
+    unit|u    run unit tests
+
+  We build your Browser module!
+
+  Options:
+
+    -h, --help               output usage information
+    -V, --version            output the version number
+    -l, --log-level <level>  set log level
+```
+
+To get rid of npm-specific logging (e.g. `> example@1.0.0 ws /Users/foo/Workspace/example` and `> ws`) use `-s`:
+
+```
+$ npm run -s ws
+
+  Usage: ws <command> [options]
+
+
+  Commands:
+
+    build|b   build the project
+    watch|w   continuously build and serve the project
+    lint|l    run linter
+    unit|u    run unit tests
+
+  We build your Browser module!
+
+  Options:
+
+    -h, --help               output usage information
+    -V, --version            output the version number
+    -l, --log-level <level>  set log level
+```
+
+Normally you can just append a command or option. E.g. to run `build` call `$npm run -s ws build` or `$npm run -s ws b`:
+
+```
+$ npm run -s ws b
+run build...
+finished build ♥
+```
+
+However this does _not_ work for commands or options which are supported by npm itself. E.g. calling `$ npm run -s ws --version` prints out the version of npm and _not_ of ws.
+ 
+```
+$ npm run -s ws --version
+3.10.6
+```
+
+You need to add `--` behind `ws` like `$ npm run -s ws -- --version` to properly separate npm and ws. This is a limitation of npm.
+
+```
+$ npm run -s ws -- --version
+1.0.1-11
+```
+
+If you don't want to type `npm run -s ws --` every time you use `ws` we recommend to create an alias for it in your `.bash_profile`:
+
+```
+alias ws="npm run -s ws --"
+```
 
 # Documentation
 
