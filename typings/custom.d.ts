@@ -153,6 +153,20 @@ declare module 'loglevel' {
   export function error(msg: any): void;
 }
 
+declare module 'selenium-webdriver' {
+  export const Builder: any;
+  export const By: any;
+  export const until: any;
+}
+
+declare module 'selenium-webdriver/chrome';
+declare module 'selenium-webdriver/firefox';
+
+declare module 'selenium-standalone' {
+  export function install(callback: (error: any) => void): void;
+  export function start(callback: (error: any, childProcess: any) => void): void;
+}
+
 declare module 'babel-core' {
   export function transformFile(filename: string, options: any, callback: (error: any, result: any) => void): void;
 }

@@ -1,23 +1,24 @@
 import { debug } from 'loglevel';
-import { yellow } from 'chalk';
 import { join } from 'path';
 import { ConfigOptions, Server } from 'karma';
 import getIpAddress from './ip-address';
-import { getBrowsers, getBrowsersFilteredByAvailability, isSauceLabsHost } from './selenium-grid';
-import { project } from '../project';
-import { launchSauceConnect } from './sauce-connect';
+import { getBrowsers, isSauceLabsHost, launchSauceConnect } from './selenium';
+import { project, SeleniumGridConfig } from '../project';
 
 function toCustomLaunchersObject(customLaunchers, browser) {
+  // at this place we know selenium config is set, no need for null checks
+  const selenium = project.ws.selenium as SeleniumGridConfig;
+
   const id = `grid-${browser.browserName}-${browser.version}`;
   customLaunchers[id] = Object.assign({}, browser, {
     base: 'WebDriver',
     // allways inject <meta> to use edge mode for IE
     'x-ua-compatible': 'IE=edge',
     config: {
-      hostname: project.ws.selenium.host,
-      port: project.ws.selenium.port,
-      user: project.ws.selenium.user,
-      pwd: project.ws.selenium.password
+      hostname: selenium.host,
+      port: selenium.port,
+      user: selenium.user,
+      pwd: selenium.password
     }
   });
   return customLaunchers;
@@ -70,7 +71,7 @@ const defaultConfig: EnhancedConfigOptions = {
         const sourceLine = line.split(' <- ')[0].replace('webpack:///', './');
         list.push(`    ${sourceLine}`);
         return list;
-      }, [])
+      }, [] as Array<string>)
       .join('\n');
   }
 };
@@ -89,17 +90,10 @@ export async function testAsync(options: { grid?: boolean } = {}) {
 
   let sauceConnectProcess;
   if (options.grid) {
-    const {
-      host,
-      port,
-      filterForAvailability
-    } = project.ws.selenium;
-    const browsersQuery = project.ws.browsers;
-    const browsers = filterForAvailability ? await getBrowsersFilteredByAvailability() : getBrowsers();
-
-    if (browsers.length === 0) {
-      throw `No browsers are available on ${yellow(`${host}:${port}`)} given ${yellow(browsersQuery)}.`;
-    }
+    // at this place we know selenium config is set, no need for null checks
+    const selenium = project.ws.selenium as SeleniumGridConfig;
+    const { host, port } = selenium;
+    const browsers = await getBrowsers();
 
     const customLaunchers = browsers.reduce(toCustomLaunchersObject, {});
     Object.assign(karmaConfig, {
@@ -109,11 +103,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
     });
 
     if (isSauceLabsHost(host)) {
-      const {
-        user: username,
-        password: accessKey
-      } = project.ws.selenium;
-      sauceConnectProcess = await launchSauceConnect({ username, accessKey });
+      sauceConnectProcess = await launchSauceConnect(selenium);
     }
   }
 

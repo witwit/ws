@@ -46,7 +46,7 @@ export default async function watch() {
 
   info('Finished initial build.');
 
-  const middlewares = [
+  const middlewares: Array<any> = [
     livereloadMiddleware({ port })
   ];
   await listenAsync(middlewares);

@@ -1,8 +1,7 @@
-import { Configuration } from 'webpack';
 import {
   entry,
   outputUmd,
-  tsLoader,
+  tsLoaderBrowser,
   jsonLoader,
   cssLoader,
   lessLoader,
@@ -15,15 +14,16 @@ import {
   resolveLoader,
   resolve,
   devtool,
-  postcssPlugin
+  postcssPlugin,
+  WsWebpackConfiguration
 } from './generic';
 
-const options: Configuration = {
+const options: WsWebpackConfiguration = {
   entry,
   output: outputUmd,
   module: {
     loaders: [
-      tsLoader,
+      tsLoaderBrowser,
       jsonLoader,
       cssLoader,
       lessLoader,

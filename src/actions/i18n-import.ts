@@ -3,21 +3,22 @@ import { join } from 'path';
 import { get } from 'https';
 import { outputFileAsync, removeAsync } from 'fs-extra-promise';
 import urlTemplate from 'url-template';
-import { project } from '../project';
+import { project, I18nConfig } from '../project';
 import { concatLanguages } from '../lib/i18n';
 
 const IGNORED_CONTENTS = [
   '404: Not Found\n' // e.g. used by raw.githubusercontent.com
 ];
 
-function importTranslation(locale: string, feature: string) {
-  const url = urlTemplate.parse(project.ws.i18n.importUrl)
+function importTranslation(locale: string, feature: string, i18n: I18nConfig) {
+  // at this place we know i18n.importUrl config is set, no need for null checks
+  const url = urlTemplate.parse(i18n.importUrl!)
     .expand({ locale, feature });
-  const outputPath = join(process.cwd(), project.ws.i18n.dir, feature, `${locale}.properties`);
+  const outputPath = join(process.cwd(), i18n.dir, feature, `${locale}.properties`);
 
   debug(`Import from ${url}.`);
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     get(url, (res) => {
       let body = '';
       res.on('data', (data) => body = body + data);
@@ -34,14 +35,17 @@ function importTranslation(locale: string, feature: string) {
 }
 
 export default async function i18nImport() {
-  const features = project.ws.i18n.features || [ '' ];
-  const locales = project.ws.i18n.locales;
+  // at this place we know i18n config is set, no need for null checks
+  const i18n = project.ws.i18n as I18nConfig;
+
+  const features = i18n.features || [ '' ];
+  const locales = i18n.locales;
   const localesAndLanguages = concatLanguages(locales);
 
-  await removeAsync(project.ws.i18n.dir);
-  const importPromises = [];
+  await removeAsync(i18n.dir);
+  const importPromises: Array<Promise<void>> = [];
   features.forEach(feature => localesAndLanguages.forEach(localeOrLanguage => {
-    importPromises.push(importTranslation(localeOrLanguage, feature));
+    importPromises.push(importTranslation(localeOrLanguage, feature, i18n));
   }));
 
   await Promise.all(importPromises);

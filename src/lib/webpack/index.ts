@@ -1,10 +1,12 @@
 import { warn, error } from 'loglevel';
 import { join } from 'path';
 import webpack, { DefinePlugin } from 'webpack';
+import { WsWebpackConfiguration } from './generic';
 import spaOptions from './spa-options';
 import nodeOptions from './node-options';
 import browserOptions from './browser-options';
 import spaUnitOptions from './spa-unit-options';
+import spaE2eOptions from './spa-e2e-options';
 import nodeUnitOptions from './node-unit-options';
 import browserUnitOptions from './browser-unit-options';
 import spaReleaseOptions from './spa-release-options';
@@ -16,6 +18,7 @@ export {
   nodeOptions,
   browserOptions,
   spaUnitOptions,
+  spaE2eOptions,
   nodeUnitOptions,
   browserUnitOptions,
   spaReleaseOptions,
@@ -34,10 +37,10 @@ export const statsStringifierOptions: webpack.compiler.StatsToStringOptions = {
   children: false
 };
 
-export function createLocaleSpecificOptions(options: webpack.Configuration, locale: string) {
+export function createLocaleSpecificOptions(options: WsWebpackConfiguration, locale: string) {
   return Object.assign({}, options, {
     output: Object.assign({}, options.output, {
-      path: join(options.output.path, project.ws.i18n.isSingleLocale ? '' : locale)
+      path: join(options.output.path, project.ws.i18n && project.ws.i18n.isSingleLocale ? '' : locale)
     }),
     plugins: [
       new DefinePlugin({
@@ -98,14 +101,14 @@ function onChange(err, stats, livereloadServer, onChangeSuccess?) {
   }
 }
 
-export function compileAsync(options: webpack.Configuration) {
+export function compileAsync(options: WsWebpackConfiguration) {
   const compiler = webpack(options);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => onBuild(resolve, reject, err, stats));
   });
 }
 
-export function watchAsync(livereloadServer, options: webpack.Configuration, onChangeSuccess?: (stats: any) => void) {
+export function watchAsync(livereloadServer, options: WsWebpackConfiguration, onChangeSuccess?: (stats: any) => void) {
   const compiler = webpack(options);
   let isInitialBuild = true;
   return new Promise((resolve, reject) => {

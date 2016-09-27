@@ -1,12 +1,12 @@
-import { Configuration } from 'webpack';
 import browserOptions from './browser-options';
 import {
   entryUnit,
   outputTest,
-  devtoolTest
+  devtoolTest,
+  WsWebpackConfiguration
 } from './generic';
 
-const options: Configuration = Object.assign({}, browserOptions, {
+const options: WsWebpackConfiguration = Object.assign({}, browserOptions, {
   entry: entryUnit,
   output: outputTest,
   externals: [],

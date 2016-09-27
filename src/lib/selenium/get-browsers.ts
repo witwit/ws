@@ -1,12 +1,14 @@
+// we can find nodes in a selenium grid or browser available on sauce labs
 import { debug } from 'loglevel';
 import { flatten, uniqBy } from 'lodash';
+import { yellow } from 'chalk';
 import { rcompare } from 'semver';
 import { get } from 'https';
 import browserslist from 'browserslist';
 import grid from 'selenium-grid-status';
-import { project } from '../project';
+import { project } from '../../project';
 
-interface Browser {
+export interface Browser {
   browserName: string;
   version: string;
   id: string;
@@ -105,9 +107,12 @@ const originalData = Object.assign({}, browserslist.data);
 //     { browserName: 'Internet Explorer', version: '10',}
 //     { browserName: 'Internet Explorer', version: '9',}
 //     { browserName: 'Safari', version: '9.1'} ]
-export function getBrowsers(browsersQuery: string = project.ws.browsers): Browser[] {
-  debug(`Parse browsers from query: ${browsersQuery}.`);
-  const browsers = browserslist(browsersQuery)
+/**
+ * Converts results of a `browserslist` query to an Selenium Browser Capabilities array.
+ */
+export function queryBrowsers(query: string = project.ws.browsers): Browser[] {
+  debug(`Parse browsers from query: ${query}.`);
+  const browsers = browserslist(query)
     .map(browser => {
       let [ name, version ] = browser.split(' ');
       const hasVersionRange = version.includes('-');
@@ -118,7 +123,7 @@ export function getBrowsers(browsersQuery: string = project.ws.browsers): Browse
     })
     .filter(({ name }) => supportedBrowsers.some(({ browserslist }) => browserslist === name))
     .map(({ name, version }) => {
-      const browserName = supportedBrowsers.find(({ browserslist }) => browserslist === name).selenium;
+      const browserName = supportedBrowsers.find(({ browserslist }) => browserslist === name)!.selenium;
       return {
         browserName,
         version,
@@ -130,8 +135,11 @@ export function getBrowsers(browsersQuery: string = project.ws.browsers): Browse
   return browsers;
 }
 
+/**
+ * Returns all nodes inside a selenium grid.
+ */
 function getNodes(): Promise<grid.SeleniumNode[]> {
-  const { host, port } = project.ws.selenium;
+  const { host, port } = project.ws.selenium!;
   debug(`Get nodes from ${host}:${port}.`);
   return new Promise<grid.SeleniumNode[]>((resolve, reject) => {
     grid.available({ host, port }, (err, nodes) => {
@@ -167,6 +175,9 @@ function convertToValidSemver(version: string) {
   }
 }
 
+/**
+ * Is this the Sauce Labs host?
+ */
 export function isSauceLabsHost(host: string): boolean {
   return host === SAUCE_LABS_HOST;
 }
@@ -175,9 +186,9 @@ function sortByVersion(browserA: Browser, browserB: Browser): number {
   return rcompare(convertToValidSemver(browserA.version), convertToValidSemver(browserB.version));
 }
 
-async function getAvailableBrowsers(): Promise<Browser[]> {
+async function getAllAvailableBrowsers(): Promise<Browser[]> {
   let browsersWithoutId: { version: string, browserName: string }[];
-  if (isSauceLabsHost(project.ws.selenium.host)) {
+  if (isSauceLabsHost(project.ws.selenium!.host)) {
     debug(`Get available browsers on Sauce Labs.`);
     const platforms: any = await new Promise((resolve, reject) => {
       get(SAUCE_LABS_PLATFORMS, (res) => {
@@ -216,12 +227,16 @@ async function getAvailableBrowsers(): Promise<Browser[]> {
   return browsers;
 }
 
-export async function getBrowsersFilteredByAvailability(browsers: string = project.ws.browsers): Promise<Browser[]> {
-  const availableBrowsers = await getAvailableBrowsers();
+/**
+ * Converts a `browserslist` string to Selenium Browser Capabilities array filtered by the
+ * browsers which are really available on the Selenium Grid.
+ */
+export async function getFilteredAvailableBrowsers(browsers: string = project.ws.browsers): Promise<Browser[]> {
+  const availableBrowsers = await getAllAvailableBrowsers();
   const availableBrowsersData = availableBrowsers
     .filter(({ browserName }) => supportedBrowsers.some(({ selenium }) => selenium === browserName))
     .reduce((data, browser) => {
-      const name = supportedBrowsers.find(({ selenium }) => selenium === browser.browserName).browserslist;
+      const name = supportedBrowsers.find(({ selenium }) => selenium === browser.browserName)!.browserslist;
       if (data[name]) {
         data[name].released.unshift(browser.version);
         data[name].versions.unshift(browser.version);
@@ -237,10 +252,26 @@ export async function getBrowsersFilteredByAvailability(browsers: string = proje
 
   // override `browserslist.data`
   browserslist.data = availableBrowsersData;
-  const browsersFilteredByAvailability = getBrowsers(browsers);
+  const browsersFilteredByAvailability = queryBrowsers(browsers);
   // restore`browserslist.data`
   browserslist.data = originalData;
 
   debug(`Filtered available browsers: ${browsersFilteredByAvailability.map(({ id }) => id)}.`);
   return browsersFilteredByAvailability;
+}
+
+export async function getBrowsers(): Promise<Browser[]> {
+  const {
+    host,
+    port,
+    filterForAvailability
+  } = project.ws.selenium!;
+  const browsersQuery = project.ws.browsers;
+  const browsers = filterForAvailability ? await getFilteredAvailableBrowsers() : queryBrowsers();
+
+  if (browsers.length === 0) {
+    throw `No browsers are available on ${yellow(`${host}:${port}`)} given ${yellow(browsersQuery)}.`;
+  }
+
+  return browsers;
 }

@@ -1,8 +1,7 @@
-import { Configuration } from 'webpack';
 import nodeOptions from './node-options';
-import { entryNodeUnit, outputTest } from './generic';
+import { entryNodeUnit, outputTest, WsWebpackConfiguration } from './generic';
 
-const options: Configuration = Object.assign({}, nodeOptions, {
+const options: WsWebpackConfiguration = Object.assign({}, nodeOptions, {
   entry: entryNodeUnit,
   output: outputTest
 });

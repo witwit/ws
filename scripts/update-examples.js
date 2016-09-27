@@ -1,6 +1,7 @@
 // call it as `$ node scripts/update-examples.js` from root
 const join = require('path').join;
 const existsSync = require('fs').existsSync;
+const spawn = require('child_process').spawn;
 const execSync = require('child_process').execSync;
 const rimrafSync = require('rimraf').sync;
 
@@ -39,6 +40,14 @@ examples.forEach(example => {
       existsSync(join(cwd, 'tests', 'unit.tsx'))
     ) {
       execSync('npm run -s ws -- unit', { cwd, stdio });
+    }
+    // test grid
+    if (example === 'spa-ts') {
+      const server = spawn('npm', [ 'run', '-s', 'ws', '--', 'serve'], { cwd, detached: true });
+      execSync('npm run -s ws -- e2e', { cwd, stdio });
+      execSync('npm run -s ws -- e2e -g', { cwd, stdio });
+      execSync('npm run -s ws -- unit -g', { cwd, stdio });
+      server.kill();
     }
   } catch (err) {
      throw `[ERROR] Couldn't update "${example}"!`;

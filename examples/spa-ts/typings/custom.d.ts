@@ -7,3 +7,9 @@ declare module 'react-addons-test-utils' {
   const ReactTestUtils: any;
   export default ReactTestUtils;
 }
+
+declare module 'selenium-webdriver' {
+  export const Builder: any;
+  export const By: any;
+  export const until: any;
+}

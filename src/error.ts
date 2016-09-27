@@ -6,6 +6,7 @@ const IGNORED_TRACE_LINES = [
   'bin/ws.js:2:1)',
   // native
   'at [object Generator].next (native)',
+  'at next (native)',
   // polyfills
   'at fulfilled (',
   'core-js/modules/_microtask.js',
@@ -26,6 +27,7 @@ export function handleError(err: Error) {
   if (err.stack) {
     err.stack.split('\n')
       .filter(line => !IGNORED_TRACE_LINES.some(ignoredLine => line.includes(ignoredLine)))
+      .map(line => line.replace('webpack:///', './'))
       .forEach(line => error(line));
   } else {
     error(err);

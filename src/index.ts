@@ -8,6 +8,7 @@ import buildAction from './actions/build';
 import watchAction from './actions/watch';
 import lintAction from './actions/lint';
 import unitAction from './actions/unit';
+import e2eAction from './actions/e2e';
 import i18nImportAction from './actions/i18n-import';
 import i18nCompileAction from './actions/i18n-compile';
 
@@ -49,6 +50,26 @@ switch (project.ws.type) {
       .description('serve the project')
       .option('-p, --production', 'serve production build')
       .action(handleAction(serveAction));
+
+    const e2eCommand = commander
+      .command('e2e')
+      .alias('e')
+      .description('run e2e tests')
+      .option('--browsers <browsers>', 'browsers which should be used (e.g. `ie-9,ff-36,chrome-41`)')
+      .action((...args) => {
+        if (args.length === 2) {
+          const [ browsers, options ] = args;
+          options.browsers = browsers;
+          handleAction(e2eAction)(options);
+        } else {
+          const [ options ] = args;
+          handleAction(e2eAction)(options);
+        }
+      });
+
+    if (project.ws.selenium) {
+      e2eCommand.option('-g, --grid', 'run on selenium grid');
+    }
     break;
   case TYPE.NODE:
     commander.description('We build your Node module!');

@@ -7,12 +7,25 @@ import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
 import { project } from '../../project';
 
+/**
+ * We make some properties of `webpack.Configuration`. It is easier for future usage, so we don't
+ * need to check, if they are available or not.
+ */
+export interface WsWebpackConfiguration extends webpack.Configuration {
+  entry: string | string[] | webpack.Entry;
+  output: webpack.Output;
+}
+
 export const entry = [
   `./${project.ws.srcDir}/index.${project.ws.entryExtension}`
 ];
 
 export const entryUnit = [
   `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`
+];
+
+export const entryE2e = [
+  `./${project.ws.testsDir}/e2e.${project.ws.entryExtension}`
 ];
 
 export const entryNode = [
@@ -80,12 +93,14 @@ const babelBrowser = JSON.stringify({
   ]
 });
 
-export const tsLoader = {
+export const tsLoaderBrowser = {
   test: /\.ts(x?)$/,
-  loader:
-    `babel-loader?` +
-    (project.ws.type === 'node' ? babelNode : babelBrowser) +
-    `!awesome-typescript-loader`
+  loader: `babel-loader?${babelBrowser}!awesome-typescript-loader`
+};
+
+export const tsLoaderNode = {
+  test: /\.ts(x?)$/,
+  loader: `babel-loader?${babelNode}!awesome-typescript-loader`
 };
 
 export const jsonLoader = {

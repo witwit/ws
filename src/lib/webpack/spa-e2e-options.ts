@@ -1,13 +1,13 @@
-import spaOptions from './spa-options';
+import nodeOptions from './node-options';
 import {
-  entryUnit,
+  entryE2e,
   outputTest,
   devtoolTest,
   WsWebpackConfiguration
 } from './generic';
 
-const options: WsWebpackConfiguration = Object.assign({}, spaOptions, {
-  entry: entryUnit,
+const options: WsWebpackConfiguration = Object.assign({}, nodeOptions, {
+  entry: entryE2e,
   output: outputTest,
   devtool: devtoolTest
 });

@@ -4,7 +4,7 @@ import { join } from 'path';
 import { camelCase } from 'lodash';
 import { readFileAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
 import { concatLanguages, isMatchingLocaleOrLanguage } from '../lib/i18n';
-import { project } from '../project';
+import { project, I18nConfig } from '../project';
 
 const parser = require('intl-messageformat-parser');
 
@@ -42,7 +42,7 @@ function camelCaseKeys(data) {
 }
 
 async function readTranslation(locale: string, feature: string): Promise<Translation> {
-  const readPath = join(process.cwd(), project.ws.i18n.dir, feature, `${locale}.properties`);
+  const readPath = join(process.cwd(), project.ws.i18n!.dir, feature, `${locale}.properties`);
 
   debug(`Read from ${readPath}.`);
 
@@ -63,7 +63,7 @@ async function readTranslation(locale: string, feature: string): Promise<Transla
 }
 
 function writeTranslation(translation: ParsedTranslation) {
-  const filename = join(project.ws.srcDir, project.ws.i18n.dir, `${translation.locale}.js`);
+  const filename = join(project.ws.srcDir, project.ws.i18n!.dir, `${translation.locale}.js`);
   const data = `${GENERATED_WARNING}
 module.exports.asts = ${JSON.stringify(translation.asts, null, '  ')};`;
 
@@ -101,7 +101,7 @@ function getDocumentation(translations: ParsedTranslation[], key: string) {
 }
 
 function writeIndexTranslation(translations: ParsedTranslation[]) {
-  const filename = join(project.ws.srcDir, project.ws.i18n.dir, `index.${project.ws.entryExtension}`);
+  const filename = join(project.ws.srcDir, project.ws.i18n!.dir, `index.${project.ws.entryExtension}`);
   const hasTypes = project.ws.entryExtension !== 'js';
 
   const data =
@@ -125,8 +125,11 @@ export const ${key} = (${hasArguments(translations[0].asts[key]) ? `data${hasTyp
 }
 
 export default async function i18nCompile() {
-  const features = project.ws.i18n.features || [ '' ];
-  const locales = project.ws.i18n.locales;
+  // at this place we know i18n config is set, no need for null checks
+  const i18n = project.ws.i18n as I18nConfig;
+
+  const features = i18n.features || [ '' ];
+  const locales = i18n.locales;
   const localesAndLanguages = concatLanguages(locales);
 
   const readPromises: Promise<Translation>[] = [];
@@ -154,7 +157,7 @@ export default async function i18nCompile() {
     return Object.assign({ asts }, translation);
   });
 
-  await removeAsync(join(project.ws.srcDir, project.ws.i18n.dir));
+  await removeAsync(join(project.ws.srcDir, i18n.dir));
   await Promise.all(parsedTranslations.map(writeTranslation));
   await writeIndexTranslation(parsedTranslations);
 };

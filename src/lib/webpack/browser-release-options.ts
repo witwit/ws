@@ -1,14 +1,14 @@
-import { Configuration } from 'webpack';
 import browserOptions from './browser-options';
 import {
   outputUmdMin,
   extractCssMinPlugin,
   defineProductionPlugin,
   minifyJsPlugin,
-  devtoolProduction
+  devtoolProduction,
+  WsWebpackConfiguration
 } from './generic';
 
-const options: Configuration = Object.assign({}, browserOptions, {
+const options: WsWebpackConfiguration = Object.assign({}, browserOptions, {
   output: outputUmdMin,
   plugins: [
     extractCssMinPlugin,

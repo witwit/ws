@@ -1,4 +1,3 @@
-import { Configuration } from 'webpack';
 import spaOptions from './spa-options';
 import {
   outputSpaRelease,
@@ -6,10 +5,11 @@ import {
   extractCssHashPlugin,
   defineProductionPlugin,
   minifyJsPlugin,
-  devtoolProduction
+  devtoolProduction,
+  WsWebpackConfiguration
 } from './generic';
 
-const options: Configuration = Object.assign({}, spaOptions, {
+const options: WsWebpackConfiguration = Object.assign({}, spaOptions, {
   output: outputSpaRelease,
   plugins: [
     indexHtmlPlugin,

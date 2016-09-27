@@ -1,20 +1,20 @@
-import { Configuration } from 'webpack';
 import {
   entryNode,
   outputCommon2,
-  tsLoader,
+  tsLoaderNode,
   externalsNode,
   resolveLoader,
   resolve,
-  devtool
+  devtool,
+  WsWebpackConfiguration
 } from './generic';
 
-const options: Configuration = {
+const options: WsWebpackConfiguration = {
   entry: entryNode,
   output: outputCommon2,
   module: {
     loaders: [
-      tsLoader
+      tsLoaderNode
     ]
   },
   externals: externalsNode,

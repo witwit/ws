@@ -32,7 +32,7 @@ export default async function lint() {
   }
 
   // documentation
-  const documentationFailures = [];
+  const documentationFailures: Array<string> = [];
   if (!project.private) {
     if (!(await existsAsync(join(process.cwd(), 'README.md')))) {
       documentationFailures.push(`You have ${yellow('no README.md')}.`);

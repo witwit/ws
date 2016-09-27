@@ -4,7 +4,7 @@ import express from 'express';
 import { project } from '../project';
 import { findAsync } from './openport';
 
-export async function listenAsync(middlewares = [], root = project.ws.distDir) {
+export async function listenAsync(middlewares: Array<any> = [], root = project.ws.distDir) {
   const app = express();
 
   middlewares.push(express.static(root));

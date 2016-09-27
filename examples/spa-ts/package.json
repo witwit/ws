@@ -9,7 +9,11 @@
     "ws": "node ../../bin/ws"
   },
   "ws": {
-    "type": "spa"
+    "type": "spa",
+    "selenium": {
+      "host": "ondemand.saucelabs",
+      "port": 80
+    }
   },
   "dependencies": {
     "@types/react": "^0.14.27",
@@ -23,6 +27,7 @@
     "@types/expect": "^1.13.29",
     "@types/mocha": "^2.2.27",
     "expect": "^1.18.0",
-    "react-addons-test-utils": "^15.0.0"
+    "react-addons-test-utils": "^15.0.0",
+    "selenium-webdriver": "^2.53.2"
   }
 }
