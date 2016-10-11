@@ -110,7 +110,7 @@ const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
 const asts = require(\`./\${process.env.LOCALE}\`).asts;
 const IntlMessageFormat = require('intl-messageformat');
 
-const lazyMessages = {};${Object.keys(translations[0].data).map(key => `
+const lazyMessages: { [s: string]: any } = {};${Object.keys(translations[0].data).map(key => `
 ${getDocumentation(translations, key)}
 export const ${key} = (${hasArguments(translations[0].asts[key]) ? `data${hasTypes ? `: ${getArguments(translations[0].asts[key])}` : ''}` : ''})${hasTypes ? ': string' : ''} => {
   if (!lazyMessages['${key}']) {
