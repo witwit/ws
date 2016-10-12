@@ -13,9 +13,9 @@ import {
   appMessageFormatName
 } from './i18n';
 
-// use intl polyfill for old browsers
-require('intl');
-require(`intl/locale-data/jsonp/${process.env.LOCALE.replace('_', '-')}.js`); // must be inlined
+// use intl polyfill for IE 10 and Safari 9
+import 'intl';
+require(`intl/locale-data/jsonp/${process.env.INTL_LOCALE}`);
 
 require('normalize.css/normalize.css');
 require('./style.less');
@@ -32,11 +32,10 @@ export const AppComponent = () => (
         ? <p>Production Build</p>
         : <p>Dev Build</p>
     }
-    {
-      process.env.LOCALE === 'en_GB'
-        ? <p>en_GB Build</p>
-        : <p>NOT en_GB Build</p>
-    }
+    <p>locale: {process.env.LOCALE}</p>
+    <p>intl locale: {process.env.INTL_LOCALE}</p>
+    <p>language code: {process.env.LANGUAGE_CODE}</p>
+    <p>country code: {process.env.COUNTRY_CODE}</p>
     <SomeComponent />
     <OtherComponent />
     <p>{commonHello()}</p>

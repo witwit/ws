@@ -44,7 +44,14 @@ export function createLocaleSpecificOptions(options: WsWebpackConfiguration, loc
     }),
     plugins: [
       new DefinePlugin({
-        'process.env.LOCALE': JSON.stringify(locale)
+        // e.g. 'en_US'
+        'process.env.LOCALE': JSON.stringify(locale),
+        // e.g. 'en-US'
+        'process.env.INTL_LOCALE': JSON.stringify(locale.replace('_', '-')),
+        // e.g. 'en'
+        'process.env.LANGUAGE_CODE': JSON.stringify(locale.split('_')[0]),
+        // e.g. 'US'
+        'process.env.COUNTRY_CODE': JSON.stringify(locale.split('_')[1])
       })
     ].concat(options.plugins || [])
   });

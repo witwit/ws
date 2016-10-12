@@ -3,7 +3,7 @@ const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
 const asts = require(`./${process.env.LOCALE}`).asts;
 const IntlMessageFormat = require('intl-messageformat');
 
-const lazyMessages = {};
+const lazyMessages: { [s: string]: any } = {};
 
 /**
  * `en_GB`: Hello user!

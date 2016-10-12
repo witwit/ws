@@ -106,7 +106,7 @@ function writeIndexTranslation(translations: ParsedTranslation[]) {
 
   const data =
 `${GENERATED_WARNING}
-const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
+const INTL_LOCALE = process.env.INTL_LOCALE;
 const asts = require(\`./\${process.env.LOCALE}\`).asts;
 const IntlMessageFormat = require('intl-messageformat');
 
