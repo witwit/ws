@@ -90,7 +90,10 @@ const babelBrowser = JSON.stringify({
   ],
   plugins: [
     resolveFile('babel-plugin-transform-decorators-legacy')
-  ]
+  ],
+  // this removes the "[BABEL] Note: The code generator has deoptimised the styling of..." warning
+  // I don't think we need `compact`, because our code is minified for production separately
+  compact: false
 });
 
 export const tsLoaderBrowser = {
