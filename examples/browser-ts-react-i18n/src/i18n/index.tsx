@@ -1,5 +1,5 @@
 // this file was generated - do not modify it manually
-const INTL_LOCALE = process.env.LOCALE.replace('_', '-');
+const INTL_LOCALE = process.env.INTL_LOCALE;
 const asts = require(`./${process.env.LOCALE}`).asts;
 const IntlMessageFormat = require('intl-messageformat');
 
