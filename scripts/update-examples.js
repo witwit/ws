@@ -20,15 +20,15 @@ const stdio = 'inherit';
 examples.forEach(example => {
   console.log(`Update "${example}":`);
   try {
+    // fresh start
     const cwd = join(process.cwd(), 'examples', example);
     rimrafSync(join(cwd, 'node_modules'));
     rimrafSync(join(cwd, 'dist'));
     rimrafSync(join(cwd, 'dist-tests'));
     rimrafSync(join(cwd, 'dist-release'));
     execSync('npm install', { cwd, stdio });
-    if (example.includes('i18n')) {
-      execSync('npm run -s ws -- i18n:c', { cwd, stdio });
-    }
+
+    // test commands
     execSync('npm run -s ws -- build', { cwd, stdio });
     if (example.includes('spa')) {
       execSync('npm run -s ws -- build --production', { cwd, stdio });

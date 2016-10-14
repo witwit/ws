@@ -10,7 +10,6 @@ import lintAction from './actions/lint';
 import unitAction from './actions/unit';
 import e2eAction from './actions/e2e';
 import i18nImportAction from './actions/i18n-import';
-import i18nCompileAction from './actions/i18n-compile';
 
 // common setup
 const pkg = require('../package.json');
@@ -79,24 +78,14 @@ switch (project.ws.type) {
     break;
 }
 
-if (project.ws.i18n) {
+if (project.ws.i18n && project.ws.i18n.importUrl) {
   commander
-    .command('i18n:compile')
-    .alias('i18n:c')
-    .description('compile translations')
+    .command('i18n:import')
+    .alias('i18n:i')
+    .description('import translations')
     // .option('--feature <feature>', 'feature to import')
     // .option('-l, --locale <locale>', 'locale to import')
-    .action(handleAction(i18nCompileAction));
-
-  if (project.ws.i18n.importUrl) {
-    commander
-      .command('i18n:import')
-      .alias('i18n:i')
-      .description('import translations')
-      // .option('--feature <feature>', 'feature to import')
-      // .option('-l, --locale <locale>', 'locale to import')
-      .action(handleAction(i18nImportAction));
-  }
+    .action(handleAction(i18nImportAction));
 }
 
 // shared setup

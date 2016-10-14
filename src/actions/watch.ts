@@ -14,6 +14,7 @@ import {
   spaOptions,
   browserOptions
 } from '../lib/webpack';
+import { compileI18n } from '../lib/i18n-compile';
 
 export default async function watch() {
   await removeAsync(project.ws.distDir);
@@ -30,6 +31,7 @@ export default async function watch() {
       break;
     case TYPE.SPA:
       if (project.ws.i18n) {
+        await compileI18n();
         await watchAsync(livereloadServer, createLocaleSpecificOptions(spaOptions, project.ws.i18n.locales[0]), onChangeSuccess);
       } else {
         await watchAsync(livereloadServer, spaOptions, onChangeSuccess);
@@ -37,6 +39,7 @@ export default async function watch() {
       break;
     case TYPE.BROWSER:
       if (project.ws.i18n) {
+        await compileI18n();
         await watchAsync(livereloadServer, createLocaleSpecificOptions(browserOptions, project.ws.i18n.locales[0]), onChangeSuccess);
       } else {
         await watchAsync(livereloadServer, browserOptions, onChangeSuccess);

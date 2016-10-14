@@ -12,6 +12,7 @@ import {
 } from '../lib/webpack';
 import { testAsync as karmaTestAsync } from '../lib/karma';
 import { testAsync as mochaTestAsync  } from '../lib/mocha';
+import { compileI18n } from '../lib/i18n-compile';
 
 export default async function unit(options) {
   const unitEntry = `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`;
@@ -34,6 +35,7 @@ export default async function unit(options) {
       break;
     case TYPE.SPA:
       if (project.ws.i18n) {
+        await compileI18n();
         await compileAsync(createLocaleSpecificOptions(spaUnitOptions, project.ws.i18n.locales[0]));
       } else {
         await compileAsync(spaUnitOptions);
@@ -42,6 +44,7 @@ export default async function unit(options) {
       break;
     case TYPE.BROWSER:
       if (project.ws.i18n) {
+        await compileI18n();
         await compileAsync(createLocaleSpecificOptions(browserUnitOptions, project.ws.i18n.locales[0]));
       } else {
         await compileAsync(browserUnitOptions);

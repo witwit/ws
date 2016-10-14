@@ -11,6 +11,7 @@ import {
   browserOptions,
   browserReleaseOptions
 } from '../lib/webpack';
+import { compileI18n } from '../lib/i18n-compile';
 
 export default async function build(options) {
   switch (project.ws.type) {
@@ -22,6 +23,7 @@ export default async function build(options) {
       if (options.production) {
         await removeAsync(project.ws.distReleaseDir);
         if (project.ws.i18n) {
+          await compileI18n();
           for (const locale of project.ws.i18n.locales) {
             info(`...for locale ${locale}.`);
             await compileAsync(createLocaleSpecificOptions(spaReleaseOptions, locale));
@@ -32,6 +34,7 @@ export default async function build(options) {
       } else {
         await removeAsync(project.ws.distDir);
         if (project.ws.i18n) {
+          await compileI18n();
           await compileAsync(createLocaleSpecificOptions(spaOptions, project.ws.i18n.locales[0]));
         } else {
           await compileAsync(spaOptions);
@@ -41,6 +44,7 @@ export default async function build(options) {
     case TYPE.BROWSER:
       await removeAsync(project.ws.distDir);
       if (project.ws.i18n) {
+        await compileI18n();
         // TODO: Do we still need this? We include every locale in the output know. Removing locales should be
         // solved by setting a correct process.env and using a minifier.
         for (const locale of project.ws.i18n.locales) {

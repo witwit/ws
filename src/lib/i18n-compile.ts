@@ -124,7 +124,7 @@ export const ${key} = (${hasArguments(translations[0].asts[key]) ? `data${hasTyp
   return outputFileAsync(filename, data);
 }
 
-export default async function i18nCompile() {
+export async function compileI18n() {
   // at this place we know i18n config is set, no need for null checks
   const i18n = project.ws.i18n as I18nConfig;
 
