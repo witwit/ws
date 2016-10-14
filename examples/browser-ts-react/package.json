@@ -2,7 +2,6 @@
   "name": "ws-examples-browser-ts-react",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "webpack": "src/index.tsx",
   "less": "src/style.less",
   "typings": "dist/src/index.d.ts",
   "private": true,

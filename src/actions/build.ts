@@ -4,6 +4,7 @@ import { project, TYPE } from '../project';
 import {
   compileAsync,
   createLocaleSpecificOptions,
+  keepLocaleEnv,
   spaOptions,
   spaReleaseOptions,
   nodeOptions,
@@ -40,6 +41,8 @@ export default async function build(options) {
     case TYPE.BROWSER:
       await removeAsync(project.ws.distDir);
       if (project.ws.i18n) {
+        // TODO: Do we still need this? We include every locale in the output know. Removing locales should be
+        // solved by setting a correct process.env and using a minifier.
         for (const locale of project.ws.i18n.locales) {
           info(`...for locale ${locale}.`);
           await compileAsync(createLocaleSpecificOptions(browserOptions, locale));
@@ -47,10 +50,11 @@ export default async function build(options) {
         }
         info(`...with all locales.`);
       }
+      // commonjs build with uninitialized process.env to be consumed by other build tools:
+      await compileAsync(keepLocaleEnv(browserOptions));
+      // umd build for users without build tools:
       // even when we use locales, we create a default build containing *all* translations
       // users can select a locale with `window.process = { env: { LOCALE: 'en_GB' } };`, before they load
-      // our component (this is mostly for users without build tools)
-      await compileAsync(browserOptions);
       await compileAsync(browserReleaseOptions);
       break;
   }

@@ -1,7 +1,7 @@
 {
   "name": "ws-examples-browser-less",
   "version": "1.0.0",
-  "webpack": "src/index.js",
+  "main": "dist/index.js",
   "less": "src/style.less",
   "private": true,
   "scripts": {

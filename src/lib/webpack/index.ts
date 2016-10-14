@@ -57,6 +57,19 @@ export function createLocaleSpecificOptions(options: WsWebpackConfiguration, loc
   });
 }
 
+export function keepLocaleEnv(options: WsWebpackConfiguration) {
+  return Object.assign({}, options, {
+    plugins: [
+      new DefinePlugin({
+        'process.env.LOCALE': 'process.env.LOCALE',
+        'process.env.INTL_LOCALE': 'process.env.INTL_LOCALE',
+        'process.env.LANGUAGE_CODE': 'process.env.LANGUAGE_CODE',
+        'process.env.COUNTRY_CODE': 'process.env.COUNTRY_CODE'
+      })
+    ].concat(options.plugins || [])
+  });
+}
+
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
 function onBuild(resolve, reject, err, stats, watcher?) {
   if (err) {
