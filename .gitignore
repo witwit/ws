@@ -3,3 +3,4 @@ node_modules/
 dist/
 dist-tests/
 dist-release/
+**/src/i18n/
