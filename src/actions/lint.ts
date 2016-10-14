@@ -40,6 +40,9 @@ export default async function lint() {
     if (!project.keywords || !project.keywords.length) {
       documentationFailures.push(`You have ${yellow('no keywords')} set in your ${yellow('package.json')}.`);
     }
+    if (!project.description) {
+      documentationFailures.push(`You have ${yellow('no description')} set in your ${yellow('package.json')}.`);
+    }
     if (!(await existsAsync(join(process.cwd(), 'examples')))) {
       documentationFailures.push(`You have ${yellow('no examples/')} directory.`);
     } else {

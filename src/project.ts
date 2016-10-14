@@ -180,6 +180,10 @@ export interface PackageConfig {
    */
   private?: boolean;
   /**
+   * A description of your project.
+   */
+  description?: string;
+  /**
    * Keywords which describe your project.
    */
   keywords?: string[];
