@@ -3,10 +3,9 @@ import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import { SomeComponent, OtherComponent } from '../src/index';
 
-// polyfill intl for cross-browser tests
-// if a spa uses our components, it should inclue the polyfill itself, if old browsers should be supported
-require('intl');
-require(`intl/locale-data/jsonp/${process.env.LOCALE.replace('_', '-')}.js`); // must be inlined
+// use intl polyfill for IE 10 and Safari 9
+import 'intl';
+require(`intl/locale-data/jsonp/${process.env.INTL_LOCALE}`);
 
 describe('test my i18n components', () => {
   it('should render <SomeComponent />', () => {
