@@ -1,7 +1,7 @@
 import { debug } from 'loglevel';
 import { parse } from 'properties';
 import { join } from 'path';
-import { camelCase } from 'lodash';
+import { camelCase, uniqBy } from 'lodash';
 import { readFileAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
 import { concatLanguages, isMatchingLocaleOrLanguage } from '../lib/i18n';
 import { project, I18nConfig } from '../project';
@@ -75,7 +75,8 @@ function hasArguments(ast) {
 }
 
 function getArguments(ast) {
-  const keyTypePairs = ast.elements
+  const keyTypePairs = uniqBy(
+    ast.elements
     .filter(element => element.type === 'argumentElement')
     .map(element => ({
       key: element.id,
@@ -85,7 +86,9 @@ function getArguments(ast) {
         : (element.format && element.format.type === 'selectFormat')
           ? element.format.options.map(({ selector }) => selector === 'other' ? 'string' : `'${selector}'`).join(' | ')
           : 'string'
-    }));
+    })),
+    'key');
+
   if (keyTypePairs.length) {
     return `{ ${keyTypePairs.map(({ key, type }) => `${key}: ${type}`).join(', ')} }`;
   } else {
