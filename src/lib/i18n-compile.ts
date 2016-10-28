@@ -116,6 +116,10 @@ const IntlMessageFormat = require('intl-messageformat');
 const lazyMessages: { [s: string]: any } = {};${Object.keys(translations[0].data).map(key => `
 ${getDocumentation(translations, key)}
 export const ${key} = (${hasArguments(translations[0].asts[key]) ? `data${hasTypes ? `: ${getArguments(translations[0].asts[key])}` : ''}` : ''})${hasTypes ? ': string' : ''} => {
+  if (!asts['${key}']) {
+    console.warn('Cannot find translation for "${key}".');
+    return '<${key}>';
+  }
   if (!lazyMessages['${key}']) {
     lazyMessages['${key}'] = new IntlMessageFormat(asts['${key}'], INTL_LOCALE);
   }
