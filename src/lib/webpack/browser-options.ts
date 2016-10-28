@@ -1,6 +1,6 @@
 import {
   entry,
-  outputUmd,
+  outputCommon2,
   tsLoaderBrowser,
   jsonLoader,
   cssLoader,
@@ -20,7 +20,7 @@ import {
 
 const options: WsWebpackConfiguration = {
   entry,
-  output: outputUmd,
+  output: outputCommon2,
   module: {
     loaders: [
       tsLoaderBrowser,
