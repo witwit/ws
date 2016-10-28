@@ -121,14 +121,14 @@ function onChange(err, stats, livereloadServer, onChangeSuccess?) {
   }
 }
 
-export function compileAsync(options: WsWebpackConfiguration) {
+export function compileAsync(options: WsWebpackConfiguration | Array<WsWebpackConfiguration>) {
   const compiler = webpack(options);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => onBuild(resolve, reject, err, stats));
   });
 }
 
-export function watchAsync(livereloadServer, options: WsWebpackConfiguration, onChangeSuccess?: (stats: any) => void) {
+export function watchAsync(livereloadServer, options: WsWebpackConfiguration | Array<WsWebpackConfiguration>, onChangeSuccess?: (stats: any) => void) {
   const compiler = webpack(options);
   let isInitialBuild = true;
   return new Promise((resolve, reject) => {

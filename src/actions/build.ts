@@ -24,10 +24,12 @@ export default async function build(options) {
         await removeAsync(project.ws.distReleaseDir);
         if (project.ws.i18n) {
           await compileI18n();
-          for (const locale of project.ws.i18n.locales) {
-            info(`...for locale ${locale}.`);
-            await compileAsync(createLocaleSpecificOptions(spaReleaseOptions, locale));
-          }
+          const localeConfigs = project.ws.i18n.locales.map(locale => createLocaleSpecificOptions(spaReleaseOptions, locale));
+          await compileAsync(localeConfigs);
+          // for (const locale of project.ws.i18n.locales) {
+          //   info(`...for locale ${locale}.`);
+          //   await compileAsync(createLocaleSpecificOptions(spaReleaseOptions, locale));
+          // }
         } else {
           await compileAsync(spaReleaseOptions);
         }
@@ -47,11 +49,14 @@ export default async function build(options) {
         await compileI18n();
         // TODO: Do we still need this? We include every locale in the output know. Removing locales should be
         // solved by setting a correct process.env and using a minifier.
-        for (const locale of project.ws.i18n.locales) {
-          info(`...for locale ${locale}.`);
-          await compileAsync(createLocaleSpecificOptions(browserOptions, locale));
-          await compileAsync(createLocaleSpecificOptions(browserReleaseOptions, locale));
-        }
+        const localeConfigs = project.ws.i18n.locales.map(locale => createLocaleSpecificOptions(browserOptions, locale));
+        const localeReleaseConfigs = project.ws.i18n.locales.map(locale => createLocaleSpecificOptions(browserReleaseOptions, locale));
+        await compileAsync(localeConfigs.concat(localeReleaseConfigs));
+        // for (const locale of project.ws.i18n.locales) {
+        //   info(`...for locale ${locale}.`);
+        //   await compileAsync(createLocaleSpecificOptions(browserOptions, locale));
+        //   await compileAsync(createLocaleSpecificOptions(browserReleaseOptions, locale));
+        // }
         info(`...with all locales.`);
       }
       // commonjs build with uninitialized process.env to be consumed by other build tools:
