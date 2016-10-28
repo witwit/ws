@@ -58,8 +58,8 @@ async function init(options) {
     const selenium = project.ws.selenium as SeleniumGridConfig;
     const { host, port, user, password } = selenium;
     options.seleniumUrl = `http://${user ? `${user}:${password}@` : ''}${host}:${port}/wd/hub`;
-    browsers = options.browsers ?
-        options.browser.split(',').map(parseBrowser)
+    browsers = options.browsers
+      ? options.browser.split(',').map(parseBrowser)
       : await getBrowsers();
 
     if (isSauceLabsHost(host)) {
@@ -68,7 +68,8 @@ async function init(options) {
   } else {
     options.seleniumUrl = `http://localhost:4444/wd/hub`;
     seleniumProcess = await startSeleniumServer();
-    browsers = (options.browsers || 'chrome,ff').split(',').map(parseBrowser);
+    const defaultBrowsers = 'ff'; // 'chrome,ff'
+    browsers = (options.browsers || defaultBrowsers).split(',').map(parseBrowser);
   }
 
   // spawn tests
