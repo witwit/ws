@@ -2,7 +2,7 @@
   "name": "ws-examples-browser-ts-react-i18n",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "less": "src/style.less",
+  "webpack": "src/index.tsx",
   "typings": "dist/src/index.d.ts",
   "private": true,
   "scripts": {

@@ -57,10 +57,13 @@ export const outputCommon2 = Object.assign({}, output, {
   libraryTarget: 'commonjs2'
 });
 
-export const outputUmdMin = Object.assign({}, output, {
+export const outputUmd = Object.assign({}, output, {
   libraryTarget: 'umd',
-  library: project.name,
-  filename: 'index.umd.min.js'
+  library: project.name
+});
+
+export const outputUmdMin = Object.assign({}, outputUmd, {
+  filename: 'index.min.js'
 });
 
 export const outputSpaRelease = Object.assign({}, output, {
