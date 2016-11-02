@@ -3,7 +3,7 @@ import { cyan } from 'chalk';
 import moment from 'moment';
 import livereload from 'livereload';
 import livereloadMiddleware from 'connect-livereload';
-import { removeAsync } from 'fs-extra-promise';
+import { removeAsync, existsAsync } from 'fs-extra-promise';
 import { project, TYPE } from '../project';
 import { findAsync } from '../lib/openport';
 import { listenAsync } from '../lib/express';
@@ -12,6 +12,7 @@ import {
   createLocaleSpecificOptions,
   nodeOptions,
   spaOptions,
+  spaI18nOptions,
   browserOptions
 } from '../lib/webpack';
 import { compileI18n } from '../lib/i18n-compile';
@@ -33,6 +34,11 @@ export default async function watch() {
       if (project.ws.i18n) {
         await compileI18n();
         await watchAsync(livereloadServer, createLocaleSpecificOptions(spaOptions, project.ws.i18n.locales[0]), onChangeSuccess);
+
+        const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
+        if (hasI18nEntry) {
+          await watchAsync(livereloadServer, spaI18nOptions);
+        }
       } else {
         await watchAsync(livereloadServer, spaOptions, onChangeSuccess);
       }

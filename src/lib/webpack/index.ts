@@ -3,6 +3,7 @@ import { join } from 'path';
 import webpack, { DefinePlugin } from 'webpack';
 import { WsWebpackConfiguration } from './generic';
 import spaOptions from './spa-options';
+import spaI18nOptions from './spa-i18n-options';
 import nodeOptions from './node-options';
 import browserOptions from './browser-options';
 import spaUnitOptions from './spa-unit-options';
@@ -10,11 +11,13 @@ import spaE2eOptions from './spa-e2e-options';
 import nodeUnitOptions from './node-unit-options';
 import browserUnitOptions from './browser-unit-options';
 import spaReleaseOptions from './spa-release-options';
+import spaReleaseI18nOptions from './spa-release-i18n-options';
 import browserReleaseOptions from './browser-release-options';
 import { project } from '../../project';
 
 export {
   spaOptions,
+  spaI18nOptions,
   nodeOptions,
   browserOptions,
   spaUnitOptions,
@@ -22,6 +25,7 @@ export {
   nodeUnitOptions,
   browserUnitOptions,
   spaReleaseOptions,
+  spaReleaseI18nOptions,
   browserReleaseOptions
 };
 
