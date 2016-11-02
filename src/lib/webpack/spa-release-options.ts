@@ -9,13 +9,19 @@ import {
   WsWebpackConfiguration
 } from './generic';
 
+const webpack = require('webpack');
+
 const options: WsWebpackConfiguration = Object.assign({}, spaOptions, {
   output: outputSpaRelease,
   plugins: [
     indexHtmlPlugin,
     extractCssHashPlugin,
     defineProductionPlugin,
-    minifyJsPlugin
+    minifyJsPlugin,
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false
+    })
   ],
   devtool: devtoolProduction
 });

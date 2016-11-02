@@ -2,6 +2,7 @@ import { debug } from 'loglevel';
 import { parse } from 'properties';
 import { join } from 'path';
 import { camelCase, uniqBy } from 'lodash';
+import stringifyObject from 'stringify-object';
 import { readFileAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
 import { concatLanguages, isMatchingLocaleOrLanguage } from '../lib/i18n';
 import { project, I18nConfig } from '../project';
@@ -9,6 +10,10 @@ import { project, I18nConfig } from '../project';
 const parser = require('intl-messageformat-parser');
 
 const GENERATED_WARNING = '// this file was generated - do not modify it manually';
+
+const stringifyObjectOptions = {
+  indent: '  '
+};
 
 interface TranslationMap {
   [key: string]: string;
@@ -63,9 +68,13 @@ async function readTranslation(locale: string, feature: string): Promise<Transla
 }
 
 function writeTranslation(translation: ParsedTranslation) {
-  const filename = join(project.ws.srcDir, project.ws.i18n!.dir, `${translation.locale}.js`);
+  const filename = join(project.ws.srcDir, project.ws.i18n!.dir, `${translation.locale}.${project.ws.entryExtension}`);
   const data = `${GENERATED_WARNING}
-module.exports.asts = ${JSON.stringify(translation.asts, null, '  ')};`;
+${Object.keys(translation.asts).map(key => {
+  const ast = translation.asts[key];
+  return `export const ${key}Ast = ${stringifyObject(ast, stringifyObjectOptions)}`;
+}).join(';\n\n')}
+`;
 
   return outputFileAsync(filename, data);
 }
@@ -106,22 +115,25 @@ function getDocumentation(translations: ParsedTranslation[], key: string) {
 function writeIndexTranslation(translations: ParsedTranslation[]) {
   const filename = join(project.ws.srcDir, project.ws.i18n!.dir, `index.${project.ws.entryExtension}`);
   const hasTypes = project.ws.entryExtension !== 'js';
+  const keys = Object.keys(translations[0].data);
 
   const data =
 `${GENERATED_WARNING}
+// import IntlMessageFormat from 'intl-messageformat';
+import { ${keys.map(key => `${key}Ast`).join(', ')} } from './de_DE';
 const INTL_LOCALE = process.env.INTL_LOCALE;
-const asts = require(\`./\${process.env.LOCALE}\`).asts;
+//const asts = require(\`./\${process.env.LOCALE}\`).asts;
 const IntlMessageFormat = require('intl-messageformat');
 
-const lazyMessages: { [s: string]: any } = {};${Object.keys(translations[0].data).map(key => `
+const lazyMessages: { [s: string]: any } = {};${keys.map(key => `
 ${getDocumentation(translations, key)}
 export const ${key} = (${hasArguments(translations[0].asts[key]) ? `data${hasTypes ? `: ${getArguments(translations[0].asts[key])}` : ''}` : ''})${hasTypes ? ': string' : ''} => {
-  if (!asts['${key}']) {
+  if (!${key}Ast) {
     console.warn('Cannot find translation for "${key}".');
     return '<${key}>';
   }
   if (!lazyMessages['${key}']) {
-    lazyMessages['${key}'] = new IntlMessageFormat(asts['${key}'], INTL_LOCALE);
+    lazyMessages['${key}'] = new IntlMessageFormat(${key}Ast, INTL_LOCALE);
   }
   return lazyMessages['${key}'].format(${hasArguments(translations[0].asts[key]) ? 'data' : ''});
 };`

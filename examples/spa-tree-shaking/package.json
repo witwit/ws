@@ -1,0 +1,24 @@
+{
+  "name": "ws-examples-spa-tree-shaking",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "spa",
+    "i18n": {
+      "locales": [
+        "en_GB",
+        "en_US",
+        "de_DE",
+        "de_AT"
+      ]
+    }
+  },
+  "dependencies": {
+    "intl": "^1.2.4",
+    "intl-messageformat": "^1.3.0",
+    "ws-examples-browser-tree-shaking": "file:../browser-tree-shaking"
+  }
+}

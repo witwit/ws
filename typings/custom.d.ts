@@ -6,6 +6,15 @@
 
 declare module 'autoprefixer';
 
+declare module 'stringify-object' {
+  export interface Options {
+    indent?: string;
+    singleQuotes?: boolean;
+  }
+
+  export default function stringifyObject(input: any, options?: Options): void;
+}
+
 declare module 'globby' {
   export interface Options {
     cwd?: string;

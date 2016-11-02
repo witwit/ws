@@ -34,7 +34,8 @@ export const statsStringifierOptions: webpack.compiler.StatsToStringOptions = {
   timings: false,
   chunks: false,
   chunkModules: false,
-  children: false
+  // `children` must be `true` to get error logging, when `options` is an array
+  children: true
 };
 
 export function createLocaleSpecificOptions(options: WsWebpackConfiguration, locale: string) {

@@ -83,7 +83,8 @@ const babelBrowser = JSON.stringify({
   presets: [
     [ resolveFile('babel-preset-es2015') , { modules: false } ],
     resolveFile('babel-preset-react'),
-    resolveFile('babel-preset-stage-0')
+    resolveFile('babel-preset-stage-0'),
+    resolveFile('babel-preset-babili')
   ],
   plugins: [
     resolveFile('babel-plugin-transform-decorators-legacy')
@@ -164,11 +165,7 @@ export const defineProductionPlugin = new DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify('production')
 });
 
-export const minifyJsPlugin = new optimize.UglifyJsPlugin({
-  compress: {
-    warnings: false
-  }
-});
+export const minifyJsPlugin = new optimize.UglifyJsPlugin();
 
 export const indexHtmlPlugin = new HtmlWebpackPlugin({
   filename: 'index.html',
