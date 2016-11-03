@@ -2,7 +2,7 @@
   "name": "ws-examples-browser-tree-shaking",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "webpack": "src/index.tsx",
+  "webpack": "src/index.ts",
   "typings": "dist/src/index.d.ts",
   "private": true,
   "scripts": {

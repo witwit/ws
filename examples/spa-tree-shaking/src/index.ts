@@ -1,4 +1,7 @@
-import { logFoo, logBuzz } from 'ws-examples-browser-tree-shaking';
+import {
+  // logFoo,
+  logBuzz
+} from 'ws-examples-browser-tree-shaking';
 
-logFoo();
+// logFoo();
 logBuzz();

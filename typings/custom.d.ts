@@ -12,7 +12,7 @@ declare module 'stringify-object' {
     singleQuotes?: boolean;
   }
 
-  export default function stringifyObject(input: any, options?: Options): void;
+  export default function stringifyObject(input: any, options?: Options): string;
 }
 
 declare module 'globby' {
