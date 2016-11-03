@@ -1,12 +1,14 @@
 import { info } from 'loglevel';
-import { removeAsync } from 'fs-extra-promise';
+import { removeAsync, existsAsync } from 'fs-extra-promise';
 import { project, TYPE } from '../project';
 import {
   compileAsync,
   createLocaleSpecificOptions,
   keepLocaleEnv,
   spaOptions,
+  spaI18nOptions,
   spaReleaseOptions,
+  spaReleaseI18nOptions,
   nodeOptions,
   browserOptions,
   browserReleaseOptions
@@ -26,10 +28,16 @@ export default async function build(options) {
           await compileI18n();
           const localeConfigs = project.ws.i18n.locales.map(locale => createLocaleSpecificOptions(spaReleaseOptions, locale));
           await compileAsync(localeConfigs);
+
           // for (const locale of project.ws.i18n.locales) {
           //   info(`...for locale ${locale}.`);
           //   await compileAsync(createLocaleSpecificOptions(spaReleaseOptions, locale));
           // }
+
+          const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
+          if (hasI18nEntry) {
+            await compileAsync(spaReleaseI18nOptions);
+          }
         } else {
           await compileAsync(spaReleaseOptions);
         }
@@ -38,6 +46,11 @@ export default async function build(options) {
         if (project.ws.i18n) {
           await compileI18n();
           await compileAsync(createLocaleSpecificOptions(spaOptions, project.ws.i18n.locales[0]));
+
+          const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
+          if (hasI18nEntry) {
+            await compileAsync(spaI18nOptions);
+          }
         } else {
           await compileAsync(spaOptions);
         }

@@ -133,9 +133,30 @@ export interface WsConfig {
    */
   srcDir: string;
   /**
+   * The entry file for your source code. This value is set automatically.
+   * It could look this: `./src/index.ts`.
+   */
+  srcEntry: string;
+  /**
+   * The _optional_ entry file for source code at the root level of a localized spa.
+   * This value is set automatically.
+   * It could look this: `./src/index.i18n.ts`.
+   */
+  srcI18nEntry: string;
+  /**
    * The directory where your tests are located.
    */
   testsDir: string;
+  /**
+   * The entry file for your unit tests. This value is set automatically.
+   * It could look this: `./tests/unit.ts`.
+   */
+  unitEntry: string;
+  /**
+   * The entry file for your e2e tests. This value is set automatically.
+   * It could look this: `./tests/e2e.ts`.
+   */
+  e2eEntry: string;
   /**
    * The directory where your development build is generated.
    * If you have a browser components project, optimized files will live here, too.
@@ -216,7 +237,7 @@ export function validate(pkg): PackageConfig {
   }
 
   if (!pkg.name) {
-    throw `You need to specify a ${yellow('name')} in your packae.json.`;
+    throw `You need to specify a ${yellow('name')} in your package.json.`;
   }
 
   if (!pkg.ws.srcDir) {
@@ -254,6 +275,12 @@ export function validate(pkg): PackageConfig {
       pkg.ws.entryExtension = 'tsx';
     }
   }
+
+  // entry files
+  pkg.ws.srcEntry = `./${pkg.ws.srcDir}/index.${pkg.ws.entryExtension}`;
+  pkg.ws.srcI18nEntry = `./${pkg.ws.srcDir}/index.i18n.${pkg.ws.entryExtension}`;
+  pkg.ws.unitEntry = `./${pkg.ws.testsDir}/unit.${pkg.ws.entryExtension}`;
+  pkg.ws.e2eEntry = `./${pkg.ws.testsDir}/e2e.${pkg.ws.entryExtension}`;
 
   // defaults for browsers
   if (!pkg.ws.browsers) {

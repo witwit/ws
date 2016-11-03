@@ -15,10 +15,9 @@ import { testAsync as mochaTestAsync  } from '../lib/mocha';
 import { compileI18n } from '../lib/i18n-compile';
 
 export default async function unit(options) {
-  const unitEntry = `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`;
-  const hasUnitTests = await existsAsync(unitEntry);
+  const hasUnitTests = await existsAsync(project.ws.unitEntry);
   if (!hasUnitTests) {
-    warn(`${yellow('warn!')} You tried to run unit tests, but ${yellow(unitEntry)} doesn't exist.`);
+    warn(`${yellow('warn!')} You tried to run unit tests, but ${yellow(project.ws.unitEntry)} doesn't exist.`);
     return;
   }
 

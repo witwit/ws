@@ -17,25 +17,29 @@ export interface WsWebpackConfiguration extends webpack.Configuration {
 }
 
 export const entry = [
-  `./${project.ws.srcDir}/index.${project.ws.entryExtension}`
+  project.ws.srcEntry
+];
+
+export const entryI18n = [
+  project.ws.srcI18nEntry
 ];
 
 export const entryUnit = [
-  `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`
+  project.ws.unitEntry
 ];
 
 export const entryE2e = [
-  `./${project.ws.testsDir}/e2e.${project.ws.entryExtension}`
+  project.ws.e2eEntry
 ];
 
 export const entryNode = [
   'source-map-support/register',
-  `./${project.ws.srcDir}/index.${project.ws.entryExtension}`
+  project.ws.srcEntry
 ];
 
 export const entryNodeUnit = [
   'source-map-support/register',
-  `./${project.ws.testsDir}/unit.${project.ws.entryExtension}`
+  project.ws.srcEntry
 ];
 
 export const output = {
@@ -172,6 +176,11 @@ export const indexHtmlPlugin = new HtmlWebpackPlugin({
   template: './src/index.html'
 });
 
+export const indexHtmlI18nPlugin = new HtmlWebpackPlugin({
+  filename: 'index.html',
+  template: './src/index.i18n.html'
+});
+
 export const resolveLoader = {
   // if you symlink the ws tool (e.g. while development), you want to resolve loaders
   // relative to the ws tool first (just like a normale `require()` would work)
@@ -245,3 +254,18 @@ export const externalsBrowser = [
     return target;
   }, {}), project.ws.externals)
 ];
+
+export const defineLocalesPlugin = project.ws.i18n && new DefinePlugin({
+  // e.g. 'en_US'
+  'process.env.LOCALE': JSON.stringify(project.ws.i18n.locales[0]),
+  'process.env.LOCALES': JSON.stringify(project.ws.i18n.locales),
+  // e.g. 'en-US'
+  'process.env.INTL_LOCALE': JSON.stringify(project.ws.i18n.locales[0].replace('_', '-')),
+  'process.env.INTL_LOCALES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.replace('_', '-'))),
+  // e.g. 'en'
+  'process.env.LANGUAGE_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[0]),
+  'process.env.LANGUAGE_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[0])),
+  // e.g. 'US'
+  'process.env.COUNTRY_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[1]),
+  'process.env.COUNTRY_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[1]))
+});
