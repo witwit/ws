@@ -43,7 +43,7 @@ examples.forEach(example => {
     }
     // test grid
     if (example === 'spa-ts') {
-      const server = spawn('npm', [ 'run', '-s', 'ws', '--', 'serve'], { cwd, detached: true });
+      const server = spawn('npm', [ 'run', '-s', 'ws', '--', 'serve'], { cwd, stdio });
       execSync('npm run -s ws -- e2e --browsers ff', { cwd, stdio });
       // execSync('npm run -s ws -- e2e -g', { cwd, stdio });
       // execSync('npm run -s ws -- unit -g', { cwd, stdio });
