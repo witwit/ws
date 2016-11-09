@@ -50,8 +50,7 @@ const babelBrowser = JSON.stringify({
   presets: [
     [ resolveFile('babel-preset-es2015') , { modules: false } ],
     resolveFile('babel-preset-react'),
-    resolveFile('babel-preset-stage-0'),
-    resolveFile('babel-preset-babili')
+    resolveFile('babel-preset-stage-0')
   ],
   plugins: [
     resolveFile('babel-plugin-transform-decorators-legacy')
