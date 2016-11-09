@@ -3,10 +3,6 @@ import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import { SomeComponent, OtherComponent } from '../src/index';
 
-// use intl polyfill for IE 10 and Safari 9
-import 'intl';
-require(`intl/locale-data/jsonp/${process.env.INTL_LOCALE}`);
-
 describe('test my i18n components', () => {
   it('should render <SomeComponent />', () => {
     const renderer = ReactTestUtils.createRenderer();

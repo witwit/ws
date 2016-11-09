@@ -1,33 +1,10 @@
 import { warn, error } from 'loglevel';
 import { join } from 'path';
 import webpack, { DefinePlugin } from 'webpack';
-import { WsWebpackConfiguration } from './generic';
-import spaOptions from './spa-options';
-import spaI18nOptions from './spa-i18n-options';
-import nodeOptions from './node-options';
-import browserOptions from './browser-options';
-import spaUnitOptions from './spa-unit-options';
-import spaE2eOptions from './spa-e2e-options';
-import nodeUnitOptions from './node-unit-options';
-import browserUnitOptions from './browser-unit-options';
-import spaReleaseOptions from './spa-release-options';
-import spaReleaseI18nOptions from './spa-release-i18n-options';
-import browserReleaseOptions from './browser-release-options';
+import { WebpackConfiguration } from './options';
 import { project } from '../../project';
 
-export {
-  spaOptions,
-  spaI18nOptions,
-  nodeOptions,
-  browserOptions,
-  spaUnitOptions,
-  spaE2eOptions,
-  nodeUnitOptions,
-  browserUnitOptions,
-  spaReleaseOptions,
-  spaReleaseI18nOptions,
-  browserReleaseOptions
-};
+export * from './options';
 
 export const statsStringifierOptions: webpack.compiler.StatsToStringOptions = {
   // minimal logging
@@ -42,38 +19,38 @@ export const statsStringifierOptions: webpack.compiler.StatsToStringOptions = {
   children: true
 };
 
-export function createLocaleSpecificOptions(options: WsWebpackConfiguration, locale: string) {
-  return Object.assign({}, options, {
-    output: Object.assign({}, options.output, {
-      path: join(options.output.path, project.ws.i18n && project.ws.i18n.isSingleLocale ? '' : locale)
-    }),
-    plugins: [
-      new DefinePlugin({
-        // e.g. 'en_US'
-        'process.env.LOCALE': JSON.stringify(locale),
-        // e.g. 'en-US'
-        'process.env.INTL_LOCALE': JSON.stringify(locale.replace('_', '-')),
-        // e.g. 'en'
-        'process.env.LANGUAGE_CODE': JSON.stringify(locale.split('_')[0]),
-        // e.g. 'US'
-        'process.env.COUNTRY_CODE': JSON.stringify(locale.split('_')[1])
-      })
-    ].concat(options.plugins || [])
-  });
-}
+// export function createLocaleSpecificOptions(options: WebpackConfiguration, locale: string) {
+//   return Object.assign({}, options, {
+//     output: Object.assign({}, options.output, {
+//       path: join(options.output.path, project.ws.i18n && project.ws.i18n.isSingleLocale ? '' : locale)
+//     }),
+//     plugins: [
+//       new DefinePlugin({
+//         // e.g. 'en_US'
+//         'process.env.LOCALE': JSON.stringify(locale),
+//         // e.g. 'en-US'
+//         'process.env.INTL_LOCALE': JSON.stringify(locale.replace('_', '-')),
+//         // e.g. 'en'
+//         'process.env.LANGUAGE_CODE': JSON.stringify(locale.split('_')[0]),
+//         // e.g. 'US'
+//         'process.env.COUNTRY_CODE': JSON.stringify(locale.split('_')[1])
+//       })
+//     ].concat(options.plugins || [])
+//   });
+// }
 
-export function keepLocaleEnv(options: WsWebpackConfiguration) {
-  return Object.assign({}, options, {
-    plugins: [
-      new DefinePlugin({
-        'process.env.LOCALE': 'process.env.LOCALE',
-        'process.env.INTL_LOCALE': 'process.env.INTL_LOCALE',
-        'process.env.LANGUAGE_CODE': 'process.env.LANGUAGE_CODE',
-        'process.env.COUNTRY_CODE': 'process.env.COUNTRY_CODE'
-      })
-    ].concat(options.plugins || [])
-  });
-}
+// export function keepLocaleEnv(options: WebpackConfiguration) {
+//   return Object.assign({}, options, {
+//     plugins: [
+//       new DefinePlugin({
+//         'process.env.LOCALE': 'process.env.LOCALE',
+//         'process.env.INTL_LOCALE': 'process.env.INTL_LOCALE',
+//         'process.env.LANGUAGE_CODE': 'process.env.LANGUAGE_CODE',
+//         'process.env.COUNTRY_CODE': 'process.env.COUNTRY_CODE'
+//       })
+//     ].concat(options.plugins || [])
+//   });
+// }
 
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
 function onBuild(resolve, reject, err, stats, watcher?) {
@@ -126,14 +103,14 @@ function onChange(err, stats, livereloadServer, onChangeSuccess?) {
   }
 }
 
-export function compileAsync(options: WsWebpackConfiguration | Array<WsWebpackConfiguration>) {
+export function compileAsync(options: WebpackConfiguration | Array<WebpackConfiguration>) {
   const compiler = webpack(options);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => onBuild(resolve, reject, err, stats));
   });
 }
 
-export function watchAsync(livereloadServer, options: WsWebpackConfiguration | Array<WsWebpackConfiguration>, onChangeSuccess?: (stats: any) => void) {
+export function watchAsync(livereloadServer, options: WebpackConfiguration | Array<WebpackConfiguration>, onChangeSuccess?: (stats: any) => void) {
   const compiler = webpack(options);
   let isInitialBuild = true;
   return new Promise((resolve, reject) => {

@@ -5,7 +5,6 @@ import { cyan, yellow } from 'chalk';
 import { project, TYPE } from '../project';
 import {
   compileAsync,
-  createLocaleSpecificOptions,
   nodeUnitOptions,
   spaUnitOptions,
   browserUnitOptions
@@ -35,19 +34,15 @@ export default async function unit(options) {
     case TYPE.SPA:
       if (project.ws.i18n) {
         await compileI18n();
-        await compileAsync(createLocaleSpecificOptions(spaUnitOptions, project.ws.i18n.locales[0]));
-      } else {
-        await compileAsync(spaUnitOptions);
       }
+      await compileAsync(spaUnitOptions);
       exitCode = await karmaTestAsync(options);
       break;
     case TYPE.BROWSER:
       if (project.ws.i18n) {
         await compileI18n();
-        await compileAsync(createLocaleSpecificOptions(browserUnitOptions, project.ws.i18n.locales[0]));
-      } else {
-        await compileAsync(browserUnitOptions);
       }
+      await compileAsync(browserUnitOptions);
       exitCode = await karmaTestAsync(options);
       break;
   }

@@ -1,9 +1,10 @@
+import globby from 'globby';
 import { debug } from 'loglevel';
 import { parse } from 'properties';
-import { join } from 'path';
+import { join, dirname } from 'path';
 import { camelCase, uniqBy } from 'lodash';
 import stringifyObject from 'stringify-object';
-import { readFileAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
+import { readFileAsync, readJsonAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
 import { concatLanguages, isMatchingLocaleOrLanguage } from '../lib/i18n';
 import { project, I18nConfig } from '../project';
 
@@ -46,8 +47,8 @@ function camelCaseKeys(data) {
   }, {});
 }
 
-async function readTranslation(locale: string, feature: string): Promise<Translation> {
-  const readPath = join(process.cwd(), project.ws.i18n!.dir, feature, `${locale}.properties`);
+async function readTranslation(cwd: string, dir: string, locale: string, feature: string): Promise<Translation> {
+  const readPath = join(cwd, dir, feature, `${locale}.properties`);
 
   debug(`Read from ${readPath}.`);
 
@@ -68,7 +69,7 @@ async function readTranslation(locale: string, feature: string): Promise<Transla
 }
 
 function hasArguments(ast) {
- return ast.elements && ast.elements.length && ast.elements.filter(element => element.type === 'argumentElement').length;
+ return ast && ast.elements && ast.elements.length && ast.elements.filter(element => element.type === 'argumentElement').length;
 }
 
 function getArgumentTypes(ast) {
@@ -116,41 +117,73 @@ function indent(indentation: string, text: string) {
   return text.split('\n').join(`\n${indentation}`);
 }
 
-function writeTranslation(translations: ParsedTranslation[]) {
-  const filename = join(project.ws.srcDir, project.ws.i18n!.dir, `index.${project.ws.entryExtension}`);
-  const hasTypes = project.ws.entryExtension !== 'js';
-  const defaultTranslation = translations[0];
+function writeTranslation(defaultTranslation: ParsedTranslation, translation: ParsedTranslation) {
+  const filename = join(project.ws.i18n!.distDir, `${translation.locale}.js`);
   const keys = Object.keys(defaultTranslation.data);
-  const optReturnType = hasTypes ? ': string' : '';
-  const optAnyType = hasTypes ? ': any' : '';
 
   const data =
-`${GENERATED_WARNING}
+    `${GENERATED_WARNING}
 const IntlMessageFormat = require('intl-messageformat');
-const INTL_LOCALE = process.env.INTL_LOCALE;
+// use intl polyfill for IE 10 and Safari 9
+require('intl');
+require('intl/locale-data/jsonp/${translation.locale.replace('_', '-')}');
 
-const cachedMessages: { [s: string]: any } = {};
-${keys.map(key =>
-`${getDocumentation(translations, key)}
-export const ${key} = (${getArgument(defaultTranslation.asts[key], hasTypes)})${optReturnType} => {
-  if (!cachedMessages['${key}']) {
-    let ast${optAnyType};
-${translations.map(translation => `
-    if (process.env.LOCALE === '${translation.locale}') {
-      ast = ${indent('      ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
-    }`).join('\n')}
+const i18nModule = {};
+export const LOCALE = i18nModule.LOCALE = '${translation.locale}';
+export const INTL_LOCALE = i18nModule.INTL_LOCALE = '${translation.locale.replace('_', '-')}';
+export const LANGUAGE_CODE = i18nModule.LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
+export const COUNTRY_CODE = i18nModule.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
 
-    if (!ast) {
-      console.warn('Cannot find translation for "${key}".');
-      return '<${key}>';
-    }
-
+const cachedMessages = {};
+${keys.map(key => `
+export const ${key} = i18nModule['${key}'] = (${hasArguments(translation.asts[key]) ? 'data' : ''}) => {${translation.asts[key] ? `
+    if (!cachedMessages['${key}']) {
+    const ast = ${indent('    ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
     cachedMessages['${key}'] = new IntlMessageFormat(ast, INTL_LOCALE);
   }
 
-  return cachedMessages['${key}'].format(${hasArguments(defaultTranslation.asts[key]) ? 'data' : ''});
+  return cachedMessages['${key}'].format(${hasArguments(translation.asts[key]) ? 'data' : ''});`
+  : `return 'Missing key "${key}".'`}
 };
 `).join('')}
+
+module.exports['${project.ws.i18n!.module}'] = i18nModule;
+`;
+
+  return outputFileAsync(filename, data);
+}
+
+function writeDeclaration(translations: ParsedTranslation[]) {
+  const filename = join(project.ws.i18n!.distDir, 'index.d.ts');
+  const defaultTranslation = translations[0];
+  const keys = Object.keys(defaultTranslation.data);
+
+  const data =
+    `${GENERATED_WARNING}
+declare module '${project.ws.i18n!.module}' {
+  /**
+   * Your locale in the format \`de_DE\`, \`en_US\`, etc.
+   */
+  export const LOCALE;
+
+  /**
+   * Your locale in the format \`de-DE\`, \`en-US\`, etc.
+   */
+  export const INTL_LOCALE;
+
+  /**
+   * Your language code in the format \`de\`, \`en\`, etc.
+   */
+  export const LANGUAGE_CODE;
+
+  /**
+   * Your country code in the format \`DE\`, \`US\`, etc.
+   */
+  export const COUNTRY_CODE;${keys.map(key =>
+      `
+${getDocumentation(translations, key)}
+  export function ${key}(${hasArguments(defaultTranslation.asts[key]) ? 'data' : ''}): string;`).join('\n')}
+}
 `;
 
   return outputFileAsync(filename, data);
@@ -160,17 +193,40 @@ export async function compileI18n() {
   // at this place we know i18n config is set, no need for null checks
   const i18n = project.ws.i18n as I18nConfig;
 
-  const features = i18n.features || [ '' ];
-  const locales = i18n.locales;
-  const localesAndLanguages = concatLanguages(locales);
+  const translatedModules: Array<{
+    cwd: string,
+    dir: string,
+    features: Array<string>,
+    localesAndLanguages: Array<string>
+  }> = [];
+
+  // get translations from all deps (this is very dumb right now)
+  const deps = await globby('node_modules/**/package.json');
+  await Promise.all(deps.map(dep => readJsonAsync(dep).then(pkg => {
+    if (pkg.ws && pkg.ws.i18n) {
+      translatedModules.push({
+        cwd: dirname(dep),
+        dir: pkg.ws.i18n.dir || 'i18n',
+        features: pkg.ws.i18n.features || [ '' ],
+        localesAndLanguages: concatLanguages(pkg.ws.i18n.locales)
+      });
+    }
+  })));
+
+  translatedModules.push({
+    cwd: process.cwd(),
+    dir: i18n.dir,
+    features: i18n.features || [ '' ],
+    localesAndLanguages: concatLanguages(i18n.locales)
+  });
 
   const readPromises: Promise<Translation>[] = [];
-  features.forEach(feature => localesAndLanguages.forEach(localeOrLanguage => {
-    readPromises.push(readTranslation(localeOrLanguage, feature));
-  }));
+  translatedModules.forEach(translatedModule => translatedModule.features.forEach(feature => translatedModule.localesAndLanguages.forEach(localeOrLanguage => {
+    readPromises.push(readTranslation(translatedModule.cwd, translatedModule.dir, localeOrLanguage, feature));
+  })));
   const translations: Translation[] = await Promise.all(readPromises);
 
-  const groupedTranslations: GroupedTranslation[] = locales.map(locale => ({
+  const groupedTranslations: GroupedTranslation[] = i18n.locales.map(locale => ({
     locale,
     translations: translations.filter(translation => isMatchingLocaleOrLanguage(translation.locale, locale))
   }));
@@ -189,6 +245,10 @@ export async function compileI18n() {
     return Object.assign({ asts }, translation);
   });
 
-  await removeAsync(join(project.ws.srcDir, i18n.dir));
-  await writeTranslation(parsedTranslations);
+  await removeAsync(i18n.distDir);
+  await Promise.all(parsedTranslations.map(parsedTranslation => writeTranslation(parsedTranslations[0], parsedTranslation)));
+
+  if (project.ws.entryExtension !== 'js') {
+    await writeDeclaration(parsedTranslations);
+  }
 };

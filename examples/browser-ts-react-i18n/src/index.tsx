@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { someContent, contentWithMessageFormat } from './i18n';
+import { someContent, contentWithMessageFormat } from 'mercateo/i18n';
 
 /**
  * This component shows a translated message.

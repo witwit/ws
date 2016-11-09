@@ -2,6 +2,10 @@ import React from 'react';
 import { NameComponent, ImageTestComponent } from 'ws-examples-browser-ts-react';
 import { SomeComponent, OtherComponent } from 'ws-examples-browser-ts-react-i18n';
 import {
+  LOCALE,
+  INTL_LOCALE,
+  LANGUAGE_CODE,
+  COUNTRY_CODE,
   commonHello,
   commonDescribe,
   commonColor,
@@ -11,11 +15,7 @@ import {
   appMessageFormatGender,
   appMessageFormatHomer,
   appMessageFormatName
-} from './i18n';
-
-// use intl polyfill for IE 10 and Safari 9
-import 'intl';
-require(`intl/locale-data/jsonp/${process.env.INTL_LOCALE}`);
+} from 'mercateo/i18n';
 
 require('normalize.css/normalize.css');
 require('./style.less');
@@ -32,10 +32,10 @@ export const AppComponent = () => (
         ? <p>Production Build</p>
         : <p>Dev Build</p>
     }
-    <p>locale: {process.env.LOCALE}</p>
-    <p>intl locale: {process.env.INTL_LOCALE}</p>
-    <p>language code: {process.env.LANGUAGE_CODE}</p>
-    <p>country code: {process.env.COUNTRY_CODE}</p>
+    <p>locale: {LOCALE}</p>
+    <p>intl locale: {INTL_LOCALE}</p>
+    <p>language code: {LANGUAGE_CODE}</p>
+    <p>country code: {COUNTRY_CODE}</p>
     <SomeComponent />
     <OtherComponent />
     <p>{commonHello()}</p>

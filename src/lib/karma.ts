@@ -81,7 +81,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
   const karmaConfig = Object.assign({}, defaultConfig, {
     basePath: process.cwd(),
     files: [
-      join(project.ws.distTestsDir, project.ws.i18n ? project.ws.i18n.locales[0] : '', 'index.js')
+      join(project.ws.distTestsDir, 'index.js')
     ],
     preprocessors: {
       [join(project.ws.distTestsDir, 'index.js')]: [ 'sourcemap' ]

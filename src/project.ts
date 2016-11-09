@@ -78,6 +78,10 @@ export interface I18nConfig {
    */
   locales: string[];
   /**
+   * Currently fixed to `'mercateo/i18n'`. Used for internal logic.
+   */
+  module: string;
+  /**
    * If you want to have the benefits of i18n like using the message format, but you _really_
    * just want to support _one_ locale, you can generate your projects as if you would not
    * support any locale at all (e.g. generated SPAs aren't nested in a directory for every
@@ -88,6 +92,10 @@ export interface I18nConfig {
    * The directory where your `.properties` with translations are located. Defaults to `i18n`.
    */
   dir: string;
+  /**
+   * The directory where your generated translation are placed. Defaults to `dist-i18n`.
+   */
+  distDir: string;
   /**
    * You can group translations in so called _features_ (e.g. `common`, `errors`, `forms`).
    *
@@ -260,8 +268,16 @@ export function validate(pkg): PackageConfig {
     pkg.ws.distReleaseDir = 'dist-release';
   }
 
+  if (pkg.ws.i18n) {
+    pkg.ws.i18n.module = 'mercateo/i18n';
+  }
+
   if (pkg.ws.i18n && !pkg.ws.i18n.dir) {
     pkg.ws.i18n.dir = 'i18n';
+  }
+
+  if (pkg.ws.i18n && !pkg.ws.i18n.distDir) {
+    pkg.ws.i18n.distDir = 'dist-i18n';
   }
 
   // check if this project is using typescript (and tsx)

@@ -9,11 +9,10 @@ import { findAsync } from '../lib/openport';
 import { listenAsync } from '../lib/express';
 import {
   watchAsync,
-  createLocaleSpecificOptions,
-  nodeOptions,
-  spaOptions,
-  spaI18nOptions,
-  browserOptions
+  nodeDevOptions,
+  spaDevOptions,
+  spaRootI18nDevOptions,
+  browserDevOptions
 } from '../lib/webpack';
 import { compileI18n } from '../lib/i18n-compile';
 
@@ -28,28 +27,23 @@ export default async function watch() {
   const onChangeSuccess = (stats) => info(`Finished build at ${cyan(moment(stats.endTime).format('HH:mm:ss'))}.`);
   switch (project.ws.type) {
     case TYPE.NODE:
-      await watchAsync(livereloadServer, nodeOptions, onChangeSuccess);
+      await watchAsync(livereloadServer, nodeDevOptions, onChangeSuccess);
       break;
     case TYPE.SPA:
       if (project.ws.i18n) {
         await compileI18n();
-        await watchAsync(livereloadServer, createLocaleSpecificOptions(spaOptions, project.ws.i18n.locales[0]), onChangeSuccess);
-
         const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
         if (hasI18nEntry) {
-          await watchAsync(livereloadServer, spaI18nOptions);
+          await watchAsync(livereloadServer, spaRootI18nDevOptions);
         }
-      } else {
-        await watchAsync(livereloadServer, spaOptions, onChangeSuccess);
       }
+      await watchAsync(livereloadServer, spaDevOptions, onChangeSuccess);
       break;
     case TYPE.BROWSER:
       if (project.ws.i18n) {
         await compileI18n();
-        await watchAsync(livereloadServer, createLocaleSpecificOptions(browserOptions, project.ws.i18n.locales[0]), onChangeSuccess);
-      } else {
-        await watchAsync(livereloadServer, browserOptions, onChangeSuccess);
       }
+      await watchAsync(livereloadServer, browserDevOptions, onChangeSuccess);
       break;
   }
 

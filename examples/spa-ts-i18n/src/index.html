@@ -2,12 +2,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <% const appLoading = require('./i18n/index.tsx').appLoading; %>
+  <% const i18n = require('../dist-i18n/' + htmlWebpackPlugin.options.locale + '.js')['mercateo/i18n'] %>
   <title>App</title>
 </head>
 <body>
   <section id="app">
-    <p><%= appLoading() %></p>
+    <p><%= i18n.appLoading() %></p>
   </section>
 </body>
 </html>
