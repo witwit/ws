@@ -130,15 +130,14 @@ const IntlMessageFormat = require('intl-messageformat');
 require('intl');
 require('intl/locale-data/jsonp/${intlLocale}');
 
-const i18nModule = {};
-export const LOCALE = i18nModule.LOCALE = '${translation.locale}';
-export const INTL_LOCALE = i18nModule.INTL_LOCALE = '${intlLocale}';
-export const LANGUAGE_CODE = i18nModule.LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
-export const COUNTRY_CODE = i18nModule.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
+module.exports['${project.ws.i18n!.module}'].LOCALE = '${translation.locale}';
+module.exports['${project.ws.i18n!.module}'].INTL_LOCALE = '${intlLocale}';
+module.exports['${project.ws.i18n!.module}'].LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
+module.exports['${project.ws.i18n!.module}'].COUNTRY_CODE = '${translation.locale.split('_')[1]}';
 
 const cachedMessages = {};
 ${keys.map(key => `
-export const ${key} = i18nModule['${key}'] = (${hasArguments(translation.asts[key]) ? 'data' : ''}) => {${translation.asts[key] ? `
+module.exports['${project.ws.i18n!.module}']['${key}'] = (${hasArguments(translation.asts[key]) ? 'data' : ''}) => {${translation.asts[key] ? `
     if (!cachedMessages['${key}']) {
     const ast = ${indent('    ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
     cachedMessages['${key}'] = new IntlMessageFormat(ast, INTL_LOCALE);
@@ -148,8 +147,40 @@ export const ${key} = i18nModule['${key}'] = (${hasArguments(translation.asts[ke
   : `return 'Missing key "${key}".'`}
 };
 `).join('')}
+`;
 
-module.exports['${project.ws.i18n!.module}'] = i18nModule;
+  return outputFileAsync(filename, data);
+}
+
+async function writeTranslationUnit(translation: ParsedTranslation) {
+  const filename = join(project.ws.i18n!.distDir, `unit.js`);
+  const keys = Object.keys(translation.data);
+  const intlLocale = await toIntlLocale(translation.locale);
+
+  const data =
+    `${GENERATED_WARNING}
+const IntlMessageFormat = require('intl-messageformat');
+// use intl polyfill for IE 10 and Safari 9
+require('intl');
+require('intl/locale-data/jsonp/${intlLocale}');
+
+export const LOCALE = '${translation.locale}';
+export const INTL_LOCALE = '${intlLocale}';
+export const LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
+export const COUNTRY_CODE = '${translation.locale.split('_')[1]}';
+
+const cachedMessages = {};
+${keys.map(key => `
+export const ${key} = (${hasArguments(translation.asts[key]) ? 'data' : ''}) => {${translation.asts[key] ? `
+    if (!cachedMessages['${key}']) {
+    const ast = ${indent('    ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
+    cachedMessages['${key}'] = new IntlMessageFormat(ast, INTL_LOCALE);
+  }
+
+  return cachedMessages['${key}'].format(${hasArguments(translation.asts[key]) ? 'data' : ''});`
+  : `return 'Missing key "${key}".'`}
+};
+`).join('')}
 `;
 
   return outputFileAsync(filename, data);
@@ -249,6 +280,7 @@ export async function compileI18n() {
 
   await removeAsync(i18n.distDir);
   await Promise.all(parsedTranslations.map(parsedTranslation => writeTranslation(parsedTranslations[0], parsedTranslation)));
+  await writeTranslationUnit(parsedTranslations[0]);
 
   if (project.ws.entryExtension !== 'js') {
     await writeDeclaration(parsedTranslations);

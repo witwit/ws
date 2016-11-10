@@ -334,7 +334,7 @@ export const spaUnitOptions: WebpackConfiguration = {
   resolveLoader,
   resolve: Object.assign({}, resolve, project.ws.i18n ? {
     alias: {
-      [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
+      [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
     }
   } : {}),
   devtool
