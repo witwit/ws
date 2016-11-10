@@ -1,12 +1,12 @@
-import { warn, error } from 'loglevel';
+import { warn, error, info, getLevel, levels } from 'loglevel';
 import { join } from 'path';
-import webpack, { DefinePlugin } from 'webpack';
+import webpack, { DefinePlugin, compiler } from 'webpack';
 import { WebpackConfiguration } from './options';
 import { project } from '../../project';
 
 export * from './options';
 
-export const statsStringifierOptions: webpack.compiler.StatsToStringOptions = {
+export const statsStringifierOptions: compiler.StatsToStringOptions = {
   // minimal logging
   assets: false,
   colors: true,
@@ -15,6 +15,19 @@ export const statsStringifierOptions: webpack.compiler.StatsToStringOptions = {
   timings: false,
   chunks: false,
   chunkModules: false,
+  // `children` must be `true` to get error logging, when `options` is an array
+  children: true
+};
+
+export const verboseStatsStringifierOptions: compiler.StatsToStringOptions = {
+  // maximal logging
+  assets: true,
+  colors: true,
+  version: true,
+  hash: true,
+  timings: true,
+  chunks: true,
+  chunkModules: true,
   // `children` must be `true` to get error logging, when `options` is an array
   children: true
 };
@@ -52,6 +65,25 @@ export const statsStringifierOptions: webpack.compiler.StatsToStringOptions = {
 //   });
 // }
 
+function isVerbose(): boolean {
+  return getLevel() <= levels.DEBUG;
+}
+
+function optionallyProfile(options: WebpackConfiguration | Array<WebpackConfiguration>) {
+  if (isVerbose()) {
+    if (Array.isArray(options)) {
+      options.map(option => option.profile = true);
+    } else {
+      options.profile = true;
+    }
+  }
+}
+
+function stringifyStats(stats: any): string {
+  const stringifierOptions = isVerbose() ? verboseStatsStringifierOptions : statsStringifierOptions;
+  return stats.toString(stringifierOptions);
+}
+
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
 function onBuild(resolve, reject, err, stats, watcher?) {
   if (err) {
@@ -61,11 +93,15 @@ function onBuild(resolve, reject, err, stats, watcher?) {
 
   if (stats.hasErrors()) {
     // "soft" error
-    return reject(stats.toString(statsStringifierOptions));
+    return reject(stringifyStats(stats));
   }
 
   if (stats.hasWarnings()) {
-    warn(stats.toString(statsStringifierOptions));
+    warn(stringifyStats(stats));
+  }
+
+  if (isVerbose()) {
+    info(stringifyStats(stats));
   }
 
   // note: watcher is optional
@@ -81,12 +117,17 @@ function onChange(err, stats, livereloadServer, onChangeSuccess?) {
 
   if (stats.hasErrors()) {
     // "soft" error
-    return error(stats.toString(statsStringifierOptions));
+    return error(stringifyStats(stats));
   }
 
   if (stats.hasWarnings()) {
-    warn(stats.toString(statsStringifierOptions));
+    warn(stringifyStats(stats));
   }
+
+  if (isVerbose()) {
+    info(stringifyStats(stats));
+  }
+
 
   // filter changes for live reloading
   const changedModules = stats.compilation.modules.filter(module => module.built && module.resource);
@@ -104,6 +145,7 @@ function onChange(err, stats, livereloadServer, onChangeSuccess?) {
 }
 
 export function compileAsync(options: WebpackConfiguration | Array<WebpackConfiguration>) {
+  optionallyProfile(options);
   const compiler = webpack(options);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => onBuild(resolve, reject, err, stats));
@@ -111,6 +153,7 @@ export function compileAsync(options: WebpackConfiguration | Array<WebpackConfig
 }
 
 export function watchAsync(livereloadServer, options: WebpackConfiguration | Array<WebpackConfiguration>, onChangeSuccess?: (stats: any) => void) {
+  optionallyProfile(options);
   const compiler = webpack(options);
   let isInitialBuild = true;
   return new Promise((resolve, reject) => {

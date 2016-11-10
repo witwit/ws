@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { info } from 'loglevel';
 import { cyan } from 'chalk';
 import moment from 'moment';
@@ -15,6 +16,7 @@ import {
   browserDevOptions
 } from '../lib/webpack';
 import { compileI18n } from '../lib/i18n-compile';
+import { copy } from '../lib/copy';
 
 export default async function watch() {
   await removeAsync(project.ws.distDir);
@@ -38,6 +40,11 @@ export default async function watch() {
         }
       }
       await watchAsync(livereloadServer, spaDevOptions, onChangeSuccess);
+      if (project.ws.i18n) {
+        // this is a quich fix to get relative path for assets in localized spa's working
+        await Promise.all(project.ws.i18n.locales.map(locale =>
+          copy(project.ws.distDir, join(project.ws.distDir, locale), '*.{png,jpg,gif,svg,eot,woff,woff2,ttf}')));
+      }
       break;
     case TYPE.BROWSER:
       if (project.ws.i18n) {

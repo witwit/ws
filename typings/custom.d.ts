@@ -126,6 +126,11 @@ declare module 'loglevel' {
   };
 
   /**
+   * Get your log level.
+   */
+  export function getLevel(): number;
+
+  /**
    * Set your log level.
    * @param level Your new log level.
    */
