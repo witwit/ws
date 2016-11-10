@@ -130,23 +130,26 @@ const IntlMessageFormat = require('intl-messageformat');
 require('intl');
 require('intl/locale-data/jsonp/${intlLocale}');
 
-module.exports['${project.ws.i18n!.module}'].LOCALE = '${translation.locale}';
-module.exports['${project.ws.i18n!.module}'].INTL_LOCALE = '${intlLocale}';
-module.exports['${project.ws.i18n!.module}'].LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
-module.exports['${project.ws.i18n!.module}'].COUNTRY_CODE = '${translation.locale.split('_')[1]}';
+var myModule = {};
+myModule.LOCALE = '${translation.locale}';
+myModule.INTL_LOCALE = '${intlLocale}';
+myModule.LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
+myModule.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
 
 const cachedMessages = {};
 ${keys.map(key => `
-module.exports['${project.ws.i18n!.module}']['${key}'] = (${hasArguments(translation.asts[key]) ? 'data' : ''}) => {${translation.asts[key] ? `
-    if (!cachedMessages['${key}']) {
+myModule.${key} = function(${hasArguments(translation.asts[key]) ? 'data' : ''}) {${translation.asts[key] ? `
+  if (!cachedMessages.${key}) {
     const ast = ${indent('    ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
-    cachedMessages['${key}'] = new IntlMessageFormat(ast, INTL_LOCALE);
+    cachedMessages.${key} = new IntlMessageFormat(ast, myModule.INTL_LOCALE);
   }
 
-  return cachedMessages['${key}'].format(${hasArguments(translation.asts[key]) ? 'data' : ''});`
-  : `return 'Missing key "${key}".'`}
+  return cachedMessages.${key}.format(${hasArguments(translation.asts[key]) ? 'data' : ''});`
+  : `return 'Missing key "${key}".';`}
 };
 `).join('')}
+
+module.exports['mercateo/i18n'] = myModule;
 `;
 
   return outputFileAsync(filename, data);

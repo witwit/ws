@@ -69,7 +69,7 @@ export const jsLoaderNode = {
 
 export const jsLoaderBrowser = {
   test: /\.js(x?)$/,
-  exclude: /node_modules/,
+  exclude: /(node_modules|dist-i18n)/,
   loader: `babel-loader?${babelBrowser}`
 };
 
@@ -478,7 +478,7 @@ export const browserUnitOptions: WebpackConfiguration = {
   resolveLoader,
   resolve: Object.assign({}, resolve, project.ws.i18n ? {
     alias: {
-      [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
+      [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
     }
   } : {}),
   devtool
