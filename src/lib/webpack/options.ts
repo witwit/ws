@@ -5,6 +5,7 @@ import WebpackNodeExternals from 'webpack-node-externals';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
+import { toIntlLocale } from '../intl';
 import { project } from '../../project';
 
 /**
@@ -227,20 +228,20 @@ export const externalsBrowser = [
   }, {}), project.ws.externals)
 ];
 
-export const defineLocalesPlugin = project.ws.i18n && new DefinePlugin({
-  // e.g. 'en_US'
-  'process.env.LOCALE': JSON.stringify(project.ws.i18n.locales[0]),
-  'process.env.LOCALES': JSON.stringify(project.ws.i18n.locales),
-  // e.g. 'en-US'
-  'process.env.INTL_LOCALE': JSON.stringify(project.ws.i18n.locales[0].replace('_', '-')),
-  'process.env.INTL_LOCALES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.replace('_', '-'))),
-  // e.g. 'en'
-  'process.env.LANGUAGE_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[0]),
-  'process.env.LANGUAGE_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[0])),
-  // e.g. 'US'
-  'process.env.COUNTRY_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[1]),
-  'process.env.COUNTRY_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[1]))
-});
+// export const defineLocalesPlugin = project.ws.i18n && new DefinePlugin({
+//   // e.g. 'en_US'
+//   'process.env.LOCALE': JSON.stringify(project.ws.i18n.locales[0]),
+//   'process.env.LOCALES': JSON.stringify(project.ws.i18n.locales),
+//   // e.g. 'en-US'
+//   'process.env.INTL_LOCALE': JSON.stringify(toIntlLocale(project.ws.i18n.locales[0])), // ! toIntlLocale is async, this wouldn't work
+//   'process.env.INTL_LOCALES': JSON.stringify(project.ws.i18n.locales.map(locale => toIntlLocale(locale))), // ! toIntlLocale is async, this wouldn't work
+//   // e.g. 'en'
+//   'process.env.LANGUAGE_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[0]),
+//   'process.env.LANGUAGE_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[0])),
+//   // e.g. 'US'
+//   'process.env.COUNTRY_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[1]),
+//   'process.env.COUNTRY_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[1]))
+// });
 
 const moduleNode = {
   loaders: [

@@ -6,6 +6,7 @@ import { camelCase, uniqBy } from 'lodash';
 import stringifyObject from 'stringify-object';
 import { readFileAsync, readJsonAsync, outputFileAsync, removeAsync } from 'fs-extra-promise';
 import { concatLanguages, isMatchingLocaleOrLanguage } from '../lib/i18n';
+import { toIntlLocale } from './intl';
 import { project, I18nConfig } from '../project';
 
 const parser = require('intl-messageformat-parser');
@@ -117,20 +118,21 @@ function indent(indentation: string, text: string) {
   return text.split('\n').join(`\n${indentation}`);
 }
 
-function writeTranslation(defaultTranslation: ParsedTranslation, translation: ParsedTranslation) {
+async function writeTranslation(defaultTranslation: ParsedTranslation, translation: ParsedTranslation) {
   const filename = join(project.ws.i18n!.distDir, `${translation.locale}.js`);
   const keys = Object.keys(defaultTranslation.data);
+  const intlLocale = await toIntlLocale(translation.locale);
 
   const data =
     `${GENERATED_WARNING}
 const IntlMessageFormat = require('intl-messageformat');
 // use intl polyfill for IE 10 and Safari 9
 require('intl');
-require('intl/locale-data/jsonp/${translation.locale.replace('_', '-')}');
+require('intl/locale-data/jsonp/${intlLocale}');
 
 const i18nModule = {};
 export const LOCALE = i18nModule.LOCALE = '${translation.locale}';
-export const INTL_LOCALE = i18nModule.INTL_LOCALE = '${translation.locale.replace('_', '-')}';
+export const INTL_LOCALE = i18nModule.INTL_LOCALE = '${intlLocale}';
 export const LANGUAGE_CODE = i18nModule.LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
 export const COUNTRY_CODE = i18nModule.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
 
