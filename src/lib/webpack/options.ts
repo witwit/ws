@@ -69,7 +69,7 @@ export const jsLoaderNode = {
 
 export const jsLoaderBrowser = {
   test: /\.js(x?)$/,
-  exclude: /(node_modules|dist-i18n)/,
+  exclude: /node_modules/,
   loader: `babel-loader?${babelBrowser}`
 };
 
