@@ -236,6 +236,13 @@ export async function compileI18n() {
     localesAndLanguages: Array<string>
   }> = [];
 
+  translatedModules.push({
+    cwd: process.cwd(),
+    dir: i18n.dir,
+    features: i18n.features || [ '' ],
+    localesAndLanguages: concatLanguages(i18n.locales)
+  });
+
   // get translations from all deps (this is very dumb right now)
   const deps = await globby('node_modules/**/package.json');
   await Promise.all(deps.map(dep => readJsonAsync(dep).then(pkg => {
@@ -248,13 +255,6 @@ export async function compileI18n() {
       });
     }
   })));
-
-  translatedModules.push({
-    cwd: process.cwd(),
-    dir: i18n.dir,
-    features: i18n.features || [ '' ],
-    localesAndLanguages: concatLanguages(i18n.locales)
-  });
 
   const readPromises: Promise<Translation>[] = [];
   translatedModules.forEach(translatedModule => translatedModule.features.forEach(feature => translatedModule.localesAndLanguages.forEach(localeOrLanguage => {
