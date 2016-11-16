@@ -59,7 +59,7 @@ async function init(options) {
     const { host, port, user, password } = selenium;
     options.seleniumUrl = `http://${user ? `${user}:${password}@` : ''}${host}:${port}/wd/hub`;
     browsers = options.browsers
-      ? options.browser.split(',').map(parseBrowser)
+      ? options.browsers.split(',').map(parseBrowser)
       : await getBrowsers();
 
     if (isSauceLabsHost(host)) {
