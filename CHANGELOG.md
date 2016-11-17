@@ -1,8 +1,9 @@
 The changelog is currently handwritten.
 
-# Unreleased
+# 1.0.1-36 (2016-11-15)
 
 - ws is now compatible with `webpack@2.1.0-beta.27`.
+- You can now set `--browsers` when running E2E tests on a grid. (Thanks @wuan!)
 
 # 1.0.1-35 (2016-11-15)
 
