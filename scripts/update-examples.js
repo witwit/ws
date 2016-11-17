@@ -42,13 +42,13 @@ examples.forEach(example => {
       execSync('npm run -s ws -- unit', { cwd, stdio });
     }
     // test grid
-    if (example === 'spa-ts') {
-      const server = spawn('npm', [ 'run', '-s', 'ws', '--', 'serve'], { cwd, stdio });
-      execSync('npm run -s ws -- e2e --browsers ff', { cwd, stdio });
-      // execSync('npm run -s ws -- e2e -g', { cwd, stdio });
-      // execSync('npm run -s ws -- unit -g', { cwd, stdio });
-      server.kill();
-    }
+    // if (example === 'spa-ts') {
+    //   const server = spawn('npm', [ 'run', '-s', 'ws', '--', 'serve'], { cwd, stdio });
+    //   execSync('npm run -s ws -- e2e --browsers ff', { cwd, stdio });
+    //   // execSync('npm run -s ws -- e2e -g', { cwd, stdio });
+    //   // execSync('npm run -s ws -- unit -g', { cwd, stdio });
+    //   server.kill();
+    // }
   } catch (err) {
      throw `[ERROR] Couldn't update "${example}"!`;
   }

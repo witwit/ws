@@ -90,7 +90,7 @@ export const jsonLoader = {
 
 export const cssLoader = {
   test: /\.css$/,
-  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap&context=/')
+  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap&context=/!postcss-loader?sourceMap')
 };
 
 export const lessLoader = {
@@ -218,15 +218,9 @@ export const externalsNode = [
   WebpackNodeExternals()
 ];
 
-export const externalsBrowser = [
-  // by default we mark every `dependency` as external by setting `{ 'external-module': true }`
-  // see https://webpack.github.io/docs/configuration.html#externals
-  // after that we add custom externals defined in `project.ws.externals`
-  Object.assign(Object.keys(project.dependencies || {}).reduce((target, key) => {
-    target[key] = true;
-    return target;
-  }, {}), project.ws.externals)
-];
+export const externalsBrowser = Object.keys(project.dependencies || {}).concat(project.ws.externals ? [
+  project.ws.externals
+] : []);
 
 // export const defineLocalesPlugin = project.ws.i18n && new DefinePlugin({
 //   // e.g. 'en_US'

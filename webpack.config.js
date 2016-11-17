@@ -30,7 +30,7 @@ module.exports = {
       {
         test: /\.ts(x?)$/,
         loader:
-          `babel?` +
+          `babel-loader?` +
           `presets[]=@niftyco/babel-node,` +
           `presets[]=babel-preset-stage-0&` +
           `plugins[]=babel-plugin-transform-decorators-legacy` +
