@@ -37,7 +37,7 @@ const outputTest = Object.assign({}, output, {
   path: join(process.cwd(), project.ws.distTestsDir)
 });
 
-const babelNode = JSON.stringify({
+const babelNode = {
   presets: [
     resolveFile('@niftyco/babel-node'),
     resolveFile('babel-preset-stage-0')
@@ -45,9 +45,9 @@ const babelNode = JSON.stringify({
   plugins: [
     resolveFile('babel-plugin-transform-decorators-legacy')
   ]
-});
+};
 
-const babelBrowser = JSON.stringify({
+const babelBrowser = {
   presets: [
     [ resolveFile('babel-preset-es2015') , { modules: false } ],
     resolveFile('babel-preset-react'),
@@ -59,28 +59,42 @@ const babelBrowser = JSON.stringify({
   // this removes the "[BABEL] Note: The code generator has deoptimised the styling of..." warning
   // I don't think we need `compact`, because our code is minified for production separately
   compact: false
-});
+};
 
 export const jsLoaderNode = {
   test: /\.js(x?)$/,
   exclude: /node_modules/,
-  loader: `babel-loader?${babelNode}`
+  loader: 'babel-loader',
+  options: Object.assign({}, babelNode, { cacheDirectory: true })
 };
 
 export const jsLoaderBrowser = {
   test: /\.js(x?)$/,
-  exclude: /node_modules/,
-  loader: `babel-loader?${babelBrowser}`
+  exclude: new RegExp(`(node_modules|${project.ws.i18n ? project.ws.i18n.locales.map(locale => `${project.ws.i18n!.distDir}\/locale`).join('|') : ''})`),
+  loader: 'babel-loader',
+  options: Object.assign({}, babelBrowser, { cacheDirectory: true })
 };
 
 export const tsLoaderNode = {
   test: /\.ts(x?)$/,
-  loader: `babel-loader?${babelNode}!awesome-typescript-loader`
+  loader: 'awesome-typescript-loader',
+  options: {
+    useBabel: true,
+    babelOptions: babelNode,
+    useCache: true,
+    cacheDirectory: 'node_modules/.cache/awesome-typescript-loader'
+  }
 };
 
 export const tsLoaderBrowser = {
   test: /\.ts(x?)$/,
-  loader: `babel-loader?${babelBrowser}!awesome-typescript-loader`
+  loader: 'awesome-typescript-loader',
+  options: {
+    useBabel: true,
+    babelOptions: babelBrowser,
+    useCache: true,
+    cacheDirectory: 'node_modules/.cache/awesome-typescript-loader'
+  }
 };
 
 export const jsonLoader = {
@@ -221,21 +235,6 @@ export const externalsNode = [
 export const externalsBrowser = Object.keys(project.dependencies || {}).concat(project.ws.externals ? [
   project.ws.externals
 ] : []);
-
-// export const defineLocalesPlugin = project.ws.i18n && new DefinePlugin({
-//   // e.g. 'en_US'
-//   'process.env.LOCALE': JSON.stringify(project.ws.i18n.locales[0]),
-//   'process.env.LOCALES': JSON.stringify(project.ws.i18n.locales),
-//   // e.g. 'en-US'
-//   'process.env.INTL_LOCALE': JSON.stringify(toIntlLocale(project.ws.i18n.locales[0])), // ! toIntlLocale is async, this wouldn't work
-//   'process.env.INTL_LOCALES': JSON.stringify(project.ws.i18n.locales.map(locale => toIntlLocale(locale))), // ! toIntlLocale is async, this wouldn't work
-//   // e.g. 'en'
-//   'process.env.LANGUAGE_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[0]),
-//   'process.env.LANGUAGE_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[0])),
-//   // e.g. 'US'
-//   'process.env.COUNTRY_CODE': JSON.stringify(project.ws.i18n.locales[0].split('_')[1]),
-//   'process.env.COUNTRY_CODES': JSON.stringify(project.ws.i18n.locales.map(locale => locale.split('_')[1]))
-// });
 
 const moduleNode = {
   loaders: [
