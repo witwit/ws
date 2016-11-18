@@ -81,8 +81,9 @@ export const tsLoaderNode = {
   options: {
     useBabel: true,
     babelOptions: babelNode,
+    babelCore: resolveFile('babel-core'),
     useCache: true,
-    cacheDirectory: 'node_modules/.cache/awesome-typescript-loader'
+    cacheDirectory: 'node_modules/.awesome-typescript-loader-cache'
   }
 };
 
@@ -92,8 +93,9 @@ export const tsLoaderBrowser = {
   options: {
     useBabel: true,
     babelOptions: babelBrowser,
+    babelCore: resolveFile('babel-core'),
     useCache: true,
-    cacheDirectory: 'node_modules/.cache/awesome-typescript-loader'
+    cacheDirectory: 'node_modules/.awesome-typescript-loader-cache'
   }
 };
 

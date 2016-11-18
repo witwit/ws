@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-38 (2016-11-18)
+
+- Fixed some flaky paths.
+
 # 1.0.1-37 (2016-11-18)
 
 - Minor performance improvements.
