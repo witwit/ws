@@ -232,7 +232,9 @@ export const externalsNode = [
   },
   // in order to ignore all modules in node_modules folder
   WebpackNodeExternals()
-];
+].concat(project.ws.externals ? [
+  project.ws.externals
+] : []);
 
 export const externalsBrowser = Object.keys(project.dependencies || {}).concat(project.ws.externals ? [
   project.ws.externals
@@ -325,7 +327,7 @@ export const spaUnitOptions: WebpackConfiguration = {
     extractCssPlugin,
     postcssPlugin
   ],
-  externals: [],
+  externals: project.ws.externals ? [ project.ws.externals ] : [],
   resolveLoader,
   resolve: Object.assign({}, resolve, project.ws.i18n ? {
     alias: {
@@ -469,7 +471,7 @@ export const browserUnitOptions: WebpackConfiguration = {
     extractCssPlugin,
     postcssPlugin
   ],
-  externals: [],
+  externals: project.ws.externals ? [ project.ws.externals ] : [],
   resolveLoader,
   resolve: Object.assign({}, resolve, project.ws.i18n ? {
     alias: {
