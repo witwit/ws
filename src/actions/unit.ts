@@ -11,7 +11,7 @@ import {
 } from '../lib/webpack';
 import { testAsync as karmaTestAsync } from '../lib/karma';
 import { testAsync as mochaTestAsync  } from '../lib/mocha';
-import { compileI18n } from '../lib/i18n-compile';
+import { compile as compileI18n } from '../lib/i18n';
 
 export default async function unit(options: any) {
   const hasUnitTests = await existsAsync(project.ws.unitEntry);

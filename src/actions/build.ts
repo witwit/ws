@@ -12,7 +12,7 @@ import {
   browserDevOptions,
   browserReleaseOptions
 } from '../lib/webpack';
-import { compileI18n } from '../lib/i18n-compile';
+import { compile as compileI18n } from '../lib/i18n';
 import { copy } from '../lib/copy';
 
 export default async function build(options: any) {
