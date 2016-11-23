@@ -197,13 +197,13 @@ async function getAllAvailableBrowsers(): Promise<Browser[]> {
         res.on('end', () => resolve(JSON.parse(body)));
       }).on('error', reject);
     });
-    browsersWithoutId = platforms.map(({ api_name, short_version }) => ({
+    browsersWithoutId = platforms.map(({ api_name, short_version }: any) => ({
       // treat 'iphone' like 'ipad' (same browser)
       browserName: api_name === 'iphone' ? 'ipad' : api_name,
       version: short_version
     }))
     // sauce labs supports beta/dev versions, but we can't map them back to browserslist
-    .filter(({ version }) => version !== 'dev' && version !== 'beta');
+    .filter(({ version }: any) => version !== 'dev' && version !== 'beta');
   } else {
     debug(`Get available browsers on Selenium Grid.`);
     // convert status like https://github.com/davglass/selenium-grid-status#usage
@@ -235,7 +235,7 @@ export async function getFilteredAvailableBrowsers(browsers: string = project.ws
   const availableBrowsers = await getAllAvailableBrowsers();
   const availableBrowsersData = availableBrowsers
     .filter(({ browserName }) => supportedBrowsers.some(({ selenium }) => selenium === browserName))
-    .reduce((data, browser) => {
+    .reduce((data: any, browser: any) => {
       const name = supportedBrowsers.find(({ selenium }) => selenium === browser.browserName)!.browserslist;
       if (data[name]) {
         data[name].released.unshift(browser.version);

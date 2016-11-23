@@ -8,7 +8,7 @@ const defaultOptions = {
   ]
 };
 
-export function transformFileAsync(filename) {
+export function transformFileAsync(filename: string) {
   return new Promise((resolve, reject) => {
     transformFile(filename, defaultOptions, (err, result) => {
       if (err) {

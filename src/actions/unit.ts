@@ -1,4 +1,4 @@
-import { info, warn } from 'loglevel';
+import { warn } from 'loglevel';
 import path from 'path';
 import { removeAsync, existsAsync } from 'fs-extra-promise';
 import { cyan, yellow } from 'chalk';
@@ -13,7 +13,7 @@ import { testAsync as karmaTestAsync } from '../lib/karma';
 import { testAsync as mochaTestAsync  } from '../lib/mocha';
 import { compileI18n } from '../lib/i18n-compile';
 
-export default async function unit(options) {
+export default async function unit(options: any) {
   const hasUnitTests = await existsAsync(project.ws.unitEntry);
   if (!hasUnitTests) {
     warn(`${yellow('warn!')} You tried to run unit tests, but ${yellow(project.ws.unitEntry)} doesn't exist.`);
@@ -22,7 +22,7 @@ export default async function unit(options) {
 
   await removeAsync(project.ws.distTestsDir);
 
-  let exitCode;
+  let exitCode: number = 0;
   switch (project.ws.type) {
     case TYPE.NODE:
       await compileAsync(nodeUnitOptions);

@@ -27,7 +27,7 @@ commander.option('-l, --log-level <level>', 'set log level', (value) => {
 }, 'info');
 
 function handleAction(action: (options?: any) => Promise<any>) {
-  return (options) => {
+  return (options: any) => {
     // handle global options
     setLevel(levels[options.parent.logLevel.toUpperCase()]);
     // handle specific action
@@ -130,7 +130,7 @@ switch (project.ws.type) {
 }
 
 // handle unknown commands
-commander.on('*', (unknownCommand) => {
+commander.on('*', (unknownCommand: string) => {
   commander.outputHelp();
   throw `${yellow(unknownCommand)} is not a known command. You can see all supported commands above.`;
 });

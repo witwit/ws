@@ -15,7 +15,7 @@ import {
 import { compileI18n } from '../lib/i18n-compile';
 import { copy } from '../lib/copy';
 
-export default async function build(options) {
+export default async function build(options: any) {
   switch (project.ws.type) {
     case TYPE.NODE:
       await removeAsync(project.ws.distDir);

@@ -5,7 +5,7 @@ import getIpAddress from './ip-address';
 import { getBrowsers, isSauceLabsHost, launchSauceConnect } from './selenium';
 import { project, SeleniumGridConfig } from '../project';
 
-function toCustomLaunchersObject(customLaunchers, browser) {
+function toCustomLaunchersObject(customLaunchers: any, browser: any) {
   // at this place we know selenium config is set, no need for null checks
   const selenium = project.ws.selenium as SeleniumGridConfig;
 
@@ -88,11 +88,11 @@ export async function testAsync(options: { grid?: boolean } = {}) {
     }
   });
 
-  let sauceConnectProcess;
+  let sauceConnectProcess: any;
   if (options.grid) {
     // at this place we know selenium config is set, no need for null checks
     const selenium = project.ws.selenium as SeleniumGridConfig;
-    const { host, port } = selenium;
+    const { host } = selenium;
     const browsers = await getBrowsers();
 
     const customLaunchers = browsers.reduce(toCustomLaunchersObject, {});
@@ -107,7 +107,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
     }
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise<number>(resolve => {
     const server = new Server(karmaConfig, (exitCode) => {
       debug(`Karma finished.`);
       if (sauceConnectProcess) {

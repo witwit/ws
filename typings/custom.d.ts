@@ -104,7 +104,9 @@ declare module 'openport' {
 }
 
 declare module 'html-webpack-plugin' {
-  export default function HtmlWebpackPlugin(...params: any[]): void;
+  export default class HtmlWebpackPlugin {
+    constructor(...params: any[]);
+  }
 }
 
 declare module 'webpack-node-externals' {
@@ -116,14 +118,8 @@ declare module 'loglevel' {
   /**
    * All log levels.
    */
-  export const levels: {
-    TRACE: number;
-    DEBUG: number;
-    INFO: number;
-    WARN: number;
-    ERROR: number;
-    SILENT: number;
-  };
+  // type LEVEL = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'SILENT';
+  export const levels: { [foo: string]: number };
 
   /**
    * Get your log level.
@@ -198,7 +194,9 @@ declare module 'connect-livereload' {
 }
 
 declare module 'extract-text-webpack-plugin' {
-  function ExtractTextWebpackPlugin(...params: any[]): void;
+  class ExtractTextWebpackPlugin {
+    constructor(...params: any[]);
+  }
 
   namespace ExtractTextWebpackPlugin {
     function extract(...params: any[]): any;

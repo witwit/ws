@@ -14,7 +14,7 @@ export function startSeleniumServer() {
             reject(err);
           } else {
             // kill selenium server on abrupt 'exit'
-            process.on('exit', code => childProcess.kill());
+            process.on('exit', () => childProcess.kill());
             resolve(childProcess);
           }
         });

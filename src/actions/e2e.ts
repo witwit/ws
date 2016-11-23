@@ -11,7 +11,7 @@ import {
 import { testAsync } from '../lib/mocha';
 import { startSeleniumServer, Browser, parseBrowser, getBrowsers, isSauceLabsHost, launchSauceConnect } from '../lib/selenium';
 
-function spawnE2e(options, browser: Browser) {
+function spawnE2e(options: any, browser: Browser) {
   return new Promise((resolve, reject) => {
     const [ node, ws ] = process.argv;
     const env = Object.assign({}, process.env, {
@@ -28,16 +28,16 @@ function spawnE2e(options, browser: Browser) {
     childProcess.stdout.on('data', (data) => process.stdout.write(`${childPrefix}${data}`));
     childProcess.stderr.on('data', (data) => process.stderr.write(`${childPrefix}${data}`));
 
-    childProcess.on('error', (err) => {
+    childProcess.on('error', (err: any) => {
       error(`${childPrefix}${err}`);
       reject(1);
     });
 
-    childProcess.on('close', (code) => code ? reject(code) : resolve(code));
+    childProcess.on('close', (code: any) => code ? reject(code) : resolve(code));
   });
 }
 
-async function init(options) {
+async function init(options: any) {
   // build
   const e2eEntry = `./${project.ws.testsDir}/e2e.${project.ws.entryExtension}`;
   const hasE2eTests = await existsAsync(e2eEntry);
@@ -50,9 +50,9 @@ async function init(options) {
   await compileAsync(spaE2eOptions);
 
   // prepare selenium
-  let seleniumProcess;
-  let sauceConnectProcess;
-  let browsers;
+  let seleniumProcess: any;
+  let sauceConnectProcess: any;
+  let browsers: Array<any>;
   if (options.grid) {
     // at this place we know selenium config is set, no need for null checks
     const selenium = project.ws.selenium as SeleniumGridConfig;
@@ -99,7 +99,7 @@ async function run() {
   }
 }
 
-export default async function e2e(options) {
+export default async function e2e(options: any) {
   const isSpawned = process.env.WS_E2E_IS_SPAWNED;
 
   if (isSpawned) {

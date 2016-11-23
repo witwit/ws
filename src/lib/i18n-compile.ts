@@ -41,8 +41,8 @@ interface ParsedTranslation {
   asts: AstMap;
 }
 
-function camelCaseKeys(data) {
-  return Object.keys(data).reduce((acc, key) => {
+function camelCaseKeys(data: any) {
+  return Object.keys(data).reduce((acc: any, key: string) => {
     acc[camelCase(key)] = data[key];
     return acc;
   }, {});
@@ -69,39 +69,27 @@ async function readTranslation(cwd: string, dir: string, locale: string, feature
   return translation;
 }
 
-function hasArguments(ast) {
- return ast && ast.elements && ast.elements.length && ast.elements.filter(element => element.type === 'argumentElement').length;
+function hasArguments(ast: any) {
+ return ast && ast.elements && ast.elements.length && ast.elements.filter((element: any) => element.type === 'argumentElement').length;
 }
 
-function getArgumentTypes(ast) {
+function getArgumentTypes(ast: any) {
   const keyTypePairs = uniqBy(
     ast.elements
-    .filter(element => element.type === 'argumentElement')
-    .map(element => ({
+    .filter((element: any) => element.type === 'argumentElement')
+    .map((element: any) => ({
       key: element.id,
       type:
         (element.format && element.format.type === 'pluralFormat')
           ? 'number'
         : (element.format && element.format.type === 'selectFormat')
-          ? element.format.options.map(({ selector }) => selector === 'other' ? 'string' : `'${selector}'`).join(' | ')
+          ? element.format.options.map(({ selector }: any) => selector === 'other' ? 'string' : `'${selector}'`).join(' | ')
           : 'string'
     })),
     'key');
 
   if (keyTypePairs.length) {
     return `{ ${keyTypePairs.map(({ key, type }) => `${key}: ${type}`).join(', ')} }`;
-  } else {
-    return '';
-  }
-}
-
-function getArgument(ast, hasTypes) {
-  if (hasArguments(ast)) {
-    if (hasTypes) {
-      return `data${getArgumentTypes(ast)}`;
-    } else {
-      return 'data';
-    }
   } else {
     return '';
   }
@@ -200,25 +188,25 @@ declare module '${project.ws.i18n!.module}' {
   /**
    * Your locale in the format \`de_DE\`, \`en_US\`, etc.
    */
-  export const LOCALE;
+  export const LOCALE: string;
 
   /**
    * Your locale in the format \`de-DE\`, \`en-US\`, etc.
    */
-  export const INTL_LOCALE;
+  export const INTL_LOCALE: string;
 
   /**
    * Your language code in the format \`de\`, \`en\`, etc.
    */
-  export const LANGUAGE_CODE;
+  export const LANGUAGE_CODE: string;
 
   /**
    * Your country code in the format \`DE\`, \`US\`, etc.
    */
-  export const COUNTRY_CODE;${keys.map(key =>
+  export const COUNTRY_CODE: string;${keys.map(key =>
       `
 ${getDocumentation(translations, key)}
-  export function ${key}(${hasArguments(defaultTranslation.asts[key]) ? 'data' : ''}): string;`).join('\n')}
+  export function ${key}(${hasArguments(defaultTranslation.asts[key]) ? `data: ${getArgumentTypes(defaultTranslation.asts[key])}` : ''}): string;`).join('\n')}
 }
 `;
 
@@ -273,7 +261,7 @@ export async function compileI18n() {
   }));
 
   const parsedTranslations: ParsedTranslation[] = mergedTranslations.map(translation => {
-    const asts = {};
+    const asts: { [s: string]: any } = {};
     Object.keys(translation.data).forEach(key => {
       const ast = parser.parse(translation.data[key]);
       asts[key] = ast;

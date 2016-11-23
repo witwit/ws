@@ -4,7 +4,7 @@ import { readJsonSync } from 'fs-extra-promise';
 import { CompilerOptions } from 'typescript';
 
 const unvalidatedProject = readJsonSync(join(process.cwd(), 'package.json'));
-let tsconfig;
+let tsconfig: any;
 try {
   tsconfig = readJsonSync(join(process.cwd(), 'tsconfig.json'));
 } catch (err) {
@@ -231,7 +231,7 @@ const sampleConfig = `
   }
 `;
 
-export function validate(pkg): PackageConfig {
+export function validate(pkg: any): PackageConfig {
   if (!pkg.ws) {
     throw `Your ${yellow('package.json')} needs a ${yellow('ws')} config. It could look like this:${sampleConfig}`;
   }

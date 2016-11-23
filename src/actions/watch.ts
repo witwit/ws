@@ -26,7 +26,7 @@ export default async function watch() {
   });
 
   const livereloadServer = livereload.createServer({ port });
-  const onChangeSuccess = (stats) => info(`Finished build at ${cyan(moment(stats.endTime).format('HH:mm:ss'))}.`);
+  const onChangeSuccess = (stats: any) => info(`Finished build at ${cyan(moment(stats.endTime).format('HH:mm:ss'))}.`);
   switch (project.ws.type) {
     case TYPE.NODE:
       await watchAsync(livereloadServer, nodeDevOptions, onChangeSuccess);

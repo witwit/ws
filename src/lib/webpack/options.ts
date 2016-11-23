@@ -1,11 +1,10 @@
 import { join } from 'path';
-import webpack, { DefinePlugin, optimize, Entry, Output } from 'webpack';
+import webpack, { DefinePlugin, optimize } from 'webpack';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
-import { toIntlLocale } from '../intl';
 import { project } from '../../project';
 
 /**
@@ -70,7 +69,7 @@ export const jsLoaderNode = {
 
 export const jsLoaderBrowser = {
   test: /\.js(x?)$/,
-  exclude: new RegExp(`(node_modules|${project.ws.i18n ? project.ws.i18n.locales.map(locale => `${project.ws.i18n!.distDir}\/locale`).join('|') : ''})`),
+  exclude: new RegExp(`(node_modules|${project.ws.i18n ? project.ws.i18n.locales.map(locale => `${project.ws.i18n!.distDir}\/${locale}`).join('|') : ''})`),
   loader: 'babel-loader',
   options: Object.assign({}, babelBrowser, { cacheDirectory: true })
 };
@@ -223,7 +222,7 @@ export const devtoolProduction = 'source-map';
 
 export const externalsNode = [
   // require json files with nodes built-in require logic
-  function(context, request, callback) {
+  function(_context: any, request: any, callback: any) {
     if (/\.json$/.test(request)) {
       callback(null, 'commonjs ' + request);
     } else {
@@ -272,7 +271,7 @@ if (project.ws.i18n) {
       filename: `${locale}/index.html`,
       template: 'src/index.html',
       chunks: [ chunkKey, 'index' ],
-      chunksSortMode: (a, b) => a.names[0] === 'index' ? 1 : 0
+      chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }));
   });
 }
@@ -357,7 +356,6 @@ export const spaE2eOptions: WebpackConfiguration = {
 };
 
 // e.g.to create a locale switcher or redirect for localized spa’s
-const defaultLocale = project.ws.i18n && project.ws.i18n.locales[0];
 export const spaRootI18nDevOptions: WebpackConfiguration = project.ws.i18n ? {
   entry: {
     indexI18n: project.ws.srcI18nEntry,
@@ -375,7 +373,7 @@ export const spaRootI18nDevOptions: WebpackConfiguration = project.ws.i18n ? {
       locale: project.ws.i18n.locales[0],
       locales: project.ws.i18n.locales,
       chunks: [ 'i18n', 'indexI18n' ],
-      chunksSortMode: (a, b) => a.names[0] === 'index' ? 1 : 0
+      chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }),
     extractCssPlugin,
     postcssPlugin
@@ -404,7 +402,7 @@ export const spaRootI18nReleaseOptions: WebpackConfiguration = project.ws.i18n ?
       locale: project.ws.i18n.locales[0],
       locales: project.ws.i18n.locales,
       chunks: [ 'i18n', 'indexI18n' ],
-      chunksSortMode: (a, b) => a.names[0] === 'index' ? 1 : 0
+      chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }),
     extractCssHashPlugin,
     postcssPlugin,

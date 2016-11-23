@@ -1,8 +1,6 @@
 import { warn, error, info, getLevel, levels } from 'loglevel';
-import { join } from 'path';
-import webpack, { DefinePlugin, compiler } from 'webpack';
+import webpack, { compiler } from 'webpack';
 import { WebpackConfiguration } from './options';
-import { project } from '../../project';
 
 export * from './options';
 
@@ -66,7 +64,7 @@ export const verboseStatsStringifierOptions: compiler.StatsToStringOptions = {
 // }
 
 function isVerbose(): boolean {
-  return getLevel() <= levels.DEBUG;
+  return getLevel() <= levels['DEBUG'];
 }
 
 function optionallyProfile(options: WebpackConfiguration | Array<WebpackConfiguration>) {
@@ -85,7 +83,7 @@ function stringifyStats(stats: any): string {
 }
 
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
-function onBuild(resolve, reject, err, stats, watcher?) {
+function onBuild(resolve: any, reject: any, err: any, stats: any, watcher?: any) {
   if (err) {
     // "hard" error
     return reject(err);
@@ -109,7 +107,7 @@ function onBuild(resolve, reject, err, stats, watcher?) {
 }
 
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
-function onChange(err, stats, livereloadServer, onChangeSuccess?) {
+function onChange(err: any, stats: any, livereloadServer: any, onChangeSuccess?: any) {
   if (err) {
     // "hard" error
     return error(err);
@@ -130,8 +128,8 @@ function onChange(err, stats, livereloadServer, onChangeSuccess?) {
 
 
   // filter changes for live reloading
-  const changedModules = stats.compilation.modules.filter(module => module.built && module.resource);
-  const changedStyleModules = changedModules.filter(module => module.resource.match(/\.(css|less|sass)$/));
+  const changedModules = stats.compilation.modules.filter((module: any) => module.built && module.resource);
+  const changedStyleModules = changedModules.filter((module: any) => module.resource.match(/\.(css|less|sass)$/));
   let hasOnlyStyleChanges = changedModules.length === changedStyleModules.length;
   if (hasOnlyStyleChanges) {
     livereloadServer.refresh('style.css');
@@ -152,12 +150,12 @@ export function compileAsync(options: WebpackConfiguration | Array<WebpackConfig
   });
 }
 
-export function watchAsync(livereloadServer, options: WebpackConfiguration | Array<WebpackConfiguration>, onChangeSuccess?: (stats: any) => void) {
+export function watchAsync(livereloadServer: any, options: WebpackConfiguration | Array<WebpackConfiguration>, onChangeSuccess?: (stats: any) => void) {
   optionallyProfile(options);
   const compiler = webpack(options);
   let isInitialBuild = true;
   return new Promise((resolve, reject) => {
-    const watcher = compiler.watch({}, (err, stats) => {
+    compiler.watch({}, (err, stats) => {
       if (isInitialBuild) {
         isInitialBuild = false;
         onBuild(resolve, reject, err, stats);

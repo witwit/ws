@@ -5,7 +5,7 @@ import { join } from 'path';
 import { lintAsync } from '../lib/tslint';
 import { project } from '../project';
 
-const sourceFileLines = {};
+const sourceFileLines: { [s: string]: any } = {};
 
 export default async function lint() {
   // typescript
