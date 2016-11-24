@@ -43,7 +43,7 @@ export default async function watch() {
       if (project.ws.i18n) {
         // this is a quich fix to get relative path for assets in localized spa's working
         await Promise.all(project.ws.i18n.locales.map(locale =>
-          copy(project.ws.distDir, join(project.ws.distDir, locale), '*.{png,jpg,gif,svg,eot,woff,woff2,ttf}')));
+          copy(project.ws.distDir, join(project.ws.distDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf}')));
         await Promise.all(project.ws.i18n.locales.map(locale =>
             copy(join(project.ws.distDir, 'config'), join(project.ws.distDir, locale, 'config'), '*.js')));
       }
