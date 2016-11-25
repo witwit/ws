@@ -40,8 +40,10 @@
     "react": "^15.0.0"
   },
   "devDependencies": {
+    "@types/enzyme": "^2.5.38",
     "@types/expect": "^1.13.29",
     "@types/mocha": "^2.2.27",
+    "enzyme": "^2.6.0",
     "expect": "^1.18.0",
     "intl": "^1.2.4",
     "react-addons-test-utils": "^15.0.0",
