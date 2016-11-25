@@ -9,6 +9,8 @@ node_js:
 cache:
   yarn: true
   directories:
+    - ~/.yarn
+    - ~/.nvm
     - node_modules
 
 #install:
