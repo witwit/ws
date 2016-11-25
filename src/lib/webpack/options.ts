@@ -238,11 +238,7 @@ export const externalsBrowser = Object.keys(project.dependencies || {}).concat(p
   project.ws.externals
 ] : []);
 
-const enzymeExternals = [ {
-  'react/lib/ExecutionEnvironment': true,
-  'react/lib/ReactContext': true,
-  'react/addons': true
-}];
+const enzymeExternals = [ 'react/lib/ExecutionEnvironment', 'react/lib/ReactContext', 'react/addons' ];
 
 const moduleNode = {
   loaders: [
