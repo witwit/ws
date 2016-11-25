@@ -1,5 +1,16 @@
 The changelog is currently handwritten.
 
+# 1.0.1-40 (2016-11-25)
+
+- Max heap is increased by default.
+- You can now use Enzyme in unit tests.
+
+Thanks @otbe!
+
+# 1.0.1-39 (2016-11-24)
+
+- `.zip` and `.pdf` files be copied for localized apps.
+
 # 1.0.1-38 (2016-11-18)
 
 - Fixed some flaky paths.
