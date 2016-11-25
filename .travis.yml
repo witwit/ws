@@ -4,15 +4,14 @@ language: node_js
 
 node_js:
   - "6"
-#  - "5"
-#  - "4"
 
 cache:
+  yarn: true
   directories:
     - node_modules
 
-install:
-  - npm install --no-optional
+#install:
+#  - npm install --no-optional
 
 # build is triggered by prepublish hook which is triggered by npm install
 #before_script:

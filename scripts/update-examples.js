@@ -26,7 +26,7 @@ examples.forEach(example => {
     rimrafSync(join(cwd, 'dist'));
     rimrafSync(join(cwd, 'dist-tests'));
     rimrafSync(join(cwd, 'dist-release'));
-    execSync('npm install', { cwd, stdio });
+    execSync('yarn install', { cwd, stdio });
 
     // test commands
     execSync('npm run -s ws -- build', { cwd, stdio });
