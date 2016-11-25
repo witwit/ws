@@ -1,24 +1,20 @@
 import expect from 'expect';
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
 import { SomeComponent, OtherComponent } from '../src/index';
+import { shallow } from 'enzyme';
 
 describe('test my i18n components', () => {
   it('should render <SomeComponent />', () => {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(<SomeComponent />);
-    const output = renderer.getRenderOutput();
+    const comp = shallow(<SomeComponent />);
 
-    expect(output.type).toBe('p');
-    expect(output.props.children).toEqual([ 'Hello translated content!' ]);
+    expect(comp.type()).toBe('p');
+    expect(comp.props().children).toEqual([ 'Hello translated content!' ]);
   });
 
   it('should render <OtherComponent />', () => {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(<OtherComponent />);
-    const output = renderer.getRenderOutput();
+    const comp = shallow(<OtherComponent />);
 
-    expect(output.type).toBe('p');
-    expect(output.props.children).toEqual([ 'You have one.' ]);
+    expect(comp.type()).toBe('p');
+    expect(comp.props().children).toEqual([ 'You have one.' ]);
   });
 });

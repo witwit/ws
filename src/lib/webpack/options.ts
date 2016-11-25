@@ -237,6 +237,8 @@ export const externalsBrowser = Object.keys(project.dependencies || {}).concat(p
   project.ws.externals
 ] : []);
 
+const enzymeExternals = [ 'react/lib/ExecutionEnvironment', 'react/lib/ReactContext', 'react/addons' ];
+
 const moduleNode = {
   loaders: [
     jsLoaderNode,
@@ -324,7 +326,7 @@ export const spaUnitOptions: WebpackConfiguration = {
     extractCssPlugin,
     postcssPlugin
   ],
-  externals: [],
+  externals: enzymeExternals,
   resolveLoader,
   resolve: Object.assign({}, resolve, project.ws.i18n ? {
     alias: {
@@ -467,7 +469,7 @@ export const browserUnitOptions: WebpackConfiguration = {
     extractCssPlugin,
     postcssPlugin
   ],
-  externals: [],
+  externals: enzymeExternals,
   resolveLoader,
   resolve: Object.assign({}, resolve, project.ws.i18n ? {
     alias: {
