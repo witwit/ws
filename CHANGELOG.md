@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-41 (2016-11-28)
+
+- Fixed CLI for some linux systems.
+
 # 1.0.1-40 (2016-11-25)
 
 - Max heap is increased by default.
