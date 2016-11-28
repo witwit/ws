@@ -122,9 +122,10 @@ export interface WsConfig {
   /**
    * We currently support three types of projects: `'spa'`, `'node'` and `'browser'`.
    */
-    type: 'spa' | 'node' | 'browser';
+  type: 'spa' | 'node' | 'browser';
   /**
    * The file extension of your entry file. Either `js`, `ts` or `tsx`.
+   * This value is set automatically.
    */
   entryExtension: 'js' | 'ts' | 'tsx';
   /**
@@ -137,7 +138,7 @@ export interface WsConfig {
    */
   externals?: any;
   /**
-   * The directory where your source code is located.
+   * The directory where your source code is located. Defaults to `'src'`.
    */
   srcDir: string;
   /**
@@ -152,7 +153,7 @@ export interface WsConfig {
    */
   srcI18nEntry: string;
   /**
-   * The directory where your tests are located.
+   * The directory where your tests are located. Defaults to `'tests'`.
    */
   testsDir: string;
   /**
