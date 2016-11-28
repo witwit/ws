@@ -8,6 +8,8 @@ When you say _build tool_ and mean a tool like Grunt, Gulp or Webpack - no. It i
 
 We used `ws` internally for years and it used Grunt, Gulp and now we switched to Webpack. But while we changed the tools _inside_ `ws` it didn't really changed the way how we used and called `ws`. But we gained new features like better compilation speed, better minification, tree shaking and so on in  every change.
 
+This project is similar to projects like [`create-react-app`](https://github.com/facebookincubator/create-react-app), but less tied to a specific framework.
+
 # Should I use it?
 
 Have you `npm install`'ed and `require`'d a `Gruntfile.js` from a different project in the past? I guess the chances for that are pretty low. But maybe you _wanted_ to do that.
@@ -153,4 +155,16 @@ alias ws="npm run -s ws --"
 
 Currently we have no in-depth documentation for `ws` as long as we try to add more features to it and use several frameworks like TypeScript oder Webpack which are currently in a beta phase. But you can check out the included examples to get started.
 
-I'll probably write an article about the motivation behind building `ws` in the future.
+# Config
+
+The ws specific config must be set in the `package.json` in a `"ws"` property. You can see an example for this [here](https://github.com/Mercateo/ws/blob/c9324980c8fc097879741901c7d788a4a44ed25a/examples/node-ts/package.json#L9). The only mandatory setting is the `type` which must be either `"spa"`, `"browser"` or `"node"`.
+
+If you want to write a TypeScript-based project, you need to create a [`tsconfig.json`](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) as well.
+
+## for SPAs
+
+`ws.type`: Must be set to `"spa"`. Mandatory.
+
+`ws.srcDir`: The directory where your source code is located. Defaults to `"src"`.
+
+`ws.testsDir`: The directory where your source code is located. Defaults to `"tests"`.
