@@ -2,6 +2,8 @@
 
 A tool which helps you to build, document and test web projects.
 
+> :warning: As long as we are in a prerelease phase we recommend you to use a fixed prerelease version of `ws` in your projects. (E.g. `"@mercateo/ws": "1.0.1-41"` would be good, `"@mercateo/ws": "^1.0.1-41"` would be bad.) As long as we use prereleases breaking changes can happen from time to time.
+
 # Is this a build tool?
 
 When you say _build tool_ and mean a tool like Grunt, Gulp or Webpack - no. It is a pre-configured and opinionated wrapper or facade around existing tools _like_ Grunt, Gulp or Webpack. Think of it like a `Gruntfile.js`, `webpack.config.js` or a big `"scripts"` configuration inside `package.json` which can be shared across projects and is versioned.
