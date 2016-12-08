@@ -1,8 +1,20 @@
 import { warn, error, info, getLevel, levels } from 'loglevel';
 import webpack, { compiler } from 'webpack';
-import { WebpackConfiguration } from './options';
+import { WebpackConfig } from './options';
 
 export * from './options';
+
+// interface SingleStats extends compiler.Stats {
+//   compilation: any;
+// }
+// interface MultiStats {
+//   stats: SingleStats;
+// }
+// // it looks like nested stats called "MultiStats" are used in "multi-compiler" mode (e.g. an array of configs)
+// // interface MultiStats {
+// //   stats: compiler.Stats;
+// // }
+// type Stats = SingleStats | MultiStats;
 
 export const statsStringifierOptions: compiler.StatsToStringOptions = {
   // minimal logging
@@ -30,44 +42,11 @@ export const verboseStatsStringifierOptions: compiler.StatsToStringOptions = {
   children: true
 };
 
-// export function createLocaleSpecificOptions(options: WebpackConfiguration, locale: string) {
-//   return Object.assign({}, options, {
-//     output: Object.assign({}, options.output, {
-//       path: join(options.output.path, project.ws.i18n && project.ws.i18n.isSingleLocale ? '' : locale)
-//     }),
-//     plugins: [
-//       new DefinePlugin({
-//         // e.g. 'en_US'
-//         'process.env.LOCALE': JSON.stringify(locale),
-//         // e.g. 'en-US'
-//         'process.env.INTL_LOCALE': JSON.stringify(locale.replace('_', '-')),
-//         // e.g. 'en'
-//         'process.env.LANGUAGE_CODE': JSON.stringify(locale.split('_')[0]),
-//         // e.g. 'US'
-//         'process.env.COUNTRY_CODE': JSON.stringify(locale.split('_')[1])
-//       })
-//     ].concat(options.plugins || [])
-//   });
-// }
-
-// export function keepLocaleEnv(options: WebpackConfiguration) {
-//   return Object.assign({}, options, {
-//     plugins: [
-//       new DefinePlugin({
-//         'process.env.LOCALE': 'process.env.LOCALE',
-//         'process.env.INTL_LOCALE': 'process.env.INTL_LOCALE',
-//         'process.env.LANGUAGE_CODE': 'process.env.LANGUAGE_CODE',
-//         'process.env.COUNTRY_CODE': 'process.env.COUNTRY_CODE'
-//       })
-//     ].concat(options.plugins || [])
-//   });
-// }
-
 function isVerbose(): boolean {
   return getLevel() <= levels['DEBUG'];
 }
 
-function optionallyProfile(options: WebpackConfiguration | Array<WebpackConfiguration>) {
+function optionallyProfile(options: WebpackConfig) {
   if (isVerbose()) {
     if (Array.isArray(options)) {
       options.map(option => option.profile = true);
@@ -82,8 +61,20 @@ function stringifyStats(stats: any): string {
   return stats.toString(stringifierOptions);
 }
 
+function getModules(stats: any): Array<any> {
+  // see https://github.com/webpack/webpack.js.org/issues/480
+  const isMultiStats = !!stats.stats;
+  if (isMultiStats) {
+    let modules: Array<any> = [];
+    stats.stats.forEach((stats: any) => modules = modules.concat(stats.compilation.modules));
+    return modules;
+  } else {
+    return stats.compilation.modules;
+  }
+}
+
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
-function onBuild(resolve: any, reject: any, err: any, stats: any, watcher?: any) {
+function onBuild(resolve: any, reject: any, err: any, stats: compiler.Stats, watcher?: any) {
   if (err) {
     // "hard" error
     return reject(err);
@@ -107,7 +98,7 @@ function onBuild(resolve: any, reject: any, err: any, stats: any, watcher?: any)
 }
 
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
-function onChange(err: any, stats: any, livereloadServer: any, onChangeSuccess?: any) {
+function onChange(err: any, stats: compiler.Stats, livereloadServer: any, onChangeSuccess?: any) {
   if (err) {
     // "hard" error
     return error(err);
@@ -126,9 +117,9 @@ function onChange(err: any, stats: any, livereloadServer: any, onChangeSuccess?:
     info(stringifyStats(stats));
   }
 
-
   // filter changes for live reloading
-  const changedModules = stats.compilation.modules.filter((module: any) => module.built && module.resource);
+  const modules = getModules(stats);
+  const changedModules = modules.filter((module: any) => module.built && module.resource);
   const changedStyleModules = changedModules.filter((module: any) => module.resource.match(/\.(css|less|sass)$/));
   let hasOnlyStyleChanges = changedModules.length === changedStyleModules.length;
   if (hasOnlyStyleChanges) {
@@ -142,7 +133,7 @@ function onChange(err: any, stats: any, livereloadServer: any, onChangeSuccess?:
   }
 }
 
-export function compileAsync(options: WebpackConfiguration | Array<WebpackConfiguration>) {
+export function compileAsync(options: WebpackConfig) {
   optionallyProfile(options);
   const compiler = webpack(options);
   return new Promise((resolve, reject) => {
@@ -150,16 +141,23 @@ export function compileAsync(options: WebpackConfiguration | Array<WebpackConfig
   });
 }
 
-export function watchAsync(livereloadServer: any, options: WebpackConfiguration | Array<WebpackConfiguration>, onChangeSuccess?: (stats: any) => void) {
+export function watchAsync(livereloadServer: any, options: WebpackConfig, onChangeSuccess?: (stats: compiler.Stats) => void) {
   optionallyProfile(options);
   const compiler = webpack(options);
   let isInitialBuild = true;
+  let hash: any;
   return new Promise((resolve, reject) => {
     compiler.watch({}, (err, stats) => {
       if (isInitialBuild) {
         isInitialBuild = false;
         onBuild(resolve, reject, err, stats);
       } else {
+        // don't call callback, if hash hasn't change
+        if (hash === (stats as any).hash) {
+          return;
+        } else {
+          hash = (stats as any).hash;
+        }
         onChange(err, stats, livereloadServer, onChangeSuccess);
       }
     });

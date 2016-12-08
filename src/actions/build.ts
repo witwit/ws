@@ -5,17 +5,22 @@ import { project, TYPE } from '../project';
 import {
   compileAsync,
   nodeDevOptions,
-  spaDevOptions,
+  getSpaDevOptions,
   spaReleaseOptions,
   spaRootI18nDevOptions,
   spaRootI18nReleaseOptions,
-  browserDevOptions,
-  browserReleaseOptions
+  getBrowserDevOptions,
+  getBrowserReleaseOptions
 } from '../lib/webpack';
 import { compile as compileI18n } from '../lib/i18n';
 import { copy } from '../lib/copy';
 
-export default async function build(options: any) {
+export interface BuildOptions {
+  locales: Array<string>;
+  production?: true;
+}
+
+export default async function build(options: BuildOptions) {
   switch (project.ws.type) {
     case TYPE.NODE:
       await removeAsync(project.ws.distDir);
@@ -50,7 +55,7 @@ export default async function build(options: any) {
             await compileAsync(spaRootI18nDevOptions);
           }
         }
-        await compileAsync(spaDevOptions);
+        await compileAsync(getSpaDevOptions(options.locales));
         if (project.ws.i18n) {
           // this is a quich fix to get relative path for assets in localized spa's working
           await Promise.all(project.ws.i18n.locales.map(locale =>
@@ -67,14 +72,14 @@ export default async function build(options: any) {
           await compileI18n();
           info('...build translations');
         }
-        await compileAsync(browserReleaseOptions);
+        await compileAsync(getBrowserReleaseOptions());
       } else {
         await removeAsync(project.ws.distDir);
         if (project.ws.i18n) {
           await compileI18n();
           info('...build translations');
         }
-        await compileAsync(browserDevOptions);
+        await compileAsync(getBrowserDevOptions(options.locales));
       }
       break;
   }

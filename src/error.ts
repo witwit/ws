@@ -14,10 +14,12 @@ const IGNORED_TRACE_LINES = [
   // webpack
   '(./webpack/bootstrap',
   'at ./webpack/bootstrap',
+  'at __webpack_require__',
   // node internals
   '(util.js',
   '(net.js',
   '(node.js',
+  '(events.js',
   'at node.js',
   '(module.js',
   '(internal/module.js'
@@ -25,9 +27,12 @@ const IGNORED_TRACE_LINES = [
 
 export function handleError(err: Error) {
   if (err.stack) {
+    console.log(__dirname)
     err.stack.split('\n')
       .filter(line => !IGNORED_TRACE_LINES.some(ignoredLine => line.includes(ignoredLine)))
+      .filter((_, index) => index < 6) // roughly error message + 5 code lines
       .map(line => line.replace('webpack:///', './'))
+      .map(line => line.replace(`${__dirname}/webpack:/`, './'))
       .forEach(line => error(line));
   } else {
     error(err);

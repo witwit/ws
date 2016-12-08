@@ -1,5 +1,5 @@
 import { join } from 'path';
-import webpack, { DefinePlugin, optimize } from 'webpack';
+import webpack, { DefinePlugin, optimize, Entry } from 'webpack';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -11,10 +11,14 @@ import { project } from '../../project';
  * We make some properties of `webpack.Configuration` mandatory. It is easier for future usage, so we don't
  * need to check, if they are available or not.
  */
-export interface WebpackConfiguration extends webpack.Configuration {
+export interface WebpackSingleConfig extends webpack.Configuration {
   entry: string | Array<string> | webpack.Entry;
   output: webpack.Output;
 }
+
+export type WebpackConfig = WebpackSingleConfig | Array<WebpackSingleConfig>
+
+const getDefaultLocales = (): Array<string> => project.ws.i18n ? project.ws.i18n.locales : [];
 
 const nodeSourceMapEntry = 'source-map-support/register';
 
@@ -281,24 +285,58 @@ if (project.ws.i18n) {
 const spaEntry = project.ws.i18n ? localizedEntry : project.ws.srcEntry;
 const spaIndexHtmlPlugins = project.ws.i18n ? localizedIndexHtmlPlugins : [ indexHtmlPlugin ];
 
-export const spaDevOptions: WebpackConfiguration = {
-  entry: spaEntry,
+const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
+  entry: project.ws.srcEntry,
   output: Object.assign({}, outputDev, {
     libraryTarget: 'umd',
     filename: '[name].js'
   }),
   module: moduleBrowser,
-  plugins: spaIndexHtmlPlugins.concat([
+  plugins: [
+    indexHtmlPlugin,
     extractCssPlugin,
     postcssPlugin
-  ]),
-  externals: project.ws.i18n ? [ project.ws.i18n.module ] : [],
+  ],
+  externals: [],
   resolveLoader,
   resolve,
   devtool
+});
+
+const getLocalizedSpaDevOptions = (locales: Array<string>): WebpackSingleConfig => {
+  const options = getUnlocalizedSpaDevOptions();
+
+  const entry: Entry = {
+    index: project.ws.srcEntry
+  };
+  const indexHtmlPlugins: Array<HtmlWebpackPlugin> = [];
+  locales.forEach(locale => {
+    const chunkKey = `${locale}/i18n`;
+    entry[chunkKey] = `./${project.ws.i18n!.distDir}/${locale}.js`;
+    indexHtmlPlugins.push(new HtmlWebpackPlugin({
+      locale,
+      locales: project.ws.i18n!.locales,
+      filename: `${locale}/index.html`,
+      template: 'src/index.html',
+      chunks: [ chunkKey, 'index' ],
+      chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
+    }));
+  });
+
+  options.entry = entry;
+  options.plugins = indexHtmlPlugins.concat([
+    extractCssPlugin,
+    postcssPlugin
+  ]);
+  options.externals = [ project.ws.i18n!.module ];
+
+  return options;
 };
 
-export const spaReleaseOptions: WebpackConfiguration = {
+export const getSpaDevOptions = (locales: Array<string> = getDefaultLocales()): WebpackConfig =>
+  locales.length ? getLocalizedSpaDevOptions(locales) : getUnlocalizedSpaDevOptions();
+
+export const spaReleaseOptions: WebpackSingleConfig = {
   entry: spaEntry,
   output: Object.assign({}, outputRelease, {
     libraryTarget: 'umd',
@@ -318,7 +356,7 @@ export const spaReleaseOptions: WebpackConfiguration = {
   devtool: devtoolProduction
 };
 
-export const spaUnitOptions: WebpackConfiguration = {
+export const spaUnitOptions: WebpackSingleConfig = {
   entry: project.ws.unitEntry,
   output: outputTest,
   module: moduleBrowser,
@@ -336,7 +374,7 @@ export const spaUnitOptions: WebpackConfiguration = {
   devtool
 };
 
-export const spaE2eOptions: WebpackConfiguration = {
+export const spaE2eOptions: WebpackSingleConfig = {
   entry: [
     nodeSourceMapEntry,
     project.ws.e2eEntry
@@ -358,7 +396,7 @@ export const spaE2eOptions: WebpackConfiguration = {
 };
 
 // e.g.to create a locale switcher or redirect for localized spa’s
-export const spaRootI18nDevOptions: WebpackConfiguration = project.ws.i18n ? {
+export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
   entry: {
     indexI18n: project.ws.srcI18nEntry,
     i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
@@ -387,7 +425,7 @@ export const spaRootI18nDevOptions: WebpackConfiguration = project.ws.i18n ? {
   devtool
 } : ({} as any);
 
-export const spaRootI18nReleaseOptions: WebpackConfiguration = project.ws.i18n ? {
+export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? {
   entry: {
     indexI18n: project.ws.srcI18nEntry,
     i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
@@ -419,7 +457,7 @@ export const spaRootI18nReleaseOptions: WebpackConfiguration = project.ws.i18n ?
   devtool: devtoolProduction
 } : ({} as any);
 
-export const browserDevOptions: WebpackConfiguration = {
+const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   // would be an webpack agnostic module in the future https://github.com/webpack/webpack/issues/2933
   // this is not really useful until then
@@ -432,13 +470,29 @@ export const browserDevOptions: WebpackConfiguration = {
     extractCssPlugin,
     postcssPlugin
   ],
-  externals: (project.ws.i18n ? [ project.ws.i18n.module ] : []).concat(externalsBrowser),
+  externals: externalsBrowser,
   resolveLoader,
   resolve,
   devtool
+});
+
+const getLocalizedBrowserDevOptions = (locale: string): WebpackSingleConfig => {
+  const options = getUnlocalizedBrowserDevOptions();
+  options.output = Object.assign({}, options.output, {
+    path: join(process.cwd(), project.ws.distDir, locale)
+  });
+  options.resolve = Object.assign({}, options.resolve, {
+    alias: {
+      [project.ws.i18n!.module]: `${process.cwd()}/${project.ws.i18n!.distDir}/${locale}.js`
+    }
+  });
+  return options;
 };
 
-const getBrowserReleaseOptions = (): WebpackConfiguration => ({
+export const getBrowserDevOptions = (locales: Array<string> = getDefaultLocales()): WebpackConfig =>
+  locales.length ? locales.map(getLocalizedBrowserDevOptions) : getUnlocalizedBrowserDevOptions();
+
+const getUnlocalizedBrowserReleaseOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   // useful for people without a build pipeline
   output: Object.assign({}, outputRelease, {
@@ -458,8 +512,8 @@ const getBrowserReleaseOptions = (): WebpackConfiguration => ({
   devtool: devtoolProduction
 });
 
-export const browserReleaseOptions: WebpackConfiguration | Array<WebpackConfiguration> = project.ws.i18n ? project.ws.i18n.locales.map(locale => {
-  const options = getBrowserReleaseOptions();
+const getLocalizedBrowserReleaseOptions = (locale: string): WebpackSingleConfig => {
+  const options = getUnlocalizedBrowserReleaseOptions();
   options.output = Object.assign({}, options.output, {
     path: join(process.cwd(), project.ws.distReleaseDir, locale)
   });
@@ -468,10 +522,13 @@ export const browserReleaseOptions: WebpackConfiguration | Array<WebpackConfigur
       [project.ws.i18n!.module]: `${process.cwd()}/${project.ws.i18n!.distDir}/${locale}.js`
     }
   });
-  return getBrowserReleaseOptions();
-}) : getBrowserReleaseOptions();
+  return options;
+};
 
-export const browserUnitOptions: WebpackConfiguration = {
+export const getBrowserReleaseOptions = (locales: Array<string> = getDefaultLocales()): WebpackConfig =>
+  locales.length ? locales.map(getLocalizedBrowserReleaseOptions) : getUnlocalizedBrowserReleaseOptions();
+
+const getUnlocalizedBrowserUnitOptions = (): WebpackSingleConfig => ({
   entry: project.ws.unitEntry,
   output: Object.assign({}, outputTest, {
     libraryTarget: 'umd',
@@ -484,15 +541,24 @@ export const browserUnitOptions: WebpackConfiguration = {
   ],
   externals: enzymeExternals,
   resolveLoader,
-  resolve: Object.assign({}, resolve, project.ws.i18n ? {
-    alias: {
-      [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
-    }
-  } : {}),
+  resolve,
   devtool
+});
+
+const getLocalizedBrowserUnitOptions = (): WebpackSingleConfig => {
+  const options = getUnlocalizedBrowserUnitOptions();
+  options.resolve = Object.assign({}, options.resolve, {
+    alias: {
+      [project.ws.i18n!.module]: `${process.cwd()}/${project.ws.i18n!.distDir}/unit.js`
+    }
+  });
+  return options;
 };
 
-export const nodeDevOptions: WebpackConfiguration = {
+export const getBrowserUnitOptions = (): WebpackConfig =>
+  project.ws.i18n ? getLocalizedBrowserUnitOptions() : getUnlocalizedBrowserUnitOptions();
+
+export const nodeDevOptions: WebpackSingleConfig = {
   entry: [
     nodeSourceMapEntry,
     project.ws.srcEntry
@@ -513,7 +579,7 @@ export const nodeDevOptions: WebpackConfiguration = {
   devtool
 };
 
-export const nodeUnitOptions: WebpackConfiguration = {
+export const nodeUnitOptions: WebpackSingleConfig = {
   entry: [
     nodeSourceMapEntry,
     project.ws.unitEntry

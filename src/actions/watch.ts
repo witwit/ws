@@ -11,14 +11,18 @@ import { listenAsync } from '../lib/express';
 import {
   watchAsync,
   nodeDevOptions,
-  spaDevOptions,
+  getSpaDevOptions,
   spaRootI18nDevOptions,
-  browserDevOptions
+  getBrowserDevOptions
 } from '../lib/webpack';
 import { compile as compileI18n } from '../lib/i18n';
 import { copy } from '../lib/copy';
 
-export default async function watch() {
+export interface WatchOptions {
+  locales: Array<string>;
+}
+
+export default async function watch(options: WatchOptions) {
   await removeAsync(project.ws.distDir);
 
   const port = await findAsync({
@@ -39,7 +43,7 @@ export default async function watch() {
           await watchAsync(livereloadServer, spaRootI18nDevOptions);
         }
       }
-      await watchAsync(livereloadServer, spaDevOptions, onChangeSuccess);
+      await watchAsync(livereloadServer, getSpaDevOptions(options.locales), onChangeSuccess);
       if (project.ws.i18n) {
         // this is a quich fix to get relative path for assets in localized spa's working
         await Promise.all(project.ws.i18n.locales.map(locale =>
@@ -52,7 +56,7 @@ export default async function watch() {
       if (project.ws.i18n) {
         await compileI18n();
       }
-      await watchAsync(livereloadServer, browserDevOptions, onChangeSuccess);
+      await watchAsync(livereloadServer, getBrowserDevOptions(options.locales), onChangeSuccess);
       break;
   }
 

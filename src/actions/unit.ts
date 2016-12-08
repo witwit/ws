@@ -7,7 +7,7 @@ import {
   compileAsync,
   nodeUnitOptions,
   spaUnitOptions,
-  browserUnitOptions
+  getBrowserUnitOptions
 } from '../lib/webpack';
 import { testAsync as karmaTestAsync } from '../lib/karma';
 import { testAsync as mochaTestAsync  } from '../lib/mocha';
@@ -42,7 +42,7 @@ export default async function unit(options: any) {
       if (project.ws.i18n) {
         await compileI18n();
       }
-      await compileAsync(browserUnitOptions);
+      await compileAsync(getBrowserUnitOptions());
       exitCode = await karmaTestAsync(options);
       break;
   }

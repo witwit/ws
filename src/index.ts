@@ -54,7 +54,7 @@ switch (project.ws.type) {
       .command('e2e')
       .alias('e')
       .description('run e2e tests')
-      .option('--browsers <browsers>', 'browsers which should be used (e.g. `ie-9,ff-36,chrome-41`)')
+      .option('--browsers <browsers>', `browsers to used (comma separated list, e.g. 'ie-9,ff-36,chrome-41')`)
       .action((...args) => {
         if (args.length === 2) {
           const [ browsers, options ] = args;
@@ -83,8 +83,6 @@ if (project.ws.i18n && project.ws.i18n.importUrl) {
     .command('i18n:import')
     .alias('i18n:i')
     .description('import translations')
-    // .option('--feature <feature>', 'feature to import')
-    // .option('-l, --locale <locale>', 'locale to import')
     .action(handleAction(i18nImportAction));
 }
 
@@ -103,12 +101,17 @@ switch (project.ws.type) {
       buildCommand.option('-p, --production', 'create production build');
     }
 
-    commander
+    const watchCommand = commander
       .command('watch')
       .alias('w')
       .description('continuously build and serve the project')
       // .option('-H, --hot', 'enables hot reloading (experimental)')
       .action(handleAction(watchAction));
+
+    if (project.ws.i18n) {
+      buildCommand.option('-L, --locales <locales>', `locales to build (comma separated list, default: '${project.ws.i18n.locales[0]}')`, locales => locales.split(','), [ project.ws.i18n.locales[0] ]);
+      watchCommand.option('-L, --locales <locales>', `locales to build (comma separated list, default: '${project.ws.i18n.locales[0]}')`, locales => locales.split(','), [ project.ws.i18n.locales[0] ]);
+    }
 
     commander
       .command('lint')

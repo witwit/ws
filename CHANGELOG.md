@@ -3,6 +3,7 @@ The changelog is currently handwritten.
 # FUTURE-RELEASE: 1.0.1-42 (2016-12-08)
 
 - Allow production build for browser components.
+- Localized dev builds default to a single locale to speed up development.
 
 # 1.0.1-41 (2016-11-28)
 
