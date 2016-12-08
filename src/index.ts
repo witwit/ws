@@ -99,7 +99,7 @@ switch (project.ws.type) {
       .description('build the project')
       .action(handleAction(buildAction));
 
-    if (project.ws.type === TYPE.SPA) {
+    if (project.ws.type === TYPE.SPA || project.ws.type === TYPE.BROWSER) {
       buildCommand.option('-p, --production', 'create production build');
     }
 

@@ -30,7 +30,7 @@ examples.forEach(example => {
 
     // test commands
     execSync('npm run -s ws -- build', { cwd, stdio });
-    if (example.includes('spa')) {
+    if (example.includes('spa') || example.includes('browser')) {
       execSync('npm run -s ws -- build --production', { cwd, stdio });
     }
     execSync('npm run -s ws -- lint', { cwd, stdio });

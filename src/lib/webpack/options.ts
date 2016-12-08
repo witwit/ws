@@ -438,7 +438,7 @@ export const browserDevOptions: WebpackConfiguration = {
   devtool
 };
 
-export const browserReleaseOptions: WebpackConfiguration = {
+const getBrowserReleaseOptions = (): WebpackConfiguration => ({
   entry: project.ws.srcEntry,
   // useful for people without a build pipeline
   output: Object.assign({}, outputRelease, {
@@ -452,11 +452,24 @@ export const browserReleaseOptions: WebpackConfiguration = {
     defineProductionPlugin,
     minifyJsPlugin
   ],
-  externals: (project.ws.i18n ? [ project.ws.i18n.module ] : []).concat(externalsBrowser),
+  externals: externalsBrowser,
   resolveLoader,
   resolve,
   devtool: devtoolProduction
-};
+});
+
+export const browserReleaseOptions: WebpackConfiguration | Array<WebpackConfiguration> = project.ws.i18n ? project.ws.i18n.locales.map(locale => {
+  const options = getBrowserReleaseOptions();
+  options.output = Object.assign({}, options.output, {
+    path: join(process.cwd(), project.ws.distReleaseDir, locale)
+  });
+  options.resolve = Object.assign({}, options.resolve, {
+    alias: {
+      [project.ws.i18n!.module]: `${process.cwd()}/${project.ws.i18n!.distDir}/${locale}.js`
+    }
+  });
+  return getBrowserReleaseOptions();
+}) : getBrowserReleaseOptions();
 
 export const browserUnitOptions: WebpackConfiguration = {
   entry: project.ws.unitEntry,

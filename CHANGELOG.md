@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# FUTURE-RELEASE: 1.0.1-42 (2016-12-08)
+
+- Allow production build for browser components.
+
 # 1.0.1-41 (2016-11-28)
 
 - Fixed CLI for some linux systems.
