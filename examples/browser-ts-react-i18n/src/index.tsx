@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import { someContent, contentWithMessageFormat } from 'mercateo/i18n';
-// import { someContent, contentWithMessageFormat } from 'glamor/react';
-const glamorReact = require('glamor/react');
-glamorReact.makeTheme();
 
 /**
  * This component shows a translated message.
