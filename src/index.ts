@@ -3,6 +3,7 @@ import commander from 'commander';
 import { info, setLevel, levels } from 'loglevel';
 import { yellow, cyan } from 'chalk';
 import { project, TYPE } from './project';
+import { updateNotifier } from './lib/update-notifier';
 import serveAction from './actions/serve';
 import buildAction from './actions/build';
 import watchAction from './actions/watch';
@@ -31,8 +32,9 @@ function handleAction(action: (options?: any) => Promise<any>) {
     // handle global options
     setLevel(levels[options.parent.logLevel.toUpperCase()]);
     // handle specific action
-    info(`run ${cyan(options.name())}...`);
-    return action(options)
+    return updateNotifier(pkg.version)
+      .then(() => info(`run ${cyan(options.name())}...`))
+      .then(() => action(options))
       .then(() => info(`finished ${cyan(options.name())} ♥`))
       .catch(handleError);
   };

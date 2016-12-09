@@ -4,6 +4,7 @@ The changelog is currently handwritten.
 
 - Allow production build for browser components. You need to run `ws build --production` to do that.
 - Localized dev builds default to a single locale to speed up development. E.g. `ws build` only builds the first locale mentioned in your `package.json`. Run `ws build --locales de_DE` to manually build the `'de_DE'` locale in this example.
+- Update notification for new versions.
 
 # 1.0.1-41 (2016-11-28)
 
