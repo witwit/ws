@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-44 (2016-12-09)
+
+- Remove buggy postinstall.
+
 # 1.0.1-43 (2016-12-09)
 # 1.0.1-42 (2016-12-09)
 

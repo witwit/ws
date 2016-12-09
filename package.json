@@ -10,7 +10,6 @@
     "build": "rimraf dist/ && webpack",
     "ws": "node ./bin/ws.js",
     "prepublish": "npm run build",
-    "postinstall": "node node_modules/phantomjs-prebuilt/install.js",
     "release:next": "npm version prerelease && git push && npm publish --tag next --access public"
   },
   "ws": {
