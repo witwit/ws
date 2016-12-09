@@ -237,7 +237,17 @@ export const externalsNode = [
   WebpackNodeExternals()
 ];
 
-export const externalsBrowser = Object.keys(project.dependencies || {}).concat(project.ws.externals ? [
+export const externalsBrowser = [
+  (_context: any, request: any, callback: any) => {
+    // if it starts with a letter (and *not* a path like './', '../' or '/') we treat this module as external
+    // except 'mercateo/i18n'
+    if (/^[a-zA-Z]/.test(request) && !request.includes('mercateo/i18n')) {
+      callback(null, request);
+    } else {
+      callback();
+    }
+  }
+].concat(project.ws.externals ? [
   project.ws.externals
 ] : []);
 

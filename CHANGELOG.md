@@ -2,9 +2,10 @@ The changelog is currently handwritten.
 
 # FUTURE-RELEASE: 1.0.1-42 (2016-12-08)
 
-- Allow production build for browser components. You need to run `ws build --production` to do that.
+- Allow production build for browser components. You need to run `ws build --production` to do that. Note that you probably **must** update your `"main"` and `"typings"` to point to `dist-release/` and `dist-release/` should **not** be included in your `.npmignore`.
 - Localized dev builds default to a single locale to speed up development. E.g. `ws build` only builds the first locale mentioned in your `package.json`. Run `ws build --locales de_DE` to manually build the `'de_DE'` locale in this example.
 - Update notification for new versions.
+- Module imports like `glamor/react` are now treated as external and aren't included in UMD builds of browser components.
 
 # 1.0.1-41 (2016-11-28)
 
