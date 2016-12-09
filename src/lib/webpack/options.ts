@@ -16,7 +16,7 @@ export interface WebpackSingleConfig extends webpack.Configuration {
   output: webpack.Output;
 }
 
-export type WebpackConfig = WebpackSingleConfig | Array<WebpackSingleConfig>
+export type WebpackConfig = WebpackSingleConfig | Array<WebpackSingleConfig>;
 
 const getDefaultLocales = (): Array<string> => project.ws.i18n ? project.ws.i18n.locales : [];
 

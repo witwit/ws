@@ -7,6 +7,7 @@ The changelog is currently handwritten.
 - Update notification for new versions.
 - Module imports like `glamor/react` are now treated as external and aren't included in UMD builds of browser components.
 - Switched from `awesome-typescript-loader` to `ts-loader` to get support for TypeScript 2.1.4.
+- Updated dependencies (e.g. `tslint` to `4.0.0`).
 
 # 1.0.1-41 (2016-11-28)
 
