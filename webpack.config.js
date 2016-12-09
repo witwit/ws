@@ -2,6 +2,16 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackNodeExternals = require('webpack-node-externals');
 
+const babelConfig = {
+  presets: [
+    '@niftyco/babel-node',
+    'babel-preset-stage-0'
+  ],
+  plugins: [
+    'babel-plugin-transform-decorators-legacy'
+  ]
+};
+
 module.exports = {
   // `stats` only available when used with webpack cli
   stats: {
@@ -29,12 +39,18 @@ module.exports = {
     loaders: [
       {
         test: /\.ts(x?)$/,
-        loader:
-          `babel-loader?` +
-          `presets[]=@niftyco/babel-node,` +
-          `presets[]=babel-preset-stage-0&` +
-          `plugins[]=babel-plugin-transform-decorators-legacy` +
-          `!awesome-typescript-loader`
+        use: [
+          {
+            loader: 'babel-loader',
+            options: Object.assign({}, babelConfig, { cacheDirectory: true })
+          },
+          {
+            loader: 'ts-loader',
+            options: {
+              silent: true
+            }
+          }
+        ]
       }
     ]
   },

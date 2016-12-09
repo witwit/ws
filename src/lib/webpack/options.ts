@@ -80,26 +80,34 @@ export const jsLoaderBrowser = {
 
 export const tsLoaderNode = {
   test: /\.ts(x?)$/,
-  loader: 'awesome-typescript-loader',
-  options: {
-    useBabel: true,
-    babelOptions: babelNode,
-    babelCore: resolveFile('babel-core'),
-    useCache: true,
-    cacheDirectory: 'node_modules/.awesome-typescript-loader-cache'
-  }
+  use: [
+    {
+      loader: 'babel-loader',
+      options: Object.assign({}, babelNode, { cacheDirectory: true })
+    },
+    {
+      loader: 'ts-loader',
+      options: {
+        silent: true
+      }
+    }
+  ]
 };
 
 export const tsLoaderBrowser = {
   test: /\.ts(x?)$/,
-  loader: 'awesome-typescript-loader',
-  options: {
-    useBabel: true,
-    babelOptions: babelBrowser,
-    babelCore: resolveFile('babel-core'),
-    useCache: true,
-    cacheDirectory: 'node_modules/.awesome-typescript-loader-cache'
-  }
+  use: [
+    {
+      loader: 'babel-loader',
+      options: Object.assign({}, babelBrowser, { cacheDirectory: true })
+    },
+    {
+      loader: 'ts-loader',
+      options: {
+        silent: true
+      }
+    }
+  ]
 };
 
 export const jsonLoader = {
@@ -148,8 +156,9 @@ export const extractCssPlugin = new ExtractTextWebpackPlugin('style.css');
 
 export const extractCssHashPlugin = new ExtractTextWebpackPlugin('style-[contenthash].css');
 
-export const postcssPlugin = new (webpack as any).LoaderOptionsPlugin({
+export const loaderOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
   options: {
+    resolve: {},
     postcss: () => [
       autoprefixer({
         browsers: project.ws.browsers
@@ -305,7 +314,7 @@ const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
   plugins: [
     indexHtmlPlugin,
     extractCssPlugin,
-    postcssPlugin
+    loaderOptionsPlugin
   ],
   externals: [],
   resolveLoader,
@@ -336,7 +345,7 @@ const getLocalizedSpaDevOptions = (locales: Array<string>): WebpackSingleConfig 
   options.entry = entry;
   options.plugins = indexHtmlPlugins.concat([
     extractCssPlugin,
-    postcssPlugin
+    loaderOptionsPlugin
   ]);
   options.externals = [ project.ws.i18n!.module ];
 
@@ -355,7 +364,7 @@ export const spaReleaseOptions: WebpackSingleConfig = {
   module: moduleBrowser,
   plugins: spaIndexHtmlPlugins.concat([
     extractCssHashPlugin,
-    postcssPlugin,
+    loaderOptionsPlugin,
     defineProductionPlugin,
     minifyJsPlugin,
     productionOptionsPlugin
@@ -372,7 +381,7 @@ export const spaUnitOptions: WebpackSingleConfig = {
   module: moduleBrowser,
   plugins: [
     extractCssPlugin,
-    postcssPlugin
+    loaderOptionsPlugin
   ],
   externals: enzymeExternals,
   resolveLoader,
@@ -426,7 +435,7 @@ export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
       chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }),
     extractCssPlugin,
-    postcssPlugin
+    loaderOptionsPlugin
     // defineLocalesPlugin
   ],
   externals: [ project.ws.i18n.module ],
@@ -455,7 +464,7 @@ export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? 
       chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }),
     extractCssHashPlugin,
-    postcssPlugin,
+    loaderOptionsPlugin,
     defineProductionPlugin,
     minifyJsPlugin,
     productionOptionsPlugin
@@ -478,7 +487,7 @@ const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
   module: moduleBrowser,
   plugins: [
     extractCssPlugin,
-    postcssPlugin
+    loaderOptionsPlugin
   ],
   externals: externalsBrowser,
   resolveLoader,
@@ -512,7 +521,7 @@ const getUnlocalizedBrowserReleaseOptions = (): WebpackSingleConfig => ({
   module: moduleBrowser,
   plugins: [
     extractCssPlugin,
-    postcssPlugin,
+    loaderOptionsPlugin,
     defineProductionPlugin,
     minifyJsPlugin
   ],
@@ -547,7 +556,7 @@ const getUnlocalizedBrowserUnitOptions = (): WebpackSingleConfig => ({
   module: moduleBrowser,
   plugins: [
     extractCssPlugin,
-    postcssPlugin
+    loaderOptionsPlugin
   ],
   externals: enzymeExternals,
   resolveLoader,

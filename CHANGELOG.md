@@ -6,6 +6,7 @@ The changelog is currently handwritten.
 - Localized dev builds default to a single locale to speed up development. E.g. `ws build` only builds the first locale mentioned in your `package.json`. Run `ws build --locales de_DE` to manually build the `'de_DE'` locale in this example.
 - Update notification for new versions.
 - Module imports like `glamor/react` are now treated as external and aren't included in UMD builds of browser components.
+- Switched from `awesome-typescript-loader` to `ts-loader` to get support for TypeScript 2.1.4.
 
 # 1.0.1-41 (2016-11-28)
 
