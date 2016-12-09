@@ -27,7 +27,6 @@ const IGNORED_TRACE_LINES = [
 
 export function handleError(err: Error) {
   if (err.stack) {
-    console.log(__dirname)
     err.stack.split('\n')
       .filter(line => !IGNORED_TRACE_LINES.some(ignoredLine => line.includes(ignoredLine)))
       .filter((_, index) => index < 6) // roughly error message + 5 code lines
