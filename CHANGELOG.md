@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-45 (2016-12-12)
+
+- Changed translations templates to have better compability with older browsers. (It seems they aren't transpiled correctly for now?)
+
 # 1.0.1-44 (2016-12-09)
 
 - Remove buggy postinstall.

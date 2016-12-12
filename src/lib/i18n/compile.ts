@@ -56,7 +56,7 @@ async function writeTranslation(defaultTranslation: ParsedTranslation, translati
 
   const data =
     `${GENERATED_WARNING}
-const IntlMessageFormat = require('intl-messageformat');
+var IntlMessageFormat = require('intl-messageformat');
 // use intl polyfill for IE 10 and Safari 9
 require('intl');
 require('intl/locale-data/jsonp/${intlLocale}');
@@ -67,11 +67,11 @@ myModule.INTL_LOCALE = '${intlLocale}';
 myModule.LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
 myModule.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
 
-const cachedMessages = {};
+var cachedMessages = {};
 ${keys.map(key => `
 myModule.${key} = function(${hasArguments(translation.asts[key]) ? 'data' : ''}) {${translation.asts[key] ? `
   if (!cachedMessages.${key}) {
-    const ast = ${indent('    ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
+    var ast = ${indent('    ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
     cachedMessages.${key} = new IntlMessageFormat(ast, myModule.INTL_LOCALE);
   }
 
