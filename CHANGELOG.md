@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-46 (2016-12-13)
+
+- Modified translation exports so they work in more edge cases.
+
 # 1.0.1-45 (2016-12-12)
 
 - Changed translations templates to have better compability with older browsers. (It seems they aren't transpiled correctly for now?)

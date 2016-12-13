@@ -62,14 +62,14 @@ require('intl');
 require('intl/locale-data/jsonp/${intlLocale}');
 
 var myModule = {};
-myModule.LOCALE = '${translation.locale}';
-myModule.INTL_LOCALE = '${intlLocale}';
-myModule.LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
-myModule.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
+module.exports.LOCALE = myModule.LOCALE = '${translation.locale}';
+module.exports.INTL_LOCALE = myModule.INTL_LOCALE = '${intlLocale}';
+module.exports.LANGUAGE_CODE = myModule.LANGUAGE_CODE = '${translation.locale.split('_')[0]}';
+module.exports.COUNTRY_CODE = myModule.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
 
 var cachedMessages = {};
 ${keys.map(key => `
-myModule.${key} = function(${hasArguments(translation.asts[key]) ? 'data' : ''}) {${translation.asts[key] ? `
+module.exports.${key} = myModule.${key} = function(${hasArguments(translation.asts[key]) ? 'data' : ''}) {${translation.asts[key] ? `
   if (!cachedMessages.${key}) {
     var ast = ${indent('    ', stringifyObject(translation.asts[key], stringifyObjectOptions))};
     cachedMessages.${key} = new IntlMessageFormat(ast, myModule.INTL_LOCALE);
@@ -80,6 +80,8 @@ myModule.${key} = function(${hasArguments(translation.asts[key]) ? 'data' : ''})
 };
 `).join('')}
 
+// sadly this re-export with our custom module name is needed
+// see https://github.com/donaldpipowitch/webpack-i18n-example
 module.exports['mercateo/i18n'] = myModule;
 `;
 
