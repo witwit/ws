@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-47 (2017-01-02)
+
+- Just a small bug fix which copies json files in localized apps to the correct directory.
+
 # 1.0.1-46 (2016-12-13)
 
 - Modified translation exports so they work in more edge cases.
