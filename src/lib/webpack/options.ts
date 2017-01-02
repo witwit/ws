@@ -14,6 +14,12 @@ import { project } from '../../project';
 export interface WebpackSingleConfig extends webpack.Configuration {
   entry: string | Array<string> | webpack.Entry;
   output: webpack.Output;
+  // new option (see https://medium.com/webpack/webpack-performance-budgets-13d4880fbf6d)
+  performance?: {
+    maxAssetSize?: number;
+    maxEntrypointSize?: number;
+    hints?: false | 'warning' | 'error';
+  };
 }
 
 export type WebpackConfig = WebpackSingleConfig | Array<WebpackSingleConfig>;
@@ -317,6 +323,9 @@ const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
     loaderOptionsPlugin
   ],
   externals: [],
+  performance: {
+    hints: false
+  },
   resolveLoader,
   resolve,
   devtool
@@ -384,6 +393,9 @@ export const spaUnitOptions: WebpackSingleConfig = {
     loaderOptionsPlugin
   ],
   externals: enzymeExternals,
+  performance: {
+    hints: false
+  },
   resolveLoader,
   resolve: Object.assign({}, resolve, project.ws.i18n ? {
     alias: {
@@ -403,6 +415,9 @@ export const spaE2eOptions: WebpackSingleConfig = {
   }),
   module: moduleNode,
   externals: externalsNode,
+  performance: {
+    hints: false
+  },
   // in order to ignore built-in modules like path, fs, etc.
   target: 'node',
   node: {
@@ -439,6 +454,9 @@ export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
     // defineLocalesPlugin
   ],
   externals: [ project.ws.i18n.module ],
+  performance: {
+    hints: false
+  },
   resolveLoader,
   resolve,
   devtool
@@ -490,6 +508,9 @@ const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
     loaderOptionsPlugin
   ],
   externals: externalsBrowser,
+  performance: {
+    hints: false
+  },
   resolveLoader,
   resolve,
   devtool
@@ -559,6 +580,9 @@ const getUnlocalizedBrowserUnitOptions = (): WebpackSingleConfig => ({
     loaderOptionsPlugin
   ],
   externals: enzymeExternals,
+  performance: {
+    hints: false
+  },
   resolveLoader,
   resolve,
   devtool
@@ -587,6 +611,9 @@ export const nodeDevOptions: WebpackSingleConfig = {
   }),
   module: moduleNode,
   externals: externalsNode,
+  performance: {
+    hints: false
+  },
   // in order to ignore built-in modules like path, fs, etc.
   target: 'node',
   node: {
@@ -608,6 +635,9 @@ export const nodeUnitOptions: WebpackSingleConfig = {
   }),
   module: moduleNode,
   externals: externalsNode,
+  performance: {
+    hints: false
+  },
   // in order to ignore built-in modules like path, fs, etc.
   target: 'node',
   node: {

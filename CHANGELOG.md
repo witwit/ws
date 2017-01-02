@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-49 (2017-01-02)
+
+- Only show [webpack performance warnings](https://medium.com/webpack/webpack-performance-budgets-13d4880fbf6d) for production builds.
+
 # 1.0.1-48 (2017-01-02)
 
 - Updated dependencies (e.g. `webpack@2.2.0-rc.3`).
