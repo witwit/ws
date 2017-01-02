@@ -346,7 +346,7 @@ const getLocalizedSpaDevOptions = (locales: Array<string>): WebpackSingleConfig 
   options.plugins = indexHtmlPlugins.concat([
     extractCssPlugin,
     loaderOptionsPlugin
-  ]);
+  ]) as any;
   options.externals = [ project.ws.i18n!.module ];
 
   return options;

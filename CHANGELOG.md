@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-48 (2017-01-02)
+
+- Updated dependencies (e.g. `webpack@2.2.0-rc.3`).
+
 # 1.0.1-47 (2017-01-02)
 
 - Just a small bug fix which copies json files in localized apps to the correct directory.
