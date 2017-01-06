@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { gt } from 'semver';
-import { debug, info } from 'loglevel';
+import { debug, warn, info } from 'loglevel';
 import { cyan, magenta } from 'chalk';
 
 interface DistTags {
@@ -18,9 +18,10 @@ const LOVE_EMOJI = [
 const getRandom = (arr: Array<any>): any => arr[Math.floor(Math.random() * arr.length)];
 
 export function updateNotifier(version: string) {
-  return new Promise((resolve, reject) => exec(`npm show @mercateo/ws dist-tags --json`, (error, stdout, stderr) => {
+  return new Promise((resolve) => exec(`npm show @mercateo/ws dist-tags --json`, (error, stdout, stderr) => {
     if (error || stderr) {
-      reject(error || stderr);
+      warn(`Couldn't check, if a new version of @mercateo/ws is available. ${error || stderr}`);
+      resolve();
     } else {
       const distTags = JSON.parse(stdout) as DistTags;
       const isPrerelease = version.includes('-');
