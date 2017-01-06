@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-51 (2017-01-06)
+
+- You can now use a `copy-loader` which is an alias to `file-loader`. Idea from [here](https://www.npmjs.com/package/copy-loader)! Cool.
+
 # 1.0.1-50 (2017-01-06)
 
 - Don't reject, if update notifier doesn't work.

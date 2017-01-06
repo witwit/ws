@@ -197,7 +197,12 @@ export const resolveLoader = {
     join(__dirname, '..', 'node_modules'),
     join(process.cwd(), 'node_modules'),
     'node_modules'
-  ]
+  ],
+  alias: {
+    // see https://www.npmjs.com/package/copy-loader
+    copy: `file-loader?name=[path][name].[ext]&context=./${project.ws.srcDir}`,
+    ['copy-loader']: `file-loader?name=[path][name].[ext]&context=./${project.ws.srcDir}`
+  }
 };
 
 // defaults
