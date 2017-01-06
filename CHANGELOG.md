@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-52 (2017-01-06)
+
+- Remove `copy` alias, so only `copy-loader` is allowed. This matches native loaders which need a `-loader` suffix.
+
 # 1.0.1-51 (2017-01-06)
 
 - You can now use a `copy-loader` which is an alias to `file-loader`. Idea from [here](https://www.npmjs.com/package/copy-loader)! Cool.

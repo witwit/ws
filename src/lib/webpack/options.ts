@@ -200,7 +200,6 @@ export const resolveLoader = {
   ],
   alias: {
     // see https://www.npmjs.com/package/copy-loader
-    copy: `file-loader?name=[path][name].[ext]&context=./${project.ws.srcDir}`,
     ['copy-loader']: `file-loader?name=[path][name].[ext]&context=./${project.ws.srcDir}`
   }
 };
