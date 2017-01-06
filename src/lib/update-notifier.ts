@@ -24,7 +24,7 @@ export function updateNotifier(version: string) {
       warn(error);
       resolve();
     } else {
-      if (stderr) {
+      if (stderr.trim()) {
         warn(stderr);
       }
 
