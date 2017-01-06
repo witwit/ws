@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-50 (2017-01-06)
+
+- Don't reject, if update notifier doesn't work.
+
 # 1.0.1-49 (2017-01-02)
 
 - Only show [webpack performance warnings](https://medium.com/webpack/webpack-performance-budgets-13d4880fbf6d) for production builds.
