@@ -19,10 +19,15 @@ const getRandom = (arr: Array<any>): any => arr[Math.floor(Math.random() * arr.l
 
 export function updateNotifier(version: string) {
   return new Promise((resolve) => exec(`npm show @mercateo/ws dist-tags --json`, (error, stdout, stderr) => {
-    if (error || stderr) {
-      warn(`Couldn't check, if a new version of @mercateo/ws is available. ${error || stderr}`);
+    if (error) {
+      warn(`Couldn't check, if a new version of @mercateo/ws is available.`);
+      warn(error);
       resolve();
     } else {
+      if (stderr) {
+        warn(stderr);
+      }
+
       const distTags = JSON.parse(stdout) as DistTags;
       const isPrerelease = version.includes('-');
       const remoteVersion = isPrerelease ? distTags.next : distTags.latest;
