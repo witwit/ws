@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-53 (2017-01-09)
+
+- Support `targets` from [`babel-preset-env`](https://github.com/babel/babel-preset-env). Thanks [@otbe](https://github.com/otbe)! Use it inside you `package.json` as `ws.targets.node` and `ws.targets.browsers`. This **removes** the support of `ws.browsers`, too!
+
 # 1.0.1-52 (2017-01-06)
 
 - Remove `copy` alias, so only `copy-loader` is allowed. This matches native loaders which need a `-loader` suffix.

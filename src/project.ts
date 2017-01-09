@@ -179,10 +179,9 @@ export interface WsConfig {
    * The directory where your production build is generated (only SPAs).
    */
   distReleaseDir: string;
-
   /**
-   * Format taken from `babel-preset-env`
-   * Each target environment takes a number (you can also specify a minor versions like node: 6.5)
+   * `targets` taken from [`babel-preset-env`](https://github.com/babel/babel-preset-env).
+   * We only use `browsers` and `node` properties for now.
    */
   targets: {
      /**
@@ -192,7 +191,6 @@ export interface WsConfig {
       * Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
       */
     browsers: string;
-
     /**
      * If you want to compile against the current node version, you can specify "node": "current", which would be the same as "node": parseFloat(process.versions.node).
      */
