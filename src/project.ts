@@ -179,13 +179,25 @@ export interface WsConfig {
    * The directory where your production build is generated (only SPAs).
    */
   distReleaseDir: string;
+
   /**
-   * A [browserslist](https://github.com/ai/browserslist) compatible string to specify which
-   * browsers should be used for selenium testing (if it is enabled) and for
-   * [autoprefixer](https://github.com/postcss/autoprefixer).
-   * Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
+   * Format taken from `babel-preset-env`
+   * Each target environment takes a number (you can also specify a minor versions like node: 6.5)
    */
-  browsers: string;
+  targets: {
+     /**
+      * A [browserslist](https://github.com/ai/browserslist) compatible string to specify which
+      * browsers should be used for selenium testing (if it is enabled) and for
+      * [autoprefixer](https://github.com/postcss/autoprefixer).
+      * Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
+      */
+    browsers: string;
+
+    /**
+     * If you want to compile against the current node version, you can specify "node": "current", which would be the same as "node": parseFloat(process.versions.node).
+     */
+    node: string | number;
+  };
   /**
    * Our selenium grid settings. Only needed if you run tests with a custom selenium grid.
    */
@@ -300,8 +312,16 @@ export function validate(pkg: any): PackageConfig {
   pkg.ws.e2eEntry = `./${pkg.ws.testsDir}/e2e.${pkg.ws.entryExtension}`;
 
   // defaults for browsers
-  if (!pkg.ws.browsers) {
-    pkg.ws.browsers = '> 1%, last 2 versions, Firefox ESR';
+  if (!pkg.ws.targets) {
+    pkg.ws.targets = {};
+  }
+
+  if (!pkg.ws.targets.node) {
+    pkg.ws.targets.node = 6.9;
+  }
+
+  if (!pkg.ws.targets.browsers) {
+    pkg.ws.targets.browsers = '> 1%, last 2 versions, Firefox ESR';
   }
 
   // defaults for selenium

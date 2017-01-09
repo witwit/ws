@@ -4,7 +4,10 @@ const WebpackNodeExternals = require('webpack-node-externals');
 
 const babelConfig = {
   presets: [
-    '@niftyco/babel-node',
+    ['babel-preset-env', {
+      targets: { node: 6.9 },
+      useBuiltIns: true
+    }],
     'babel-preset-stage-0'
   ],
   plugins: [

@@ -48,7 +48,10 @@ const outputTest = Object.assign({}, output, {
 
 const babelNode = {
   presets: [
-    resolveFile('@niftyco/babel-node'),
+    [resolveFile('babel-preset-env'), {
+      targets: { node: project.ws.targets.node },
+      useBuiltIns: true
+    }],
     resolveFile('babel-preset-stage-0')
   ],
   plugins: [
@@ -58,7 +61,11 @@ const babelNode = {
 
 const babelBrowser = {
   presets: [
-    [ resolveFile('babel-preset-es2015') , { modules: false } ],
+    [ resolveFile('babel-preset-env'), {
+      targets: { browsers: project.ws.targets.browsers },
+      modules: false,
+      useBuiltIns: true
+    } ],
     resolveFile('babel-preset-react'),
     resolveFile('babel-preset-stage-0')
   ],
@@ -167,7 +174,7 @@ export const loaderOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
     resolve: {},
     postcss: () => [
       autoprefixer({
-        browsers: project.ws.browsers
+        browsers: project.ws.targets.browsers
       })
     ]
   }
