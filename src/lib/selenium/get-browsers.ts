@@ -110,7 +110,7 @@ const originalData = Object.assign({}, browserslist.data);
 /**
  * Converts results of a `browserslist` query to an Selenium Browser Capabilities array.
  */
-export function queryBrowsers(query: string = project.ws.browsers): Browser[] {
+export function queryBrowsers(query: string = project.ws.targets.browsers): Browser[] {
   debug(`Parse browsers from query: ${query}.`);
   const browsers = browserslist(query)
     .map(browser => {
@@ -231,7 +231,7 @@ async function getAllAvailableBrowsers(): Promise<Browser[]> {
  * Converts a `browserslist` string to Selenium Browser Capabilities array filtered by the
  * browsers which are really available on the Selenium Grid.
  */
-export async function getFilteredAvailableBrowsers(browsers: string = project.ws.browsers): Promise<Browser[]> {
+export async function getFilteredAvailableBrowsers(browsers: string = project.ws.targets.browsers): Promise<Browser[]> {
   const availableBrowsers = await getAllAvailableBrowsers();
   const availableBrowsersData = availableBrowsers
     .filter(({ browserName }) => supportedBrowsers.some(({ selenium }) => selenium === browserName))
@@ -266,7 +266,7 @@ export async function getBrowsers(): Promise<Browser[]> {
     port,
     filterForAvailability
   } = project.ws.selenium!;
-  const browsersQuery = project.ws.browsers;
+  const browsersQuery = project.ws.targets.browsers;
   const browsers = filterForAvailability ? await getFilteredAvailableBrowsers() : queryBrowsers();
 
   if (browsers.length === 0) {
