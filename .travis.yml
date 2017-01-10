@@ -15,15 +15,13 @@ cache:
 #  - npm install --no-optional
 
 before_script:
-  - npm run build
-
-before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
   - test ! -d node_modules || npm prune
 
 script:
+  - npm run -s build
   - npm run -s ws lint
   - node scripts/update-examples.js
 
