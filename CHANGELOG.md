@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-54 (2017-01-12)
+
+- Build translations before e2e tests.
+
 # 1.0.1-53 (2017-01-09)
 
 - Support `targets` from [`babel-preset-env`](https://github.com/babel/babel-preset-env). Thanks [@otbe](https://github.com/otbe)! Use it inside you `package.json` as `ws.targets.node` and `ws.targets.browsers`. This **removes** the support of `ws.browsers`, too!

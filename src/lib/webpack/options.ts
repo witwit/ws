@@ -13,7 +13,10 @@ import { project } from '../../project';
  */
 export interface WebpackSingleConfig extends webpack.Configuration {
   entry: string | Array<string> | webpack.Entry;
-  output: webpack.Output;
+  output: webpack.Output & {
+    filename: string;
+    path: string;
+  };
   // new option (see https://medium.com/webpack/webpack-performance-budgets-13d4880fbf6d)
   performance?: {
     maxAssetSize?: number;

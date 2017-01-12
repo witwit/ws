@@ -10,6 +10,7 @@ import {
 } from '../lib/webpack';
 import { testAsync } from '../lib/mocha';
 import { startSeleniumServer, Browser, parseBrowser, getBrowsers, isSauceLabsHost, launchSauceConnect } from '../lib/selenium';
+import { compile as compileI18n } from '../lib/i18n';
 
 function spawnE2e(options: any, browser: Browser) {
   return new Promise((resolve, reject) => {
@@ -100,6 +101,11 @@ async function run() {
 }
 
 export default async function e2e(options: any) {
+  // translations could be needed
+  if (project.ws.i18n) {
+    await compileI18n();
+  }
+
   const isSpawned = process.env.WS_E2E_IS_SPAWNED;
 
   if (isSpawned) {
