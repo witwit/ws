@@ -9,6 +9,7 @@
   "scripts": {
     "build": "rimraf dist/ && webpack",
     "ws": "node ./bin/ws.js",
+    "postinstall": "node node_modules/phantomjs-prebuilt/install.js",
     "preversion": "npm run -s build && npm run -s ws lint",
     "prerelease": "npm version prerelease && git push && npm publish --tag next --access public"
   },
