@@ -1,0 +1,28 @@
+{
+  "name": "ws-examples-spa-ts-lazy-import",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "ws": "node ../../bin/ws"
+  },
+  "ws": {
+    "type": "spa",
+    "selenium": {
+      "host": "ondemand.saucelabs",
+      "port": 80
+    }
+  },
+  "dependencies": {
+    "@types/react": "^0.14.27",
+    "@types/react-dom": "^0.14.13",
+    "@types/react-router": "^3.0.0",
+    "mobx": "^3.0.2",
+    "mobx-react": "^4.1.0",
+    "mobx-utils": "^2.0.1",
+    "normalize.css": "^5.0.0",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
+    "react-router": "^3.0.2",
+    "ws-examples-browser-ts-react": "file:../browser-ts-react"
+  }
+}

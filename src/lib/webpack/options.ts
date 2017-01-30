@@ -39,17 +39,17 @@ const output = {
   sourcePrefix: ''
 };
 
-const outputDev = Object.assign({}, output, {
+const outputDev = { ...output,
   path: join(process.cwd(), project.ws.distDir)
-});
+};
 
-export const outputRelease = Object.assign({}, output, {
+export const outputRelease = { ...output,
   path: join(process.cwd(), project.ws.distReleaseDir)
-});
+};
 
-const outputTest = Object.assign({}, output, {
+const outputTest = { ...output,
   path: join(process.cwd(), project.ws.distTestsDir)
-});
+};
 
 const babelNode = {
   presets: [
@@ -86,14 +86,14 @@ export const jsLoaderNode = {
   test: /\.js(x?)$/,
   exclude: /node_modules/,
   loader: 'babel-loader',
-  options: Object.assign({}, babelNode, { cacheDirectory: true })
+  options: { ...babelNode, cacheDirectory: true }
 };
 
 export const jsLoaderBrowser = {
   test: /\.js(x?)$/,
   exclude: new RegExp(`(node_modules|${project.ws.i18n ? project.ws.i18n.locales.map(locale => `${project.ws.i18n!.distDir}\/${locale}`).join('|') : ''})`),
   loader: 'babel-loader',
-  options: Object.assign({}, babelBrowser, { cacheDirectory: true })
+  options: { ...babelBrowser, cacheDirectory: true }
 };
 
 export const tsLoaderNode = {
@@ -101,7 +101,7 @@ export const tsLoaderNode = {
   use: [
     {
       loader: 'babel-loader',
-      options: Object.assign({}, babelNode, { cacheDirectory: true })
+      options: { ...babelNode, cacheDirectory: true }
     },
     {
       loader: 'ts-loader',
@@ -125,7 +125,7 @@ export const tsLoaderBrowser = {
     },
     {
       loader: 'babel-loader',
-      options: Object.assign({}, babelBrowser, { cacheDirectory: true })
+      options: { ...babelBrowser, cacheDirectory: true }
     },
     {
       loader: 'ts-loader',
@@ -149,7 +149,7 @@ export const awesomeTsLoaderBrowser = {
     },
     {
       loader: 'babel-loader',
-      options: Object.assign({}, babelBrowser, { cacheDirectory: true })
+      options: { ...babelBrowser, cacheDirectory: true }
     },
     {
       loader: 'awesome-typescript-loader',
@@ -391,10 +391,11 @@ const spaIndexHtmlPlugins = project.ws.i18n ? localizedIndexHtmlPlugins : [index
 
 const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
-  output: Object.assign({}, outputDev, {
+  output: {
+    ...outputDev,
     libraryTarget: 'umd',
     filename: '[name].js'
-  }),
+  },
   module: moduleBrowser,
   plugins: [
     indexHtmlPlugin,
@@ -479,10 +480,11 @@ export const getSpaDevDllOptions = (): WebpackSingleConfig => ({
 
 export const spaReleaseOptions: WebpackSingleConfig = {
   entry: spaEntry,
-  output: Object.assign({}, outputRelease, {
+  output: {
+    ...outputRelease,
     libraryTarget: 'umd',
     filename: '[name]-[hash].js'
-  }),
+  },
   module: moduleBrowser,
   plugins: spaIndexHtmlPlugins.concat([
     extractCssHashPlugin,
@@ -510,11 +512,14 @@ export const spaUnitOptions: WebpackSingleConfig = {
     hints: false
   },
   resolveLoader,
-  resolve: Object.assign({}, resolve, project.ws.i18n ? {
-    alias: {
-      [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
-    }
-  } : {}),
+  resolve: {
+    ...resolve,
+    ...(project.ws.i18n ? {
+      alias: {
+        [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
+      }
+    } : {})
+  },
   devtool
 };
 
@@ -523,9 +528,10 @@ export const spaE2eOptions: WebpackSingleConfig = {
     nodeSourceMapEntry,
     project.ws.e2eEntry
   ],
-  output: Object.assign({}, outputTest, {
+  output: {
+    ...outputTest,
     libraryTarget: 'commonjs2'
-  }),
+  },
   module: moduleNode,
   externals: externalsNode,
   performance: {
@@ -548,10 +554,11 @@ export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
     indexI18n: project.ws.srcI18nEntry,
     i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
   },
-  output: Object.assign({}, outputDev, {
+  output: {
+    ...outputDev,
     libraryTarget: 'umd',
     filename: '[name].js'
-  }),
+  },
   module: moduleBrowser,
   plugins: [
     new HtmlWebpackPlugin({
@@ -580,10 +587,11 @@ export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? 
     indexI18n: project.ws.srcI18nEntry,
     i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
   },
-  output: Object.assign({}, outputRelease, {
+  output: {
+    ...outputRelease,
     libraryTarget: 'umd',
     filename: '[name]-[hash].js'
-  }),
+  },
   module: moduleBrowser,
   plugins: [
     new HtmlWebpackPlugin({
@@ -611,10 +619,11 @@ const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   // would be an webpack agnostic module in the future https://github.com/webpack/webpack/issues/2933
   // this is not really useful until then
-  output: Object.assign({}, outputDev, {
+  output: {
+    ...outputDev,
     libraryTarget: 'umd',
     library: project.name
-  }),
+  },
   module: moduleBrowser,
   plugins: [
     extractCssPlugin,
@@ -631,14 +640,16 @@ const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
 
 const getLocalizedBrowserDevOptions = (locale: string): WebpackSingleConfig => {
   const options = getUnlocalizedBrowserDevOptions();
-  options.output = Object.assign({}, options.output, {
+  options.output = {
+    ...options.output,
     path: join(process.cwd(), project.ws.distDir, locale)
-  });
-  options.resolve = Object.assign({}, options.resolve, {
+  };
+  options.resolve = {
+    ...options.resolve,
     alias: {
       [project.ws.i18n!.module]: `${process.cwd()}/${project.ws.i18n!.distDir}/${locale}.js`
     }
-  });
+  };
   return options;
 };
 
@@ -648,10 +659,11 @@ export const getBrowserDevOptions = (locales: Array<string> = getDefaultLocales(
 const getUnlocalizedBrowserReleaseOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   // useful for people without a build pipeline
-  output: Object.assign({}, outputRelease, {
+  output: {
+    ...outputRelease,
     libraryTarget: 'umd',
     library: project.name
-  }),
+  },
   module: browserReleaseModule,
   plugins: [
     extractCssPlugin,
@@ -667,14 +679,16 @@ const getUnlocalizedBrowserReleaseOptions = (): WebpackSingleConfig => ({
 
 const getLocalizedBrowserReleaseOptions = (locale: string): WebpackSingleConfig => {
   const options = getUnlocalizedBrowserReleaseOptions();
-  options.output = Object.assign({}, options.output, {
+  options.output = {
+    ...options.output,
     path: join(process.cwd(), project.ws.distReleaseDir, locale)
-  });
-  options.resolve = Object.assign({}, options.resolve, {
+  };
+  options.resolve = {
+    ...options.resolve,
     alias: {
       [project.ws.i18n!.module]: `${process.cwd()}/${project.ws.i18n!.distDir}/${locale}.js`
     }
-  });
+  };
   return options;
 };
 
@@ -683,10 +697,11 @@ export const getBrowserReleaseOptions = (locales: Array<string> = getDefaultLoca
 
 const getUnlocalizedBrowserUnitOptions = (): WebpackSingleConfig => ({
   entry: project.ws.unitEntry,
-  output: Object.assign({}, outputTest, {
+  output: {
+    ...outputTest,
     libraryTarget: 'umd',
     library: project.name
-  }),
+  },
   module: moduleBrowser,
   plugins: [
     extractCssPlugin,
@@ -703,11 +718,12 @@ const getUnlocalizedBrowserUnitOptions = (): WebpackSingleConfig => ({
 
 const getLocalizedBrowserUnitOptions = (): WebpackSingleConfig => {
   const options = getUnlocalizedBrowserUnitOptions();
-  options.resolve = Object.assign({}, options.resolve, {
+  options.resolve = {
+    ...options.resolve,
     alias: {
       [project.ws.i18n!.module]: `${process.cwd()}/${project.ws.i18n!.distDir}/unit.js`
     }
-  });
+  };
   return options;
 };
 
@@ -719,9 +735,10 @@ export const nodeDevOptions: WebpackSingleConfig = {
     nodeSourceMapEntry,
     project.ws.srcEntry
   ],
-  output: Object.assign({}, outputDev, {
+  output: {
+    ...outputDev,
     libraryTarget: 'commonjs2'
-  }),
+  },
   module: moduleNode,
   externals: externalsNode,
   performance: {
@@ -743,9 +760,10 @@ export const nodeUnitOptions: WebpackSingleConfig = {
     nodeSourceMapEntry,
     project.ws.unitEntry
   ],
-  output: Object.assign({}, outputTest, {
+  output: {
+    ...outputTest,
     libraryTarget: 'commonjs2'
-  }),
+  },
   module: moduleNode,
   externals: externalsNode,
   performance: {

@@ -1,5 +1,10 @@
 The changelog is currently handwritten.
 
+# 1.0.1-55 (2017-01-30)
+
+- Use [awesome-typescript-loader](https://github.com/s-panferov/awesome-typescript-loader) (again), because it is faster than [ts-loader](https://github.com/TypeStrong/ts-loader) currently. (But fallback to ts-loader to generate declaration files. This is currently not supperted in awesome-typescript-loader.)
+- You can now lazily load modules with `import()`! Note that there are problems when you load images inside CSS. This happens when we use Source Maps. This is a known problem in style-loader. It looks like there are at least two PRs which could fix this (see [here](https://github.com/webpack-contrib/style-loader/pull/96) and [here](https://github.com/webpack-contrib/style-loader/pull/124)), but they aren't merged yet :(
+
 # 1.0.1-54 (2017-01-12)
 
 - Build translations before e2e tests.
