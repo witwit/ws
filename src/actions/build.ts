@@ -41,12 +41,15 @@ export default async function build(options: BuildOptions) {
         if (project.ws.i18n) {
           // this is a quich fix to get relative path for assets in localized spa's working
           await Promise.all(project.ws.i18n.locales.map(locale =>
-            copy(project.ws.distReleaseDir, join(project.ws.distReleaseDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf,json}')));
+            copy(project.ws.distReleaseDir, join(project.ws.distReleaseDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf,json,js}')));
           await Promise.all(project.ws.i18n.locales.map(locale =>
             copy(join(project.ws.distReleaseDir, 'config'), join(project.ws.distReleaseDir, locale, 'config'), '*.js')));
         }
       } else {
         await removeAsync(project.ws.distDir);
+
+        // await verifyDll(options.locales);
+
         if (project.ws.i18n) {
           await compileI18n();
           info('...build translations');
@@ -59,7 +62,7 @@ export default async function build(options: BuildOptions) {
         if (project.ws.i18n) {
           // this is a quich fix to get relative path for assets in localized spa's working
           await Promise.all(project.ws.i18n.locales.map(locale =>
-            copy(project.ws.distDir, join(project.ws.distDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf,json}')));
+            copy(project.ws.distDir, join(project.ws.distDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf,json,js}')));
           await Promise.all(project.ws.i18n.locales.map(locale =>
             copy(join(project.ws.distDir, 'config'), join(project.ws.distDir, locale, 'config'), '*.js')));
         }
