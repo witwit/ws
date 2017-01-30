@@ -2,10 +2,12 @@ import { join } from 'path';
 import webpack, { DefinePlugin, optimize, Entry } from 'webpack';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
+import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
 import { project } from '../../project';
+import { dllCache } from './dll';
 
 /**
  * We make some properties of `webpack.Configuration` mandatory. It is easier for future usage, so we don't
@@ -64,11 +66,11 @@ const babelNode = {
 
 const babelBrowser = {
   presets: [
-    [ resolveFile('babel-preset-env'), {
+    [resolveFile('babel-preset-env'), {
       targets: { browsers: project.ws.targets.browsers },
       modules: false,
       useBuiltIns: true
-    } ],
+    }],
     resolveFile('babel-preset-react'),
     resolveFile('babel-preset-stage-0')
   ],
@@ -114,11 +116,43 @@ export const tsLoaderBrowser = {
   test: /\.ts(x?)$/,
   use: [
     {
+      loader: 'string-replace-loader',
+      options: {
+        search: '_import(',
+        replace: 'import('
+
+      }
+    },
+    {
       loader: 'babel-loader',
       options: Object.assign({}, babelBrowser, { cacheDirectory: true })
     },
     {
       loader: 'ts-loader',
+      options: {
+        silent: true
+      }
+    }
+  ]
+};
+
+export const awesomeTsLoaderBrowser = {
+  test: /\.ts(x?)$/,
+  use: [
+    {
+      loader: 'string-replace-loader',
+      options: {
+        search: '_import(',
+        replace: 'import('
+
+      }
+    },
+    {
+      loader: 'babel-loader',
+      options: Object.assign({}, babelBrowser, { cacheDirectory: true })
+    },
+    {
+      loader: 'awesome-typescript-loader',
       options: {
         silent: true
       }
@@ -133,12 +167,19 @@ export const jsonLoader = {
 
 export const cssLoader = {
   test: /\.css$/,
-  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap&context=/!postcss-loader?sourceMap')
+  loader: ExtractTextWebpackPlugin.extract({
+    fallbackLoader: `style-loader?context=${process.cwd()}`,
+    loader: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap`
+  })
 };
 
 export const lessLoader = {
   test: /\.less/,
-  loader: ExtractTextWebpackPlugin.extract('css-loader?sourceMap&context=/!postcss-loader?sourceMap!less-loader?sourceMap')
+  loader: ExtractTextWebpackPlugin.extract(
+    {
+      fallbackLoader: `style-loader?context=${process.cwd()}`,
+      loader: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
+    })
 };
 
 export const imageLoader = {
@@ -193,6 +234,17 @@ export const indexHtmlPlugin = new HtmlWebpackPlugin({
   filename: 'index.html',
   template: './src/index.html'
 });
+
+export const dllPlugin = new (webpack as any).DllReferencePlugin({
+  context: process.cwd(),
+  manifest: join(dllCache, 'vendor.json')
+});
+
+export const unlocalizedAddAssetPlugin = new (AddAssetHtmlPlugin as any)(
+  [
+    { filepath: join('dist', 'vendor.dll.js'), includeSourcemap: false },
+    { filepath: join('dist', 'vendor.dll.css'), typeOfAsset: 'css', includeSourcemap: false }
+  ]);
 
 // export const indexHtmlI18nPlugin = new HtmlWebpackPlugin({
 //   filename: 'index.html',
@@ -255,7 +307,7 @@ export const devtoolProduction = 'source-map';
 
 export const externalsNode = [
   // require json files with nodes built-in require logic
-  function(_context: any, request: any, callback: any) {
+  function (_context: any, request: any, callback: any) {
     if (/\.json$/.test(request)) {
       callback(null, 'commonjs ' + request);
     } else {
@@ -280,7 +332,7 @@ export const externalsBrowser = [
   project.ws.externals
 ] : []);
 
-const enzymeExternals = [ 'react/lib/ExecutionEnvironment', 'react/lib/ReactContext', 'react/addons' ];
+const enzymeExternals = ['react/lib/ExecutionEnvironment', 'react/lib/ReactContext', 'react/addons'];
 
 const moduleNode = {
   loaders: [
@@ -289,19 +341,33 @@ const moduleNode = {
   ]
 };
 
+const sharedBrowserLoaders = [
+  jsLoaderBrowser,
+  jsonLoader,
+  cssLoader,
+  lessLoader,
+  imageLoader,
+  eotLoader,
+  woffLoader,
+  ttfLoader
+];
+
+// awesome loader is super fast but does not genrate declaration files ATM
 const moduleBrowser = {
   loaders: [
-    jsLoaderBrowser,
-    tsLoaderBrowser,
-    jsonLoader,
-    cssLoader,
-    lessLoader,
-    imageLoader,
-    eotLoader,
-    woffLoader,
-    ttfLoader
+    ...sharedBrowserLoaders,
+    awesomeTsLoaderBrowser
   ]
 };
+
+// ts-loader is super slow but with declaration files :)
+const browserReleaseModule = {
+  loaders: [
+    ...sharedBrowserLoaders,
+    tsLoaderBrowser
+  ]
+};
+
 
 const localizedEntry: any = {};
 const localizedIndexHtmlPlugins: Array<any> = [];
@@ -315,14 +381,14 @@ if (project.ws.i18n) {
       locales: project.ws.i18n!.locales,
       filename: `${locale}/index.html`,
       template: 'src/index.html',
-      chunks: [ chunkKey, 'index' ],
+      chunks: [chunkKey, 'index'],
       chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }));
   });
 }
 
 const spaEntry = project.ws.i18n ? localizedEntry : project.ws.srcEntry;
-const spaIndexHtmlPlugins = project.ws.i18n ? localizedIndexHtmlPlugins : [ indexHtmlPlugin ];
+const spaIndexHtmlPlugins = project.ws.i18n ? localizedIndexHtmlPlugins : [indexHtmlPlugin];
 
 const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
@@ -335,6 +401,8 @@ const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
     indexHtmlPlugin,
     extractCssPlugin,
     loaderOptionsPlugin
+    // unlocalizedAddAssetPlugin
+    // dllPlugin
   ],
   externals: [],
   performance: {
@@ -360,23 +428,55 @@ const getLocalizedSpaDevOptions = (locales: Array<string>): WebpackSingleConfig 
       locales: project.ws.i18n!.locales,
       filename: `${locale}/index.html`,
       template: 'src/index.html',
-      chunks: [ chunkKey, 'index' ],
+      chunks: [chunkKey, 'index'],
       chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }));
   });
 
   options.entry = entry;
-  options.plugins = indexHtmlPlugins.concat([
-    extractCssPlugin,
-    loaderOptionsPlugin
-  ]) as any;
-  options.externals = [ project.ws.i18n!.module ];
+  options.plugins = indexHtmlPlugins
+    // .concat(locales.map(locale => new (AddAssetHtmlPlugin as any)([{ filepath: join('dist', locale, 'vendor.dll.js'), includeSourcemap: false }, { filepath: join('dist', locale, 'vendor.dll.css'), typeOfAsset: 'css', includeSourcemap: false }])))
+    .concat([
+      // dllPlugin,
+      extractCssPlugin,
+      loaderOptionsPlugin
+    ]) as any;
+  options.externals = [project.ws.i18n!.module];
 
   return options;
 };
 
-export const getSpaDevOptions = (locales: Array<string> = getDefaultLocales()): WebpackConfig =>
+export const getSpaDevOptions = (locales: Array<string> = getDefaultLocales()): WebpackSingleConfig =>
   locales.length ? getLocalizedSpaDevOptions(locales) : getUnlocalizedSpaDevOptions();
+
+
+export const getSpaDevDllOptions = (): WebpackSingleConfig => ({
+  context: process.cwd(),
+  entry: {
+    vendor: Object.keys(project.dependencies || {}).filter(x => !x.startsWith('@types'))
+  },
+  output: {
+    filename: '[name].dll.js',
+    path: dllCache,
+    library: '[name]'
+  },
+  module: moduleBrowser,
+  plugins: [
+    new (webpack as any).DllPlugin({
+      path: join(dllCache, '[name].json'),
+      name: '[name]'
+    }),
+    new ExtractTextWebpackPlugin('vendor.dll.css'),
+    loaderOptionsPlugin
+  ],
+  performance: {
+    hints: false
+  },
+  externals: project.ws.i18n ? [{ [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }] : [],
+  resolveLoader,
+  resolve,
+  devtool
+});
 
 export const spaReleaseOptions: WebpackSingleConfig = {
   entry: spaEntry,
@@ -392,7 +492,7 @@ export const spaReleaseOptions: WebpackSingleConfig = {
     minifyJsPlugin,
     productionOptionsPlugin
   ]),
-  externals: project.ws.i18n ? [ project.ws.i18n.module ] : [],
+  externals: project.ws.i18n ? [project.ws.i18n.module] : [],
   resolveLoader,
   resolve,
   devtool: devtoolProduction
@@ -460,14 +560,14 @@ export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
       template: './src/index.i18n.html',
       locale: project.ws.i18n.locales[0],
       locales: project.ws.i18n.locales,
-      chunks: [ 'i18n', 'indexI18n' ],
+      chunks: ['i18n', 'indexI18n'],
       chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }),
     extractCssPlugin,
     loaderOptionsPlugin
     // defineLocalesPlugin
   ],
-  externals: [ project.ws.i18n.module ],
+  externals: [project.ws.i18n.module],
   performance: {
     hints: false
   },
@@ -492,7 +592,7 @@ export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? 
       template: './src/index.i18n.html',
       locale: project.ws.i18n.locales[0],
       locales: project.ws.i18n.locales,
-      chunks: [ 'i18n', 'indexI18n' ],
+      chunks: ['i18n', 'indexI18n'],
       chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
     }),
     extractCssHashPlugin,
@@ -502,7 +602,7 @@ export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? 
     productionOptionsPlugin
     // defineLocalesPlugin
   ],
-  externals: [ project.ws.i18n.module ],
+  externals: [project.ws.i18n.module],
   resolveLoader,
   resolve,
   devtool: devtoolProduction
@@ -553,7 +653,7 @@ const getUnlocalizedBrowserReleaseOptions = (): WebpackSingleConfig => ({
     libraryTarget: 'umd',
     library: project.name
   }),
-  module: moduleBrowser,
+  module: browserReleaseModule,
   plugins: [
     extractCssPlugin,
     loaderOptionsPlugin,

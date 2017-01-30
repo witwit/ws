@@ -22,6 +22,16 @@ export interface WatchOptions {
   locales: Array<string>;
 }
 
+const copyAssets = async () => {
+  if (project.ws.i18n) {
+    // this is a quich fix to get relative path for assets in localized spa's working
+    await Promise.all(project.ws.i18n.locales.map(locale =>
+      copy(project.ws.distDir, join(project.ws.distDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf,json,js}')));
+    await Promise.all(project.ws.i18n.locales.map(locale =>
+      copy(join(project.ws.distDir, 'config'), join(project.ws.distDir, locale, 'config'), '*.js')));
+  }
+};
+
 export default async function watch(options: WatchOptions) {
   await removeAsync(project.ws.distDir);
 
@@ -36,6 +46,8 @@ export default async function watch(options: WatchOptions) {
       await watchAsync(livereloadServer, nodeDevOptions, onChangeSuccess);
       break;
     case TYPE.SPA:
+      // await verifyDll(options.locales);
+
       if (project.ws.i18n) {
         await compileI18n();
         const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
@@ -43,14 +55,13 @@ export default async function watch(options: WatchOptions) {
           await watchAsync(livereloadServer, spaRootI18nDevOptions);
         }
       }
-      await watchAsync(livereloadServer, getSpaDevOptions(options.locales), onChangeSuccess);
-      if (project.ws.i18n) {
-        // this is a quich fix to get relative path for assets in localized spa's working
-        await Promise.all(project.ws.i18n.locales.map(locale =>
-          copy(project.ws.distDir, join(project.ws.distDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf,json}')));
-        await Promise.all(project.ws.i18n.locales.map(locale =>
-            copy(join(project.ws.distDir, 'config'), join(project.ws.distDir, locale, 'config'), '*.js')));
-      }
+
+      await watchAsync(livereloadServer, getSpaDevOptions(options.locales), async (stats: any) => {
+        onChangeSuccess(stats);
+        await copyAssets();
+      });
+
+      await copyAssets();
       break;
     case TYPE.BROWSER:
       if (project.ws.i18n) {
