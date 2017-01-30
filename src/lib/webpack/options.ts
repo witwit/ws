@@ -351,6 +351,7 @@ const sharedBrowserLoaders = [
 ];
 
 // awesome loader is super fast but does not genrate declaration files ATM
+// see https://github.com/s-panferov/awesome-typescript-loader/issues/321
 const moduleBrowser = {
   loaders: [
     ...sharedBrowserLoaders,
