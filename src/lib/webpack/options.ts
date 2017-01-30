@@ -175,11 +175,10 @@ export const cssLoader = {
 
 export const lessLoader = {
   test: /\.less/,
-  loader: ExtractTextWebpackPlugin.extract(
-    {
-      fallbackLoader: `style-loader?context=${process.cwd()}`,
-      loader: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
-    })
+  loader: ExtractTextWebpackPlugin.extract({
+    fallbackLoader: `style-loader?context=${process.cwd()}`,
+    loader: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
+  })
 };
 
 export const imageLoader = {
@@ -240,11 +239,10 @@ export const dllPlugin = new (webpack as any).DllReferencePlugin({
   manifest: join(dllCache, 'vendor.json')
 });
 
-export const unlocalizedAddAssetPlugin = new (AddAssetHtmlPlugin as any)(
-  [
-    { filepath: join('dist', 'vendor.dll.js'), includeSourcemap: false },
-    { filepath: join('dist', 'vendor.dll.css'), typeOfAsset: 'css', includeSourcemap: false }
-  ]);
+export const unlocalizedAddAssetPlugin = new (AddAssetHtmlPlugin as any)([
+  { filepath: join('dist', 'vendor.dll.js'), includeSourcemap: false },
+  { filepath: join('dist', 'vendor.dll.css'), typeOfAsset: 'css', includeSourcemap: false }
+]);
 
 // export const indexHtmlI18nPlugin = new HtmlWebpackPlugin({
 //   filename: 'index.html',
