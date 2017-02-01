@@ -3,7 +3,6 @@ The changelog is currently handwritten.
 # 1.0.1-56 (2017-02-01)
 
 - Added some new linter rules. I hope we can get [this feature request](https://github.com/palantir/tslint/issues/2163) in tslint to integrate custom rules, too.
-- Removed postinstall script for `phantomjs-prebuilt` for now. I hope we don't need it anymore and it was sometimes called in the wrong directory.
 
 # 1.0.1-55 (2017-01-30)
 
