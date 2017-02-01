@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-58 (2017-02-01)
+
+- Postinstall script wasn't called correctly. I hope this works now!
+
 # 1.0.1-57 (2017-02-01)
 
 - Added better way to postinstall phantomjs.
