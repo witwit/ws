@@ -1,4 +1,4 @@
-// call it as `$ node scripts/update-examples.js` from root
+// check all examples
 const join = require('path').join;
 const existsSync = require('fs').existsSync;
 const spawn = require('child_process').spawn;
