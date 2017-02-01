@@ -22,7 +22,7 @@ export default async function unit(options: any) {
 
   await removeAsync(project.ws.distTestsDir);
 
-  let exitCode: number = 0;
+  let exitCode = 0;
   switch (project.ws.type) {
     case TYPE.NODE:
       await compileAsync(nodeUnitOptions);

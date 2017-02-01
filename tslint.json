@@ -1,14 +1,40 @@
 {
   "rules": {
+    "arrow-return-shorthand": [ true ],
+    "ban": [
+      true,
+      [ "it", "only" ]
+    ],
+    "comment-format": [
+      true,
+      "check-space"
+      ],
     "class-name": true,
     "curly": true,
+    "import-spacing": true,
     "indent": [
       true,
       "spaces"
     ],
     "jsdoc-format": true,
+    "no-angle-bracket-type-assertion": true,
+    "no-conditional-assignment": true,
     "no-duplicate-variable": true,
+    "no-inferrable-types": [
+      true,
+      "ignore-params"
+    ],
+    "no-internal-module": true,
+    "no-misused-new": true,
+    "no-reference": true,
+    "no-trailing-whitespace": true,
+    "no-var-keyword": true,
     "no-unused-expression": true,
+    "object-literal-key-quotes": [
+      true,
+      "as-needed"
+    ],
+    "object-literal-shorthand": true,
     "one-line": [
       true,
       "check-catch",
@@ -20,6 +46,7 @@
       "single",
       "jsx-double"
     ],
+    "prefer-for-of": true,
     "semicolon": [
       true,
       "always"
@@ -34,6 +61,23 @@
     "triple-equals": [
       true,
       "allow-null-check"
+    ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      },
+      {
+        "call-signature": "onespace",
+        "index-signature": "onespace",
+        "parameter": "onespace",
+        "property-declaration": "onespace",
+        "variable-declaration": "onespace"
+      }
     ],
     "whitespace": [
       true,

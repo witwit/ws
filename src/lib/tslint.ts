@@ -1,16 +1,22 @@
 import { Linter, ILinterOptions } from 'tslint';
 import fs from 'fs-extra-promise';
 import globby from 'globby';
+import { project } from '../project';
 
 // relative from dist/index.js
 const tslintConfig = require('../tslint.json');
 const lintOptions: ILinterOptions = {
-  formatter: 'json',
+  formatter: 'codeFrame',
   rulesDirectory: [],
   formattersDirectory: '',
   fix: false
 };
-const defaultFilePatterns = [ 'src/**/*.tsx', 'src/**/*.ts' ];
+const defaultFilePatterns = [
+  `${project.ws.srcDir}/**/*.tsx`,
+  `${project.ws.srcDir}/**/*.ts`,
+  `${project.ws.testsDir}/**/*.tsx`,
+  `${project.ws.testsDir}/**/*.ts`
+];
 
 export async function lintAsync(filePatterns = defaultFilePatterns) {
   const filePaths = await globby(filePatterns);

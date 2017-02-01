@@ -305,7 +305,7 @@ export const devtoolProduction = 'source-map';
 
 export const externalsNode = [
   // require json files with nodes built-in require logic
-  function (_context: any, request: any, callback: any) {
+  function(_context: any, request: any, callback: any) {
     if (/\.json$/.test(request)) {
       callback(null, 'commonjs ' + request);
     } else {
