@@ -23,7 +23,7 @@ before_script:
 script:
   - npm run -s build
   - npm run -s ws lint
-  - node scripts/update-examples.js
+  - npm run test
 
 after_script:
   - "sh -e /etc/init.d/xvfb stop"
