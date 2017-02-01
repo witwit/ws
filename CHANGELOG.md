@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-57 (2017-02-01)
+
+- Added better way to postinstall phantomjs.
+
 # 1.0.1-56 (2017-02-01)
 
 - Added some new linter rules. I hope we can get [this feature request](https://github.com/palantir/tslint/issues/2163) in tslint to integrate custom rules, too.
