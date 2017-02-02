@@ -17,13 +17,15 @@ try {
 export const TYPE = {
   SPA: 'spa' as 'spa',
   NODE: 'node' as 'node',
-  BROWSER: 'browser' as 'browser'
+  BROWSER: 'browser' as 'browser',
+  ELECTRON: 'electron' as 'electron'
 };
 
 const TYPES = [
   TYPE.SPA,
   TYPE.NODE,
-  TYPE.BROWSER
+  TYPE.BROWSER,
+  TYPE.ELECTRON
 ];
 
 /**
@@ -122,7 +124,7 @@ export interface WsConfig {
   /**
    * We currently support three types of projects: `'spa'`, `'node'` and `'browser'`.
    */
-  type: 'spa' | 'node' | 'browser';
+  type: 'spa' | 'node' | 'browser' | 'electron';
   /**
    * The file extension of your entry file. Either `js`, `ts` or `tsx`.
    * This value is set automatically.
@@ -184,17 +186,21 @@ export interface WsConfig {
    * We only use `browsers` and `node` properties for now.
    */
   targets: {
-     /**
-      * A [browserslist](https://github.com/ai/browserslist) compatible string to specify which
-      * browsers should be used for selenium testing (if it is enabled) and for
-      * [autoprefixer](https://github.com/postcss/autoprefixer).
-      * Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
-      */
+    /**
+     * A [browserslist](https://github.com/ai/browserslist) compatible string to specify which
+     * browsers should be used for selenium testing (if it is enabled) and for
+     * [autoprefixer](https://github.com/postcss/autoprefixer).
+     * Defaults to `'> 1%, last 2 versions, Firefox ESR'`.
+     */
     browsers: string;
     /**
      * If you want to compile against the current node version, you can specify "node": "current", which would be the same as "node": parseFloat(process.versions.node).
      */
     node: string | number;
+    /**
+     * If you want to compile against electron set a version number. Default is 1.4
+     */
+    electron: number;
   };
   /**
    * Our selenium grid settings. Only needed if you run tests with a custom selenium grid.
@@ -320,6 +326,10 @@ export function validate(pkg: any): PackageConfig {
 
   if (!pkg.ws.targets.browsers) {
     pkg.ws.targets.browsers = '> 1%, last 2 versions, Firefox ESR';
+  }
+
+  if (!pkg.ws.targets.electron) {
+    pkg.ws.targets.electron = 1.4;
   }
 
   // defaults for selenium

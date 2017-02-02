@@ -12,7 +12,9 @@ const examples = [
   'browser-ts-react-i18n',
   'spa-ts',
   'spa-ts-i18n',
-  'node-ts'
+  'node-ts',
+  'electron',
+  'electron-i18n'
 ];
 
 const stdio = 'inherit';
@@ -26,11 +28,12 @@ examples.forEach(example => {
     rimrafSync(join(cwd, 'dist'));
     rimrafSync(join(cwd, 'dist-tests'));
     rimrafSync(join(cwd, 'dist-release'));
-    execSync('yarn install', { cwd, stdio });
+    // switched back to npm because yarn caches local dependencies
+    execSync('npm install', { cwd, stdio });
 
     // test commands
     execSync('npm run -s ws -- build', { cwd, stdio });
-    if (example.includes('spa') || example.includes('browser')) {
+    if (example.includes('spa') || example.includes('browser') || example.includes('electron')) {
       execSync('npm run -s ws -- build --production', { cwd, stdio });
     }
     execSync('npm run -s ws -- lint', { cwd, stdio });

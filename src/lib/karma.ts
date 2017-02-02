@@ -39,7 +39,7 @@ const defaultConfig: EnhancedConfigOptions = {
   plugins: [
     'karma-mocha',
     'karma-phantomjs-launcher',
-    'karma-webdriver-launcher',
+    project.ws.type === 'electron' ? 'karma-electron' : 'karma-webdriver-launcher',
     'karma-sourcemap-loader',
     'karma-mocha-reporter'
   ],
@@ -53,10 +53,13 @@ const defaultConfig: EnhancedConfigOptions = {
     showDiff: true
   },
   browsers: [
-    'PhantomJS'
+    project.ws.type === 'electron' ? 'Electron' : 'PhantomJS'
   ],
   logLevel: 'WARN',
   singleRun: true,
+  client: {
+    useIframe: false
+  },
   // see https://github.com/karma-runner/karma/issues/2119#issuecomment-239615791
   formatError(msg) {
     return msg
@@ -84,7 +87,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
       join(project.ws.distTestsDir, 'index.js')
     ],
     preprocessors: {
-      [join(project.ws.distTestsDir, 'index.js')]: [ 'sourcemap' ]
+      [join(project.ws.distTestsDir, 'index.js')]: (project.ws.type === 'electron' ? ['electron'] : []).concat(['sourcemap'])
     }
   });
 

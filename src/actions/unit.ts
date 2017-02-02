@@ -10,8 +10,9 @@ import {
   getBrowserUnitOptions
 } from '../lib/webpack';
 import { testAsync as karmaTestAsync } from '../lib/karma';
-import { testAsync as mochaTestAsync  } from '../lib/mocha';
+import { testAsync as mochaTestAsync } from '../lib/mocha';
 import { compile as compileI18n } from '../lib/i18n';
+import { electronUnitOptions } from '../lib/webpack/options';
 
 export default async function unit(options: any) {
   const hasUnitTests = await existsAsync(project.ws.unitEntry);
@@ -30,6 +31,14 @@ export default async function unit(options: any) {
         path.join(nodeUnitOptions.output.path, nodeUnitOptions.output.filename)
       ];
       exitCode = await mochaTestAsync(files);
+      break;
+    case TYPE.ELECTRON:
+      if (project.ws.i18n) {
+        await compileI18n();
+      }
+      await compileAsync(electronUnitOptions);
+      exitCode = await karmaTestAsync(options);
+
       break;
     case TYPE.SPA:
       if (project.ws.i18n) {

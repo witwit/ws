@@ -63,6 +63,7 @@
     "intl-messageformat-parser": "^1.2.0",
     "json-loader": "^0.5.4",
     "karma": "^1.4.1",
+    "karma-electron": "^5.1.1",
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.2.2",
     "karma-phantomjs-launcher": "^1.0.1",
@@ -98,7 +99,7 @@
     "url-loader": "^0.5.7",
     "url-template": "^2.0.7",
     "webpack": "2.2.0-rc.3",
-    "webpack-node-externals": "^1.2.0"
+    "webpack-node-externals": "^1.5.4"
   },
   "devDependencies": {
     "rimraf": "^2.5.3"

@@ -43,6 +43,7 @@ function handleAction(action: (options?: any) => Promise<any>) {
 // specific setup
 switch (project.ws.type) {
   case TYPE.SPA:
+  case TYPE.ELECTRON:
     commander.description('We build your SPA!');
 
     commander
@@ -93,13 +94,14 @@ switch (project.ws.type) {
   case TYPE.SPA:
   case TYPE.NODE:
   case TYPE.BROWSER:
+  case TYPE.ELECTRON:
     const buildCommand = commander
       .command('build')
       .alias('b')
       .description('build the project')
       .action(handleAction(buildAction));
 
-    if (project.ws.type === TYPE.SPA || project.ws.type === TYPE.BROWSER) {
+    if (project.ws.type === TYPE.SPA || project.ws.type === TYPE.BROWSER || project.ws.type === TYPE.ELECTRON) {
       buildCommand.option('-p, --production', 'create production build');
     }
 

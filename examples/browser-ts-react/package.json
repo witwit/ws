@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist-release/index.js",
   "webpack": "src/index.tsx",
-  "typings": "dist/src/index.d.ts",
+  "typings": "dist-release/src/index.d.ts",
   "private": true,
   "scripts": {
     "ws": "node ../../bin/ws"
@@ -20,8 +20,8 @@
     }
   },
   "dependencies": {
-    "@types/react": "^0.14.27",
-    "@types/react-dom": "^0.14.13",
+    "@types/react": "^15.0.6",
+    "@types/react-dom": "^0.14.22",
     "react": "^15.0.0",
     "ws-examples-browser-less": "file:../browser-less",
     "ws-examples-browser-ts": "file:../browser-ts"

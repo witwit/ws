@@ -4,6 +4,7 @@ import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import nodeExternals from 'webpack-node-externals';
 import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
 import { project } from '../../project';
@@ -67,7 +68,7 @@ const babelNode = {
 const babelBrowser = {
   presets: [
     [resolveFile('babel-preset-env'), {
-      targets: { browsers: project.ws.targets.browsers },
+      targets: project.ws.type === 'electron' ? { electron: project.ws.targets.electron } : { browsers: project.ws.targets.browsers },
       modules: false,
       useBuiltIns: true
     }],
@@ -581,6 +582,142 @@ export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
   resolve,
   devtool
 } : ({} as any);
+
+const getUnlocalizedElectronOptions = (): WebpackSingleConfig => ({
+  entry: project.ws.srcEntry,
+  output: {
+    ...outputDev,
+    filename: '[name].js'
+  },
+  module: moduleBrowser,
+  plugins: [
+    indexHtmlPlugin,
+    extractCssPlugin,
+    loaderOptionsPlugin
+    // unlocalizedAddAssetPlugin
+    // dllPlugin
+  ],
+  target: 'atom',
+  externals: [nodeExternals()],
+  performance: {
+    hints: false
+  },
+  resolveLoader,
+  resolve,
+  devtool
+});
+
+const getLocalizedElectronOptions = (locales: Array<string>): WebpackSingleConfig => {
+  const options = getUnlocalizedElectronOptions();
+
+  const entry: Entry = {
+    index: project.ws.srcEntry
+  };
+  const indexHtmlPlugins: Array<HtmlWebpackPlugin> = [];
+  locales.forEach(locale => {
+    const chunkKey = `${locale}/i18n`;
+    entry[chunkKey] = `./${project.ws.i18n!.distDir}/${locale}.js`;
+    indexHtmlPlugins.push(new HtmlWebpackPlugin({
+      locale,
+      locales: project.ws.i18n!.locales,
+      filename: `${locale}/index.html`,
+      template: 'src/index.html',
+      chunks: [chunkKey, 'index'],
+      chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
+    }));
+  });
+
+  options.entry = entry;
+  options.plugins = indexHtmlPlugins
+    .concat([
+      extractCssPlugin,
+      loaderOptionsPlugin
+    ]) as any;
+  options.externals = [nodeExternals(), { [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }];
+
+  return options;
+};
+
+export const getElectronOptions = (locales: Array<string> = getDefaultLocales()): WebpackSingleConfig =>
+  locales.length ? getLocalizedElectronOptions(locales) : getUnlocalizedElectronOptions();
+
+export const getElectronReleaseOptions = (locales: Array<string> = getDefaultLocales()) => {
+  const options = getElectronOptions(locales);
+
+  return {
+    ...options,
+    plugins: [
+      ...options.plugins || [],
+      defineProductionPlugin
+    ]
+  };
+};
+
+export const electronUnitOptions: WebpackSingleConfig = {
+  entry: project.ws.unitEntry,
+  output: outputTest,
+  module: moduleBrowser,
+  plugins: [
+    extractCssPlugin,
+    loaderOptionsPlugin
+  ],
+  target: 'atom',
+  externals: enzymeExternals.concat([nodeExternals() as any]),
+  performance: {
+    hints: false
+  },
+  resolveLoader,
+    resolve: {
+      ...resolve,
+      ...(project.ws.i18n ? {
+        alias: {
+          [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
+        }
+      } : {})
+    },
+  devtool
+};
+
+export const electronRootI18nOptions: WebpackSingleConfig = project.ws.i18n ? {
+    entry: {
+      indexI18n: project.ws.srcI18nEntry,
+      i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
+    },
+    output: {
+      ...outputDev,
+      libraryTarget: 'umd',
+      filename: '[name].js'
+    },
+    module: moduleBrowser,
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: 'index.html',
+        template: './src/index.i18n.html',
+        locale: project.ws.i18n.locales[0],
+        locales: project.ws.i18n.locales,
+        chunks: ['i18n', 'indexI18n'],
+        chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
+      }),
+      extractCssPlugin,
+      loaderOptionsPlugin
+    ],
+    target: 'atom',
+    externals: [nodeExternals(), { [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }],
+    performance: {
+      hints: false
+    },
+    resolveLoader,
+    resolve,
+    devtool
+  } : ({} as any);
+
+export const electronRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? {
+    ...electronRootI18nOptions,
+    plugins: [
+      ...electronRootI18nOptions.plugins || [],
+      defineProductionPlugin
+    ]
+  } : ({} as any);
 
 export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? {
   entry: {
