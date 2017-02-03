@@ -11,6 +11,13 @@ cache:
   directories:
     - node_modules
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+
 #install:
 #  - npm install --no-optional
 
@@ -30,6 +37,7 @@ after_script:
 
 env:
   global:
+    - CXX=g++-4.8
     # secure SAUCE_USERNAME
     - secure: >-
         i1hoBtH+QrnIlNqBl3nH66JMFAij7gSNQ/5Fse3BC1S3rxcMKX+DxE/aqjACACSDMfFZ1pcz3VUclcl1VMONQWzEJYRxzAz5Qx5vVtXdoIYgUff+8pzsARpV5r+ysHfMGitVpBhjrVwip+CVKxt+zmQ8HviiosYVS41qnmfZAgRkJj2k8xjfEod+KTxgrw1USp5L6sG7xiCdqEfw8cLtWKLpFgJbkSnJFJDdWU3aQ04Z/46P3FNszoRsfALyEdZI+79rvwhoBe3XmSEG4R9B5IKFqo/9C4oq9wIupfRs5tdvgDeXkzY9NhJIWqyh30uk9R2HhjkTjm35XBKHyKFOkESPxeWCve+Y5ghV/e0/VwXdhZkFrWxVkVrf5KgZ12T2jxfFbKtQA545flH/zhgvklq91C9EPRMZoXAGX7lf/y467D1n1LxfmiLkeCmKe/FNcwfSXy2j/56AClrsQqJtLkldE51D4vg8hxe7sSDKR4YXFwFJH2OnPF39pOUCakU6/73+gLpI4+/wqgUqLeT2qKbI6bytx5YP85+C1sLYB/e8ef10rVtDBBIqgS06rB07mPUNnnghsJqhLwAkapYoYjyKZxHPBRwaC9REUjrvQiju+csVoe0UpGPeNX1B380/1lFw6OgamP3V2Q4yUjx3gQRqRFr8aCaWQufb7dtxBc4=

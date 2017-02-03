@@ -40,7 +40,7 @@ export default async function build(options: BuildOptions) {
     case TYPE.ELECTRON:
       await removeAsync(project.ws.distDir);
 
-      if(options.production) {
+      if (options.production) {
         if (project.ws.i18n) {
           await compileI18n();
           info('...build translations');
