@@ -102,6 +102,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "devDependencies": {
+    "electron": "^1.4.15",
     "rimraf": "^2.5.3"
   },
   "keywords": [
