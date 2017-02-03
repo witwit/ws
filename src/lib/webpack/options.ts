@@ -4,7 +4,6 @@ import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import AddAssetHtmlPlugin from 'add-asset-html-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import nodeExternals from 'webpack-node-externals';
 import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
 import { project } from '../../project';
@@ -594,11 +593,9 @@ const getUnlocalizedElectronOptions = (): WebpackSingleConfig => ({
     indexHtmlPlugin,
     extractCssPlugin,
     loaderOptionsPlugin
-    // unlocalizedAddAssetPlugin
-    // dllPlugin
   ],
-  target: 'atom',
-  externals: [nodeExternals()],
+  target: 'electron',
+  externals: project.ws.externals ? [ project.ws.externals ] : [],
   performance: {
     hints: false
   },
@@ -633,7 +630,7 @@ const getLocalizedElectronOptions = (locales: Array<string>): WebpackSingleConfi
       extractCssPlugin,
       loaderOptionsPlugin
     ]) as any;
-  options.externals = [nodeExternals(), { [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }];
+  options.externals = [...options.externals as any, { [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }];
 
   return options;
 };
@@ -661,8 +658,8 @@ export const electronUnitOptions: WebpackSingleConfig = {
     extractCssPlugin,
     loaderOptionsPlugin
   ],
-  target: 'atom',
-  externals: enzymeExternals.concat([nodeExternals() as any]),
+  target: 'electron',
+  externals: enzymeExternals.concat(project.ws.externals ? [ project.ws.externals ] : []),
   performance: {
     hints: false
   },
@@ -701,8 +698,10 @@ export const electronRootI18nOptions: WebpackSingleConfig = project.ws.i18n ? {
       extractCssPlugin,
       loaderOptionsPlugin
     ],
-    target: 'atom',
-    externals: [nodeExternals(), { [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }],
+    target: 'electron',
+    externals: (project.ws.externals ? [
+        project.ws.externals
+      ] : []).concat([ { [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }]),
     performance: {
       hints: false
     },

@@ -3,7 +3,7 @@ import expect from 'expect';
 import ReactTestUtils from 'react-addons-test-utils';
 import { HelloWorld } from '../src/HelloWorld';
 
-describe('test my code', () => {
+describe('test my electron i18n app', () => {
   it('should render a react component', () => {
     const renderer = ReactTestUtils.createRenderer();
     renderer.render(<HelloWorld/>);

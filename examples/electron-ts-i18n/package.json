@@ -1,24 +1,33 @@
 {
-  "name": "electron",
+  "name": "ws-example-electron-i18n",
   "version": "1.0.0",
   "private": true,
-  "license": "MIT",
   "ws": {
-    "type": "electron"
+    "type": "electron",
+    "i18n": {
+      "locales": [
+        "en_GB"
+      ],
+      "features": [
+        "foo"
+      ]
+    }
   },
   "scripts": {
     "start": "NODE_ENV=development electron .",
-    "ws": "node ../../bin/ws"
+     "ws": "node ../../bin/ws"
   },
   "dependencies": {
     "@types/node": "^7.0.4",
     "@types/react": "^15.0.6",
     "@types/react-dom": "^0.14.22",
-    "ws-examples-browser-ts-react": "file:../browser-ts-react",
     "babel-polyfill": "^6.22.0",
     "electron": "^1.4.15",
+    "intl-messageformat": "^1.3.0",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "ws-examples-browser-ts-react-i18n": "file:../browser-ts-react-i18n",
+    "ws-examples-node-ts": "file:../node-ts"
   },
   "devDependencies": {
     "@types/expect": "^1.13.29",

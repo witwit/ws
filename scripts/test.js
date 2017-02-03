@@ -13,8 +13,8 @@ const examples = [
   'spa-ts',
   'spa-ts-i18n',
   'node-ts',
-  'electron',
-  'electron-i18n'
+  'electron-ts',
+  'electron-ts-i18n'
 ];
 
 const stdio = 'inherit';
