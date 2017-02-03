@@ -1,5 +1,3 @@
-process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app

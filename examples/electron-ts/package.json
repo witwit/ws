@@ -11,7 +11,7 @@
   },
   "scripts": {
     "postinstall": "electron-rebuild",
-    "start": "NODE_ENV=development electron .",
+    "start": "electron .",
     "ws": "node ../../bin/ws"
   },
   "dependencies": {
