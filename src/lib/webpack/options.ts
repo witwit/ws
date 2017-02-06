@@ -39,15 +39,18 @@ const output = {
   sourcePrefix: ''
 };
 
-const outputDev = { ...output,
+const outputDev = {
+  ...output,
   path: join(process.cwd(), project.ws.distDir)
 };
 
-export const outputRelease = { ...output,
+export const outputRelease = {
+  ...output,
   path: join(process.cwd(), project.ws.distReleaseDir)
 };
 
-const outputTest = { ...output,
+const outputTest = {
+  ...output,
   path: join(process.cwd(), project.ws.distTestsDir)
 };
 
@@ -168,16 +171,16 @@ export const jsonLoader = {
 export const cssLoader = {
   test: /\.css$/,
   loader: ExtractTextWebpackPlugin.extract({
-    fallbackLoader: `style-loader?context=${process.cwd()}`,
-    loader: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap`
+    fallback: `style-loader?context=${process.cwd()}`,
+    use: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap`
   })
 };
 
 export const lessLoader = {
   test: /\.less/,
   loader: ExtractTextWebpackPlugin.extract({
-    fallbackLoader: `style-loader?context=${process.cwd()}`,
-    loader: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
+    fallback: `style-loader?context=${process.cwd()}`,
+    use: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
   })
 };
 
@@ -305,7 +308,7 @@ export const devtoolProduction = 'source-map';
 
 export const externalsNode = [
   // require json files with nodes built-in require logic
-  function(_context: any, request: any, callback: any) {
+  function (_context: any, request: any, callback: any) {
     if (/\.json$/.test(request)) {
       callback(null, 'commonjs ' + request);
     } else {
@@ -595,7 +598,7 @@ const getUnlocalizedElectronOptions = (): WebpackSingleConfig => ({
     loaderOptionsPlugin
   ],
   target: 'electron',
-  externals: project.ws.externals ? [ project.ws.externals ] : [],
+  externals: project.ws.externals ? [project.ws.externals] : [],
   performance: {
     hints: false
   },
@@ -659,64 +662,64 @@ export const electronUnitOptions: WebpackSingleConfig = {
     loaderOptionsPlugin
   ],
   target: 'electron',
-  externals: enzymeExternals.concat(project.ws.externals ? [ project.ws.externals ] : []),
+  externals: enzymeExternals.concat(project.ws.externals ? [project.ws.externals] : []),
   performance: {
     hints: false
   },
   resolveLoader,
-    resolve: {
-      ...resolve,
-      ...(project.ws.i18n ? {
-        alias: {
-          [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
-        }
-      } : {})
-    },
+  resolve: {
+    ...resolve,
+    ...(project.ws.i18n ? {
+      alias: {
+        [project.ws.i18n.module]: `${process.cwd()}/${project.ws.i18n.distDir}/unit.js`
+      }
+    } : {})
+  },
   devtool
 };
 
 export const electronRootI18nOptions: WebpackSingleConfig = project.ws.i18n ? {
-    entry: {
-      indexI18n: project.ws.srcI18nEntry,
-      i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
-    },
-    output: {
-      ...outputDev,
-      libraryTarget: 'umd',
-      filename: '[name].js'
-    },
-    module: moduleBrowser,
-    plugins: [
-      new HtmlWebpackPlugin({
-        filename: 'index.html',
-        template: './src/index.i18n.html',
-        locale: project.ws.i18n.locales[0],
-        locales: project.ws.i18n.locales,
-        chunks: ['i18n', 'indexI18n'],
-        chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
-      }),
-      extractCssPlugin,
-      loaderOptionsPlugin
-    ],
-    target: 'electron',
-    externals: (project.ws.externals ? [
-        project.ws.externals
-      ] : []).concat([ { [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }]),
-    performance: {
-      hints: false
-    },
-    resolveLoader,
-    resolve,
-    devtool
-  } : ({} as any);
+  entry: {
+    indexI18n: project.ws.srcI18nEntry,
+    i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
+  },
+  output: {
+    ...outputDev,
+    libraryTarget: 'umd',
+    filename: '[name].js'
+  },
+  module: moduleBrowser,
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: './src/index.i18n.html',
+      locale: project.ws.i18n.locales[0],
+      locales: project.ws.i18n.locales,
+      chunks: ['i18n', 'indexI18n'],
+      chunksSortMode: (a: any) => a.names[0] === 'index' ? 1 : 0
+    }),
+    extractCssPlugin,
+    loaderOptionsPlugin
+  ],
+  target: 'electron',
+  externals: (project.ws.externals ? [
+    project.ws.externals
+  ] : []).concat([{ [project.ws.i18n!.module]: `this ${project.ws.i18n!.module}` }]),
+  performance: {
+    hints: false
+  },
+  resolveLoader,
+  resolve,
+  devtool
+} : ({} as any);
 
 export const electronRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? {
-    ...electronRootI18nOptions,
-    plugins: [
-      ...electronRootI18nOptions.plugins || [],
-      defineProductionPlugin
-    ]
-  } : ({} as any);
+  ...electronRootI18nOptions,
+  plugins: [
+    ...electronRootI18nOptions.plugins || [],
+    defineProductionPlugin
+  ]
+} : ({} as any);
 
 export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? {
   entry: {
