@@ -122,7 +122,7 @@ export interface I18nConfig {
  */
 export interface WsConfig {
   /**
-   * We currently support three types of projects: `'spa'`, `'node'` and `'browser'`.
+   * We currently support four types of projects: `'spa'`, `'node'`, `'browser'` and `'electron``.
    */
   type: 'spa' | 'node' | 'browser' | 'electron';
   /**
