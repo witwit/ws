@@ -17,6 +17,7 @@ import {
 } from '../lib/webpack';
 import { compile as compileI18n } from '../lib/i18n';
 import { copy } from '../lib/copy';
+import { electronRootI18nOptions, getElectronOptions } from '../lib/webpack/options';
 
 export interface WatchOptions {
   locales: Array<string>;
@@ -44,6 +45,25 @@ export default async function watch(options: WatchOptions) {
   switch (project.ws.type) {
     case TYPE.NODE:
       await watchAsync(livereloadServer, nodeDevOptions, onChangeSuccess);
+      break;
+    case TYPE.ELECTRON:
+      // await verifyDll(options.locales);
+
+      if (project.ws.i18n) {
+        await compileI18n();
+        const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
+        if (hasI18nEntry) {
+          await watchAsync(livereloadServer, electronRootI18nOptions);
+        }
+      }
+
+      await watchAsync(livereloadServer, getElectronOptions(options.locales), async (stats: any) => {
+        onChangeSuccess(stats);
+        await copyAssets();
+      });
+
+      await copyAssets();
+
       break;
     case TYPE.SPA:
       // await verifyDll(options.locales);
