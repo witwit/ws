@@ -121,7 +121,7 @@ export const tsLoaderBrowser = {
     {
       loader: 'string-replace-loader',
       options: {
-        search: '_import(',
+        search: /_import\(/g,
         replace: 'import('
 
       }
@@ -145,7 +145,7 @@ export const awesomeTsLoaderBrowser = {
     {
       loader: 'string-replace-loader',
       options: {
-        search: '_import(',
+        search: /_import\(/g,
         replace: 'import('
 
       }
