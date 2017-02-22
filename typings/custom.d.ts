@@ -6,6 +6,8 @@
 
 declare module 'autoprefixer';
 
+declare module 'lodash';
+
 declare module 'stringify-object' {
   export interface Options {
     indent?: string;
