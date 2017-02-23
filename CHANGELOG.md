@@ -1,5 +1,13 @@
 The changelog is currently handwritten.
 
+# 1.0.1-61 (2017-02-23)
+
+- Updated dependencies. Removed `@types/lodash` for now. Update selenium to new major version.
+
+# 1.0.1-60 (2017-02-07)
+
+- Fixed bug so multiple `_import`'s work.
+
 # 1.0.1-59 (2017-02-06)
 
 - A wild [@otbe](https://github.com/otbe) appears! He adds Electron support. It is very effective!
