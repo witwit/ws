@@ -31,6 +31,13 @@ interface EnhancedConfigOptions extends ConfigOptions {
   };
   // with new formatError added in 1.3
   formatError?(msg: string): string;
+  // new in karma 1.5.0
+  browserConsoleLogOptions: {
+    level?: string;
+    format?: string;
+    path?: string;
+    terminal?: boolean;
+  };
 }
 
 const defaultConfig: EnhancedConfigOptions = {
@@ -56,6 +63,10 @@ const defaultConfig: EnhancedConfigOptions = {
     project.ws.type === 'electron' ? 'Electron' : 'PhantomJS'
   ],
   logLevel: 'WARN',
+  browserConsoleLogOptions: {
+    level: 'log',
+    terminal: true
+  },
   singleRun: true,
   client: {
     useIframe: false

@@ -85,82 +85,78 @@ const babelBrowser = {
   compact: false
 };
 
-export const jsLoaderNode = {
-  test: /\.js(x?)$/,
-  exclude: /node_modules/,
-  loader: 'babel-loader',
-  options: { ...babelNode, cacheDirectory: true }
-};
+type Command = 'build' | 'build -p' | 'unit' | 'e2e';
 
-export const jsLoaderBrowser = {
-  test: /\.js(x?)$/,
-  exclude: new RegExp(`(node_modules|${project.ws.i18n ? project.ws.i18n.locales.map(locale => `${project.ws.i18n!.distDir}\/${locale}`).join('|') : ''})`),
-  loader: 'babel-loader',
-  options: { ...babelBrowser, cacheDirectory: true }
-};
+const getJsLoaderConfig = (command: Command) => {
+  const isNode = project.ws.type === 'node';
+  const isE2e = command === 'e2e';
 
-export const tsLoaderNode = {
-  test: /\.ts(x?)$/,
-  use: [
-    {
-      loader: 'babel-loader',
-      options: { ...babelNode, cacheDirectory: true }
-    },
-    {
-      loader: 'ts-loader',
-      options: {
-        silent: true
-      }
+  const babelOptions = isNode || isE2e ? babelNode : babelBrowser;
+  const exclude = isNode
+    ? /node_modules/
+    : new RegExp(`(node_modules|${project.ws.i18n ? project.ws.i18n.locales.map(locale => `${project.ws.i18n!.distDir}\/${locale}`).join('|') : ''})`);
+
+  return {
+    test: /\.js(x?)$/,
+    exclude,
+    loader: 'babel-loader',
+    options: {
+      ...babelOptions,
+      cacheDirectory: true
     }
-  ]
+  };
 };
 
-export const tsLoaderBrowser = {
-  test: /\.ts(x?)$/,
-  use: [
-    {
-      loader: 'string-replace-loader',
-      options: {
-        search: /_import\(/g,
-        replace: 'import('
+const getTsLoaderConfig = (command: Command) => {
+  const isNode = project.ws.type === 'node';
+  const isE2e = command === 'e2e';
+  const isNodeBuild = isNode && command === 'build';
+  const isBrowserRelease = project.ws.type === 'browser' && command === 'build -p';
 
-      }
-    },
-    {
-      loader: 'babel-loader',
-      options: { ...babelBrowser, cacheDirectory: true }
-    },
-    {
-      loader: 'ts-loader',
-      options: {
-        silent: true
-      }
+  // only needed when declarations are generated
+  let outDir: string | undefined = undefined;
+  if (isBrowserRelease) {
+    // note! in earlier versions of the ws tool and the loaders we used it was not possible
+    // to generate the declaration file in a different directory than the compiled build
+    // that's why fir localized browser components we assume that the declaration should be
+    // inside the default locale build
+    if (project.ws.i18n && project.ws.i18n.locales.length > 0) {
+      outDir = join(project.ws.distReleaseDir, project.ws.i18n.locales[0]);
+    } else {
+      outDir = project.ws.distReleaseDir;
     }
-  ]
-};
+  } else if (isNodeBuild) {
+    outDir = project.ws.distDir;
+  }
 
-export const awesomeTsLoaderBrowser = {
-  test: /\.ts(x?)$/,
-  use: [
-    {
-      loader: 'string-replace-loader',
-      options: {
-        search: /_import\(/g,
-        replace: 'import('
-
+  const babelOptions = isNode || isE2e ? babelNode : babelBrowser;
+  return {
+    test: /\.ts(x?)$/,
+    use: [
+      {
+        loader: 'string-replace-loader',
+        options: {
+          search: /_import\(/g,
+          replace: 'import('
+        }
+      },
+      {
+        loader: 'babel-loader',
+        options: {
+          ...babelOptions,
+          cacheDirectory: true
+        }
+      },
+      {
+        loader: 'awesome-typescript-loader',
+        options: {
+          silent: true,
+          declaration: isBrowserRelease || isNodeBuild,
+          outDir
+        }
       }
-    },
-    {
-      loader: 'babel-loader',
-      options: { ...babelBrowser, cacheDirectory: true }
-    },
-    {
-      loader: 'awesome-typescript-loader',
-      options: {
-        silent: true
-      }
-    }
-  ]
+    ]
+  };
 };
 
 export const jsonLoader = {
@@ -247,11 +243,6 @@ export const unlocalizedAddAssetPlugin = new (AddAssetHtmlPlugin as any)([
   { filepath: join('dist', 'vendor.dll.css'), typeOfAsset: 'css', includeSourcemap: false }
 ]);
 
-// export const indexHtmlI18nPlugin = new HtmlWebpackPlugin({
-//   filename: 'index.html',
-//   template: './src/index.i18n.html'
-// });
-
 export const resolveLoader = {
   // if you symlink the ws tool (e.g. while development), you want to resolve loaders
   // relative to the ws tool first (just like a normale `require()` would work)
@@ -335,41 +326,31 @@ export const externalsBrowser = [
 
 const enzymeExternals = ['react/lib/ExecutionEnvironment', 'react/lib/ReactContext', 'react/addons'];
 
-const moduleNode = {
-  loaders: [
-    jsLoaderNode,
-    tsLoaderNode
-  ]
+const getModuleConfig = (command: Command) => {
+  const commonLoaders = [
+    getJsLoaderConfig(command),
+    getTsLoaderConfig(command)
+  ];
+
+  const specificLoaders = project.ws.type === 'node'
+    ? []
+    : [
+      jsonLoader,
+      cssLoader,
+      lessLoader,
+      imageLoader,
+      eotLoader,
+      woffLoader,
+      ttfLoader
+    ];
+
+  return {
+    loaders: [
+      ...commonLoaders,
+      ...specificLoaders
+    ]
+  };
 };
-
-const sharedBrowserLoaders = [
-  jsLoaderBrowser,
-  jsonLoader,
-  cssLoader,
-  lessLoader,
-  imageLoader,
-  eotLoader,
-  woffLoader,
-  ttfLoader
-];
-
-// awesome loader is super fast but does not genrate declaration files ATM
-// see https://github.com/s-panferov/awesome-typescript-loader/issues/321
-const moduleBrowser = {
-  loaders: [
-    ...sharedBrowserLoaders,
-    awesomeTsLoaderBrowser
-  ]
-};
-
-// ts-loader is super slow but with declaration files :)
-const browserReleaseModule = {
-  loaders: [
-    ...sharedBrowserLoaders,
-    tsLoaderBrowser
-  ]
-};
-
 
 const localizedEntry: any = {};
 const localizedIndexHtmlPlugins: Array<any> = [];
@@ -392,14 +373,14 @@ if (project.ws.i18n) {
 const spaEntry = project.ws.i18n ? localizedEntry : project.ws.srcEntry;
 const spaIndexHtmlPlugins = project.ws.i18n ? localizedIndexHtmlPlugins : [indexHtmlPlugin];
 
-const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
+const getUnlocalizedSpaBuildOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   output: {
     ...outputDev,
     libraryTarget: 'umd',
     filename: '[name].js'
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build'),
   plugins: [
     indexHtmlPlugin,
     extractCssPlugin,
@@ -416,8 +397,8 @@ const getUnlocalizedSpaDevOptions = (): WebpackSingleConfig => ({
   devtool
 });
 
-const getLocalizedSpaDevOptions = (locales: Array<string>): WebpackSingleConfig => {
-  const options = getUnlocalizedSpaDevOptions();
+const getLocalizedSpaBuildOptions = (locales: Array<string>): WebpackSingleConfig => {
+  const options = getUnlocalizedSpaBuildOptions();
 
   const entry: Entry = {
     index: project.ws.srcEntry
@@ -450,10 +431,10 @@ const getLocalizedSpaDevOptions = (locales: Array<string>): WebpackSingleConfig 
 };
 
 export const getSpaDevOptions = (locales: Array<string> = getDefaultLocales()): WebpackSingleConfig =>
-  locales.length ? getLocalizedSpaDevOptions(locales) : getUnlocalizedSpaDevOptions();
+  locales.length ? getLocalizedSpaBuildOptions(locales) : getUnlocalizedSpaBuildOptions();
 
 
-export const getSpaDevDllOptions = (): WebpackSingleConfig => ({
+export const getSpaBuildDllOptions = (): WebpackSingleConfig => ({
   context: process.cwd(),
   entry: {
     vendor: Object.keys(project.dependencies || {}).filter(x => !x.startsWith('@types'))
@@ -463,7 +444,7 @@ export const getSpaDevDllOptions = (): WebpackSingleConfig => ({
     path: dllCache,
     library: '[name]'
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build'),
   plugins: [
     new (webpack as any).DllPlugin({
       path: join(dllCache, '[name].json'),
@@ -488,7 +469,7 @@ export const spaReleaseOptions: WebpackSingleConfig = {
     libraryTarget: 'umd',
     filename: '[name]-[hash].js'
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build -p'),
   plugins: spaIndexHtmlPlugins.concat([
     extractCssHashPlugin,
     loaderOptionsPlugin,
@@ -505,7 +486,7 @@ export const spaReleaseOptions: WebpackSingleConfig = {
 export const spaUnitOptions: WebpackSingleConfig = {
   entry: project.ws.unitEntry,
   output: outputTest,
-  module: moduleBrowser,
+  module: getModuleConfig('unit'),
   plugins: [
     extractCssPlugin,
     loaderOptionsPlugin
@@ -535,7 +516,7 @@ export const spaE2eOptions: WebpackSingleConfig = {
     ...outputTest,
     libraryTarget: 'commonjs2'
   },
-  module: moduleNode,
+  module: getModuleConfig('e2e'),
   externals: externalsNode,
   performance: {
     hints: false
@@ -552,7 +533,7 @@ export const spaE2eOptions: WebpackSingleConfig = {
 };
 
 // e.g.to create a locale switcher or redirect for localized spa’s
-export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
+export const spaRootI18nBuildOptions: WebpackSingleConfig = project.ws.i18n ? {
   entry: {
     indexI18n: project.ws.srcI18nEntry,
     i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
@@ -562,7 +543,7 @@ export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
     libraryTarget: 'umd',
     filename: '[name].js'
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build'),
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -585,13 +566,13 @@ export const spaRootI18nDevOptions: WebpackSingleConfig = project.ws.i18n ? {
   devtool
 } : ({} as any);
 
-const getUnlocalizedElectronOptions = (): WebpackSingleConfig => ({
+const getUnlocalizedElectronBuildOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   output: {
     ...outputDev,
     filename: '[name].js'
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build'),
   plugins: [
     indexHtmlPlugin,
     extractCssPlugin,
@@ -607,8 +588,8 @@ const getUnlocalizedElectronOptions = (): WebpackSingleConfig => ({
   devtool
 });
 
-const getLocalizedElectronOptions = (locales: Array<string>): WebpackSingleConfig => {
-  const options = getUnlocalizedElectronOptions();
+const getLocalizedElectronBuildOptions = (locales: Array<string>): WebpackSingleConfig => {
+  const options = getUnlocalizedElectronBuildOptions();
 
   const entry: Entry = {
     index: project.ws.srcEntry
@@ -638,11 +619,11 @@ const getLocalizedElectronOptions = (locales: Array<string>): WebpackSingleConfi
   return options;
 };
 
-export const getElectronOptions = (locales: Array<string> = getDefaultLocales()): WebpackSingleConfig =>
-  locales.length ? getLocalizedElectronOptions(locales) : getUnlocalizedElectronOptions();
+export const getElectronBuildOptions = (locales: Array<string> = getDefaultLocales()): WebpackSingleConfig =>
+  locales.length ? getLocalizedElectronBuildOptions(locales) : getUnlocalizedElectronBuildOptions();
 
 export const getElectronReleaseOptions = (locales: Array<string> = getDefaultLocales()) => {
-  const options = getElectronOptions(locales);
+  const options = getElectronBuildOptions(locales);
 
   return {
     ...options,
@@ -656,7 +637,7 @@ export const getElectronReleaseOptions = (locales: Array<string> = getDefaultLoc
 export const electronUnitOptions: WebpackSingleConfig = {
   entry: project.ws.unitEntry,
   output: outputTest,
-  module: moduleBrowser,
+  module: getModuleConfig('unit'),
   plugins: [
     extractCssPlugin,
     loaderOptionsPlugin
@@ -678,7 +659,7 @@ export const electronUnitOptions: WebpackSingleConfig = {
   devtool
 };
 
-export const electronRootI18nOptions: WebpackSingleConfig = project.ws.i18n ? {
+export const electronRootI18nBuildOptions: WebpackSingleConfig = project.ws.i18n ? {
   entry: {
     indexI18n: project.ws.srcI18nEntry,
     i18n: `./${project.ws.i18n.distDir}/${project.ws.i18n.locales[0]}.js`
@@ -688,7 +669,7 @@ export const electronRootI18nOptions: WebpackSingleConfig = project.ws.i18n ? {
     libraryTarget: 'umd',
     filename: '[name].js'
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build'),
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -714,9 +695,9 @@ export const electronRootI18nOptions: WebpackSingleConfig = project.ws.i18n ? {
 } : ({} as any);
 
 export const electronRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? {
-  ...electronRootI18nOptions,
+  ...electronRootI18nBuildOptions,
   plugins: [
-    ...electronRootI18nOptions.plugins || [],
+    ...electronRootI18nBuildOptions.plugins || [],
     defineProductionPlugin
   ]
 } : ({} as any);
@@ -731,7 +712,7 @@ export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? 
     libraryTarget: 'umd',
     filename: '[name]-[hash].js'
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build -p'),
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
@@ -754,7 +735,7 @@ export const spaRootI18nReleaseOptions: WebpackSingleConfig = project.ws.i18n ? 
   devtool: devtoolProduction
 } : ({} as any);
 
-const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
+const getUnlocalizedBrowserBuildOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   // would be an webpack agnostic module in the future https://github.com/webpack/webpack/issues/2933
   // this is not really useful until then
@@ -763,7 +744,7 @@ const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
     libraryTarget: 'umd',
     library: project.name
   },
-  module: moduleBrowser,
+  module: getModuleConfig('build'),
   plugins: [
     extractCssPlugin,
     loaderOptionsPlugin
@@ -777,8 +758,8 @@ const getUnlocalizedBrowserDevOptions = (): WebpackSingleConfig => ({
   devtool
 });
 
-const getLocalizedBrowserDevOptions = (locale: string): WebpackSingleConfig => {
-  const options = getUnlocalizedBrowserDevOptions();
+const getLocalizedBrowserBuildOptions = (locale: string): WebpackSingleConfig => {
+  const options = getUnlocalizedBrowserBuildOptions();
   options.output = {
     ...options.output,
     path: join(process.cwd(), project.ws.distDir, locale)
@@ -792,8 +773,8 @@ const getLocalizedBrowserDevOptions = (locale: string): WebpackSingleConfig => {
   return options;
 };
 
-export const getBrowserDevOptions = (locales: Array<string> = getDefaultLocales()): WebpackConfig =>
-  locales.length ? locales.map(getLocalizedBrowserDevOptions) : getUnlocalizedBrowserDevOptions();
+export const getBrowserBuildOptions = (locales: Array<string> = getDefaultLocales()): WebpackConfig =>
+  locales.length ? locales.map(getLocalizedBrowserBuildOptions) : getUnlocalizedBrowserBuildOptions();
 
 const getUnlocalizedBrowserReleaseOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
@@ -803,7 +784,7 @@ const getUnlocalizedBrowserReleaseOptions = (): WebpackSingleConfig => ({
     libraryTarget: 'umd',
     library: project.name
   },
-  module: browserReleaseModule,
+  module: getModuleConfig('build -p'),
   plugins: [
     extractCssPlugin,
     loaderOptionsPlugin,
@@ -841,7 +822,8 @@ const getUnlocalizedBrowserUnitOptions = (): WebpackSingleConfig => ({
     libraryTarget: 'umd',
     library: project.name
   },
-  module: moduleBrowser,
+  // module: moduleBrowser,
+  module: getModuleConfig('unit'),
   plugins: [
     extractCssPlugin,
     loaderOptionsPlugin
@@ -869,7 +851,7 @@ const getLocalizedBrowserUnitOptions = (): WebpackSingleConfig => {
 export const getBrowserUnitOptions = (): WebpackConfig =>
   project.ws.i18n ? getLocalizedBrowserUnitOptions() : getUnlocalizedBrowserUnitOptions();
 
-export const nodeDevOptions: WebpackSingleConfig = {
+export const nodeBuildOptions: WebpackSingleConfig = {
   entry: [
     nodeSourceMapEntry,
     project.ws.srcEntry
@@ -878,7 +860,7 @@ export const nodeDevOptions: WebpackSingleConfig = {
     ...outputDev,
     libraryTarget: 'commonjs2'
   },
-  module: moduleNode,
+  module: getModuleConfig('build'),
   externals: externalsNode,
   performance: {
     hints: false
@@ -903,7 +885,7 @@ export const nodeUnitOptions: WebpackSingleConfig = {
     ...outputTest,
     libraryTarget: 'commonjs2'
   },
-  module: moduleNode,
+  module: getModuleConfig('unit'),
   externals: externalsNode,
   performance: {
     hints: false

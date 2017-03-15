@@ -10,14 +10,17 @@ import { findAsync } from '../lib/openport';
 import { listenAsync } from '../lib/express';
 import {
   watchAsync,
-  nodeDevOptions,
+  nodeBuildOptions,
   getSpaDevOptions,
-  spaRootI18nDevOptions,
-  getBrowserDevOptions
+  spaRootI18nBuildOptions,
+  getBrowserBuildOptions
 } from '../lib/webpack';
 import { compile as compileI18n } from '../lib/i18n';
 import { copy } from '../lib/copy';
-import { electronRootI18nOptions, getElectronOptions } from '../lib/webpack/options';
+import {
+  electronRootI18nBuildOptions,
+  getElectronBuildOptions
+} from '../lib/webpack/options';
 
 export interface WatchOptions {
   locales: Array<string>;
@@ -44,7 +47,7 @@ export default async function watch(options: WatchOptions) {
   const onChangeSuccess = (stats: any) => info(`Finished build at ${cyan(moment(stats.endTime).format('HH:mm:ss'))}.`);
   switch (project.ws.type) {
     case TYPE.NODE:
-      await watchAsync(livereloadServer, nodeDevOptions, onChangeSuccess);
+      await watchAsync(livereloadServer, nodeBuildOptions, onChangeSuccess);
       break;
     case TYPE.ELECTRON:
       // await verifyDll(options.locales);
@@ -53,11 +56,11 @@ export default async function watch(options: WatchOptions) {
         await compileI18n();
         const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
         if (hasI18nEntry) {
-          await watchAsync(livereloadServer, electronRootI18nOptions);
+          await watchAsync(livereloadServer, electronRootI18nBuildOptions);
         }
       }
 
-      await watchAsync(livereloadServer, getElectronOptions(options.locales), async (stats: any) => {
+      await watchAsync(livereloadServer, getElectronBuildOptions(options.locales), async (stats: any) => {
         onChangeSuccess(stats);
         await copyAssets();
       });
@@ -72,7 +75,7 @@ export default async function watch(options: WatchOptions) {
         await compileI18n();
         const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
         if (hasI18nEntry) {
-          await watchAsync(livereloadServer, spaRootI18nDevOptions);
+          await watchAsync(livereloadServer, spaRootI18nBuildOptions);
         }
       }
 
@@ -87,7 +90,7 @@ export default async function watch(options: WatchOptions) {
       if (project.ws.i18n) {
         await compileI18n();
       }
-      await watchAsync(livereloadServer, getBrowserDevOptions(options.locales), onChangeSuccess);
+      await watchAsync(livereloadServer, getBrowserBuildOptions(options.locales), onChangeSuccess);
       break;
   }
 

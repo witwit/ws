@@ -1,5 +1,11 @@
 The changelog is currently handwritten.
 
+# 1.0.1-62 (2017-03-15)
+
+- Updated dependencies.
+  - `console.log` is now printed to the terminal in unit tests again. This [broke with `karma@1.5.0`](https://github.com/karma-runner/karma/issues/2602).
+  - Update to new version of `awesome-typescript-loader`. Now you **don't need** to set `declaration: true` in your `tsconfig.json` for browser components. We do this automatically.
+
 # 1.0.1-61 (2017-02-23)
 
 - Updated dependencies. Removed `@types/lodash` for now. Update selenium to new major version.

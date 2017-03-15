@@ -169,16 +169,15 @@ export interface WsConfig {
    */
   e2eEntry: string;
   /**
-   * The directory where your development build is generated.
-   * If you have a browser components project, optimized files will live here, too.
+   * The directory where your development build is generated. Defaults to `'dist'`.
    */
   distDir: string;
   /**
-   * The directory where your tests build is generated.
+   * The directory where your tests build is generated. Defaults to `'dist-tests'`.
    */
   distTestsDir: string;
   /**
-   * The directory where your production build is generated (only SPAs).
+   * The directory where your production build is generated (only SPAs). Defaults to `'dist-release'`.
    */
   distReleaseDir: string;
   /**

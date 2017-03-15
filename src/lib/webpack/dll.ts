@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { existsAsync, copyAsync, readJsonAsync, writeJsonAsync, removeAsync } from 'fs-extra-promise';
 import { compileAsync } from './index';
-import { getSpaDevDllOptions } from './options';
+import { getSpaBuildDllOptions } from './options';
 import { project } from '../../project';
 import globby from 'globby';
 import { info } from 'loglevel';
@@ -18,7 +18,7 @@ interface CacheMetdata {
 
 const buildDll = async () => {
   await removeAsync(dllCache);
-  await compileAsync(getSpaDevDllOptions());
+  await compileAsync(getSpaBuildDllOptions());
   await writeJsonAsync(wsCacheMetadata, {
     dependencyHash: await getDependencyHash()
   });

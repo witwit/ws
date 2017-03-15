@@ -48,7 +48,7 @@ module.exports = {
             options: Object.assign({}, babelConfig, { cacheDirectory: true })
           },
           {
-            loader: 'ts-loader',
+            loader: 'awesome-typescript-loader',
             options: {
               silent: true
             }

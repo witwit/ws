@@ -4,17 +4,22 @@ import { removeAsync, existsAsync } from 'fs-extra-promise';
 import { project, TYPE } from '../project';
 import {
   compileAsync,
-  nodeDevOptions,
+  nodeBuildOptions,
   getSpaDevOptions,
   spaReleaseOptions,
-  spaRootI18nDevOptions,
+  spaRootI18nBuildOptions,
   spaRootI18nReleaseOptions,
-  getBrowserDevOptions,
+  getBrowserBuildOptions,
   getBrowserReleaseOptions
 } from '../lib/webpack';
 import { compile as compileI18n } from '../lib/i18n';
 import { copy } from '../lib/copy';
-import { electronRootI18nOptions, electronRootI18nReleaseOptions, getElectronOptions, getElectronReleaseOptions } from '../lib/webpack/options';
+import {
+  electronRootI18nBuildOptions,
+  electronRootI18nReleaseOptions,
+  getElectronBuildOptions,
+  getElectronReleaseOptions
+} from '../lib/webpack/options';
 
 export interface BuildOptions {
   locales: Array<string>;
@@ -35,7 +40,7 @@ export default async function build(options: BuildOptions) {
   switch (project.ws.type) {
     case TYPE.NODE:
       await removeAsync(project.ws.distDir);
-      await compileAsync(nodeDevOptions);
+      await compileAsync(nodeBuildOptions);
       break;
     case TYPE.ELECTRON:
       await removeAsync(project.ws.distDir);
@@ -58,11 +63,11 @@ export default async function build(options: BuildOptions) {
           info('...build translations');
           const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
           if (hasI18nEntry) {
-            await compileAsync(electronRootI18nOptions);
+            await compileAsync(electronRootI18nBuildOptions);
           }
         }
 
-        await compileAsync(getElectronOptions(options.locales));
+        await compileAsync(getElectronBuildOptions(options.locales));
         await copyAssets(project.ws.distDir);
       }
 
@@ -90,7 +95,7 @@ export default async function build(options: BuildOptions) {
           info('...build translations');
           const hasI18nEntry = await existsAsync(project.ws.srcI18nEntry);
           if (hasI18nEntry) {
-            await compileAsync(spaRootI18nDevOptions);
+            await compileAsync(spaRootI18nBuildOptions);
           }
         }
         await compileAsync(getSpaDevOptions(options.locales));
@@ -111,7 +116,7 @@ export default async function build(options: BuildOptions) {
           await compileI18n();
           info('...build translations');
         }
-        await compileAsync(getBrowserDevOptions(options.locales));
+        await compileAsync(getBrowserBuildOptions(options.locales));
       }
       break;
   }

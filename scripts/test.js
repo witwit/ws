@@ -12,6 +12,7 @@ const examples = [
   'browser-ts-react-i18n',
   'spa-ts',
   'spa-ts-i18n',
+  'spa-ts-lazy-import',
   'node-ts',
   'electron-ts',
   'electron-ts-i18n'
