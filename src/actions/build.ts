@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { red } from 'chalk';
 import { info } from 'loglevel';
 import { removeAsync, existsAsync } from 'fs-extra-promise';
 import { project, TYPE } from '../project';
@@ -28,7 +29,7 @@ export interface BuildOptions {
 
 const copyAssets = async (distDir: string) => {
   if (project.ws.i18n) {
-    // this is a quich fix to get relative path for assets in localized spa's working
+    // this is a quich fix to get relatexistsasync fs promiseive path for assets in localized spa's working
     await Promise.all(project.ws.i18n.locales.map(locale =>
       copy(distDir, join(distDir, locale), '*.{zip,pdf,png,jpg,gif,svg,eot,woff,woff2,ttf,json,js}')));
     await Promise.all(project.ws.i18n.locales.map(locale =>
@@ -36,11 +37,21 @@ const copyAssets = async (distDir: string) => {
   }
 };
 
+const checkTypingsExist = async () => {
+  if (project.typings) {
+    const exist = await existsAsync(join(process.cwd(), project.typings));
+    if (!exist) {
+      throw `${red('typings')} do not exist in ${project.typings}`;
+    }
+  }
+}
+
 export default async function build(options: BuildOptions) {
   switch (project.ws.type) {
     case TYPE.NODE:
       await removeAsync(project.ws.distDir);
       await compileAsync(nodeBuildOptions);
+      await checkTypingsExist();
       break;
     case TYPE.ELECTRON:
       await removeAsync(project.ws.distDir);
@@ -110,6 +121,7 @@ export default async function build(options: BuildOptions) {
           info('...build translations');
         }
         await compileAsync(getBrowserReleaseOptions());
+        await checkTypingsExist();
       } else {
         await removeAsync(project.ws.distDir);
         if (project.ws.i18n) {

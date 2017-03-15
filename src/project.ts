@@ -227,11 +227,15 @@ export interface PackageConfig {
   /**
    * A description of your project.
    */
-  description?: string;
+  description?: string;  
   /**
    * Keywords which describe your project.
    */
   keywords?: string[];
+  /**
+   * Path to the generated typescript declarations.
+   */
+  typings?: string;  
   /**
    * This is the `ws` configuration used in the projects `package.json`.
    */
