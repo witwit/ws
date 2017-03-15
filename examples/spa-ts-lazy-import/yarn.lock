@@ -12,6 +12,12 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-dom@^0.14.22":
+  version "0.14.23"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-0.14.23.tgz#cecfcfad754b4c2765fe5d29b81b301889ad6c2e"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-router@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/react-router/-/react-router-3.0.0.tgz#59168a10f9aa38fe88d6b66e1e0e4426798b7941"
@@ -19,9 +25,13 @@
     "@types/history" "^2"
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^0.14.27":
+"@types/react@*":
   version "0.14.50"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-0.14.50.tgz#3f3f69db5661c8be3df99bde688e11300ef8131e"
+
+"@types/react@^15.0.6":
+  version "15.0.16"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-15.0.16.tgz#78e39511a9cfcabf7f74ecd55180522f4290a0c1"
 
 asap@~2.0.3:
   version "2.0.5"
@@ -184,8 +194,8 @@ whatwg-fetch@>=0.10.0:
 "ws-examples-browser-ts-react@file:../browser-ts-react":
   version "1.0.0"
   dependencies:
-    "@types/react" "^0.14.27"
-    "@types/react-dom" "^0.14.13"
+    "@types/react" "^15.0.6"
+    "@types/react-dom" "^0.14.22"
     react "^15.0.0"
     ws-examples-browser-less "file:../browser-less"
     ws-examples-browser-ts "file:../browser-ts"
