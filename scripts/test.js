@@ -14,6 +14,7 @@ const examples = [
   'spa-ts-i18n',
   'spa-ts-lazy-import',
   'node-ts',
+  'node-ts-2',  
   'electron-ts',
   'electron-ts-i18n'
 ];
