@@ -44,7 +44,7 @@ const checkTypingsExist = async () => {
       throw `${red('typings')} do not exist in ${project.typings}`;
     }
   }
-}
+};
 
 export default async function build(options: BuildOptions) {
   switch (project.ws.type) {
