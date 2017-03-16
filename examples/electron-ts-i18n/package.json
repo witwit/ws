@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "electron .",
-     "ws": "node ../../bin/ws"
+    "ws": "node ../../bin/ws"
   },
   "dependencies": {
     "@types/node": "^7.0.4",
