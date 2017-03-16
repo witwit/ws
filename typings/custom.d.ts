@@ -6,6 +6,8 @@
 
 declare module 'autoprefixer';
 
+declare function _import<T>(path: string): Promise<T>;
+
 declare module 'stringify-object' {
   export interface Options {
     indent?: string;

@@ -3,14 +3,6 @@ import commander from 'commander';
 import { info, setLevel, levels } from 'loglevel';
 import { yellow, cyan } from 'chalk';
 import { project, TYPE } from './project';
-import { updateNotifier } from './lib/update-notifier';
-import serveAction from './actions/serve';
-import buildAction from './actions/build';
-import watchAction from './actions/watch';
-import lintAction from './actions/lint';
-import unitAction from './actions/unit';
-import e2eAction from './actions/e2e';
-import i18nImportAction from './actions/i18n-import';
 
 // common setup
 const pkg = require('../package.json');
@@ -27,14 +19,16 @@ commander.option('-l, --log-level <level>', 'set log level', (value) => {
   }
 }, 'info');
 
-function handleAction(action: (options?: any) => Promise<any>) {
+function handleAction(lazyAction: () => Promise<{ default: (options?: any) => Promise<any> }>) {
   return (options: any) => {
     // handle global options
     setLevel(levels[options.parent.logLevel.toUpperCase()]);
     // handle specific action
-    return updateNotifier(pkg.version)
+    return _import<any>('./lib/update-notifier')
+      .then(module => module.updateNotifier(pkg.version))
       .then(() => info(`run ${cyan(options.name())}...`))
-      .then(() => action(options))
+      .then(() => lazyAction())
+      .then(module => module.default(options))
       .then(() => info(`finished ${cyan(options.name())} ♥`))
       .catch(handleError);
   };
@@ -51,7 +45,7 @@ switch (project.ws.type) {
       .alias('s')
       .description('serve the project')
       .option('-p, --production', 'serve production build')
-      .action(handleAction(serveAction));
+      .action(handleAction(() => _import('./actions/serve')));
 
     const e2eCommand = commander
       .command('e2e')
@@ -60,12 +54,12 @@ switch (project.ws.type) {
       .option('--browsers <browsers>', `browsers to used (comma separated list, e.g. 'ie-9,ff-36,chrome-41')`)
       .action((...args) => {
         if (args.length === 2) {
-          const [ browsers, options ] = args;
+          const [browsers, options] = args;
           options.browsers = browsers;
-          handleAction(e2eAction)(options);
+          handleAction(() => _import('./actions/e2e'))(options);
         } else {
-          const [ options ] = args;
-          handleAction(e2eAction)(options);
+          const [options] = args;
+          handleAction(() => _import('./actions/e2e'))(options);
         }
       });
 
@@ -86,7 +80,7 @@ if (project.ws.i18n && project.ws.i18n.importUrl) {
     .command('i18n:import')
     .alias('i18n:i')
     .description('import translations')
-    .action(handleAction(i18nImportAction));
+    .action(handleAction(() => _import('./actions/i18n-import')));
 }
 
 // shared setup
@@ -99,7 +93,7 @@ switch (project.ws.type) {
       .command('build')
       .alias('b')
       .description('build the project')
-      .action(handleAction(buildAction));
+      .action(handleAction(() => _import('./actions/build')));
 
     if (project.ws.type === TYPE.SPA || project.ws.type === TYPE.BROWSER || project.ws.type === TYPE.ELECTRON) {
       buildCommand.option('-p, --production', 'create production build');
@@ -110,25 +104,25 @@ switch (project.ws.type) {
       .alias('w')
       .description('continuously build and serve the project')
       // .option('-H, --hot', 'enables hot reloading (experimental)')
-      .action(handleAction(watchAction));
+      .action(handleAction(() => _import('./actions/watch')));
 
     if (project.ws.i18n) {
-      buildCommand.option('-L, --locales <locales>', `locales to build (comma separated list, default: '${project.ws.i18n.locales[0]}')`, locales => locales.split(','), [ project.ws.i18n.locales[0] ]);
-      watchCommand.option('-L, --locales <locales>', `locales to build (comma separated list, default: '${project.ws.i18n.locales[0]}')`, locales => locales.split(','), [ project.ws.i18n.locales[0] ]);
+      buildCommand.option('-L, --locales <locales>', `locales to build (comma separated list, default: '${project.ws.i18n.locales[0]}')`, locales => locales.split(','), [project.ws.i18n.locales[0]]);
+      watchCommand.option('-L, --locales <locales>', `locales to build (comma separated list, default: '${project.ws.i18n.locales[0]}')`, locales => locales.split(','), [project.ws.i18n.locales[0]]);
     }
 
     commander
       .command('lint')
       .alias('l')
       .description('run linter')
-      .action(handleAction(lintAction));
+      .action(handleAction(() => _import('./actions/lint')));
 
     const unitCommand = commander
       .command('unit')
       .alias('u')
       .description('run unit tests')
       // .option('-c, --coverage', 'generates code coverage')
-      .action(handleAction(unitAction));
+      .action(handleAction(() => _import('./actions/unit')));
 
     if (project.ws.selenium) {
       unitCommand.option('-g, --grid', 'run on selenium grid');

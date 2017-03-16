@@ -227,7 +227,7 @@ export interface PackageConfig {
   /**
    * A description of your project.
    */
-  description?: string;  
+  description?: string;
   /**
    * Keywords which describe your project.
    */
@@ -235,7 +235,7 @@ export interface PackageConfig {
   /**
    * Path to the generated typescript declarations.
    */
-  typings?: string;  
+  typings?: string;
   /**
    * This is the `ws` configuration used in the projects `package.json`.
    */
