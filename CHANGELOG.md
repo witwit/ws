@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# 1.0.1-62 (HEAD)
+# 1.0.1-62 (2017-03-16)
 
 - Updated dependencies.
   - `console.log` is now printed to the terminal in unit tests again. This [broke with `karma@1.5.0`](https://github.com/karma-runner/karma/issues/2602).
