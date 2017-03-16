@@ -151,6 +151,14 @@ const getTsLoaderConfig = (command: Command) => {
         loader: 'awesome-typescript-loader',
         options: {
           silent: true,
+          // note 1: creating declarations only works with an *empty* cache
+          // note 2: it looks like using the cache and babel in this way isn't really faster currently
+          //         that's why we don't use it for now and just use `babel-loader`
+          // useCache: true,
+          // cacheDirectory: 'node_modules/.awesome-typescript-loader-cache',
+          // useBabel: true,
+          // babelOptions,
+          // babelCore: resolveFile('babel-core'),
           declaration: isBrowserRelease || isNodeBuild,
           outDir
         }
