@@ -98,7 +98,7 @@ function onBuild(resolve: any, reject: any, err: any, stats: compiler.Stats, wat
 }
 
 // error handling taken from https://webpack.github.io/docs/node.js-api.html#error-handling
-function onChange(err: any, stats: compiler.Stats, livereloadServer: any, onChangeSuccess?: any) {
+async function onChange(err: any, stats: compiler.Stats, livereloadServer: any, onChangeSuccess?: any) {
   if (err) {
     // "hard" error
     return error(err);
@@ -117,6 +117,10 @@ function onChange(err: any, stats: compiler.Stats, livereloadServer: any, onChan
     info(stringifyStats(stats));
   }
 
+  if (onChangeSuccess) {
+    await onChangeSuccess(stats);
+  }
+
   // filter changes for live reloading
   const modules = getModules(stats);
   const changedModules = modules.filter((module: any) => module.built && module.resource);
@@ -126,10 +130,6 @@ function onChange(err: any, stats: compiler.Stats, livereloadServer: any, onChan
     livereloadServer.refresh('style.css');
   } else {
     livereloadServer.refresh('index.html');
-  }
-
-  if (onChangeSuccess) {
-    onChangeSuccess(stats);
   }
 }
 
