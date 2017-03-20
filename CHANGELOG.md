@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.1-63 (2017-03-20)
+
+- Fixed live reloading bug.
+
 # 1.0.1-62 (2017-03-16)
 
 - Updated dependencies.
