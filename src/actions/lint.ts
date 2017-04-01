@@ -7,44 +7,44 @@ import { project } from '../project';
 
 export default async function lint() {
   // typescript
-  const typescriptFileFailures = await lintAsync();
-  if (typescriptFileFailures.length) {
+  const typescriptFileErrors = await lintAsync();
+  if (typescriptFileErrors.length) {
     error('');
-    for (const fileFailure of typescriptFileFailures) {
+    for (const fileFailure of typescriptFileErrors) {
       error(fileFailure.output);
       error('');
     }
   }
 
   // documentation
-  const documentationFailures: Array<string> = [];
+  const documentationErrors: Array<string> = [];
   if (!project.private) {
     if (!(await existsAsync(join(process.cwd(), 'README.md')))) {
-      documentationFailures.push(`You have ${yellow('no README.md')}.`);
+      documentationErrors.push(`You have ${yellow('no README.md')}.`);
     }
     if (!project.keywords || !project.keywords.length) {
-      documentationFailures.push(`You have ${yellow('no keywords')} set in your ${yellow('package.json')}.`);
+      documentationErrors.push(`You have ${yellow('no keywords')} set in your ${yellow('package.json')}.`);
     }
     if (!project.description) {
-      documentationFailures.push(`You have ${yellow('no description')} set in your ${yellow('package.json')}.`);
+      documentationErrors.push(`You have ${yellow('no description')} set in your ${yellow('package.json')}.`);
     }
     if (!(await existsAsync(join(process.cwd(), 'examples')))) {
-      documentationFailures.push(`You have ${yellow('no examples/')} directory.`);
+      documentationErrors.push(`You have ${yellow('no examples/')} directory.`);
     } else {
       const contents = (await readdirAsync(join(process.cwd(), 'examples'))).filter(content => content !== '.DS_Store');
       if (!contents.length) {
-        documentationFailures.push(`Your ${yellow('examples/')} directory ${yellow('is empty')}.`);
+        documentationErrors.push(`Your ${yellow('examples/')} directory ${yellow('is empty')}.`);
       }
     }
   }
-  if (documentationFailures.length) {
+  if (documentationErrors.length) {
     error('');
-    error(`You're project ${yellow(`isn't private`)}, but it has ${yellow(documentationFailures.length.toString())} documentation failure(s).`);
-    documentationFailures.forEach(msg => error(`  ${msg}`));
+    error(`You're project ${yellow(`isn't private`)}, but it has ${yellow(documentationErrors.length.toString())} documentation failure(s).`);
+    documentationErrors.forEach(msg => error(`  ${msg}`));
     error('');
   }
 
-  if (typescriptFileFailures.length || documentationFailures.length) {
+  if (typescriptFileErrors.length || documentationErrors.length) {
     throw `${cyan('lint')} failed.`;
   }
-};
+}
