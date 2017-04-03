@@ -170,4 +170,4 @@ export async function compile() {
   if (project.ws.entryExtension !== 'js') {
     await writeDeclaration(parsedTranslations);
   }
-};
+}

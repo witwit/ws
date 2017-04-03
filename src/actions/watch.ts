@@ -100,4 +100,4 @@ export default async function watch(options: WatchOptions) {
     livereloadMiddleware({ port })
   ];
   await listenAsync(middlewares);
-};
+}

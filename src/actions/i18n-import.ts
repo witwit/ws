@@ -49,4 +49,4 @@ export default async function i18nImport() {
   }));
 
   await Promise.all(importPromises);
-};
+}

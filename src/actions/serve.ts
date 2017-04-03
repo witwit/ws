@@ -7,4 +7,4 @@ export default async function serve(options: any) {
   } else {
     await listenAsync();
   }
-};
+}

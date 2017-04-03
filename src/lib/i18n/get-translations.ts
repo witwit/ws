@@ -118,4 +118,4 @@ export async function getTranslations() {
   });
 
   return parsedTranslations;
-};
+}

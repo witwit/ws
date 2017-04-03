@@ -59,4 +59,4 @@ export default async function unit(options: any) {
   if (exitCode !== 0) {
     throw `${cyan('unit')} failed.`;
   }
-};
+}
