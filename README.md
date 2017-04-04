@@ -44,6 +44,7 @@ Besides that we think that most of our code and our dependencies of `ws` are sha
 
 # How to get started?
 
+1. Install [Node](https://nodejs.org/). We try to support at least the current LTS version of Node.
 1. `$ npm install --save-dev @mercateo/ws@next`
 1. Add `"ws": { "type": "spa" }` (or `"node"` or `"browser"` or `"electron"`) to your `package.json`, depending on the project you have.
 1. Optionally: Create a `tsconfig.json` to use TypeScript. Highly recommended!
