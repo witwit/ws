@@ -23,7 +23,7 @@ const defaultFilePatterns = [
 
 export async function lintAsync(filePatterns = defaultFilePatterns) {
   const filePaths = await globby(filePatterns);
-  const contents = await Promise.all(filePaths.map(filePath => fs.readFileAsync(filePath, 'utf8')));
+  const contents = await Promise.all(filePaths.map(filePath => fs.readFileAsync(filePath, 'utf8') as any)) as string[];
 
   const results = filePaths.map((filePath, index) => {
     const content = contents[index];

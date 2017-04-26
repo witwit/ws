@@ -1,4 +1,8 @@
 {
+  "rulesDirectory": [],
+  "extends": [
+    "tslint-eslint-rules"
+  ],
   "rules": {
     "arrow-return-shorthand": [ true ],
     "ban": [
@@ -12,9 +16,12 @@
     "class-name": true,
     "curly": true,
     "import-spacing": true,
-    "indent": [
+    "ter-indent": [
       true,
-      "spaces"
+      2,
+      {
+        "SwitchCase": 1
+      }
     ],
     "jsdoc-format": true,
     "no-angle-bracket-type-assertion": true,

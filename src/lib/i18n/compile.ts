@@ -13,7 +13,7 @@ const stringifyObjectOptions = {
 };
 
 function hasArguments(ast: any) {
- return ast && ast.elements && ast.elements.length && ast.elements.filter((element: any) => element.type === 'argumentElement').length;
+  return ast && ast.elements && ast.elements.length && ast.elements.filter((element: any) => element.type === 'argumentElement').length;
 }
 
 function getArgumentTypes(ast: any) {

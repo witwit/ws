@@ -1,5 +1,10 @@
 The changelog is currently handwritten.
 
+# next
+
+- Updated several deps (like TSLint from v4 to v5).
+- Changed linter rule [`indent`](https://palantir.github.io/tslint/rules/indent/) to [`ter-indent`](https://github.com/buzinas/tslint-eslint-rules/blob/master/src/docs/rules/terIndentRule.md).
+
 # 1.0.1-63 (2017-03-20)
 
 - Fixed live reloading bug.
