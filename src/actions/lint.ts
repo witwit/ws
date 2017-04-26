@@ -1,5 +1,5 @@
-import { yellow, cyan } from 'chalk';
-import { error } from 'loglevel';
+import { yellow, cyan, red } from 'chalk';
+import { error, info } from 'loglevel';
 import { existsAsync, readdirAsync } from 'fs-extra-promise';
 import { join } from 'path';
 import { lintAsync } from '../lib/tslint';
@@ -7,11 +7,11 @@ import { project } from '../project';
 
 export default async function lint() {
   // typescript
-  const typescriptFileErrors = await lintAsync();
-  if (typescriptFileErrors.length) {
+  const codeLintResult = await lintAsync();
+  if (codeLintResult.errorsCount) {
     error('');
-    for (const fileFailure of typescriptFileErrors) {
-      error(fileFailure.output);
+    for (const { output } of codeLintResult.errors) {
+      error(output);
       error('');
     }
   }
@@ -44,7 +44,15 @@ export default async function lint() {
     error('');
   }
 
-  if (typescriptFileErrors.length || documentationErrors.length) {
+  // result
+  if (codeLintResult.fixesCount) {
+    info(`automatically fixed ${cyan(codeLintResult.fixesCount.toString())} error(s) ${cyan('(~‾▿‾)~')}`);
+  }
+
+  const totalErrors = codeLintResult.errorsCount + documentationErrors.length;
+  if (totalErrors) {
+    error(`found ${red(totalErrors.toString())} error(s)`);
+    error('');
     throw `${cyan('lint')} failed.`;
   }
 }

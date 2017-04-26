@@ -4,6 +4,7 @@ The changelog is currently handwritten.
 
 - Updated several deps (like TSLint from v4 to v5).
 - Changed linter rule [`indent`](https://palantir.github.io/tslint/rules/indent/) to [`ter-indent`](https://github.com/buzinas/tslint-eslint-rules/blob/master/src/docs/rules/terIndentRule.md).
+- We try to automatically fix linter errors now _whenever_ you call `$ ws lint`.
 
 # 1.0.1-63 (2017-03-20)
 

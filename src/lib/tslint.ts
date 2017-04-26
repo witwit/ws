@@ -11,7 +11,7 @@ const lintOptions: ILinterOptions = {
   formatter: 'codeFrame',
   rulesDirectory: [],
   formattersDirectory: '',
-  fix: false
+  fix: true
 };
 
 const defaultFilePatterns = [
@@ -34,5 +34,8 @@ export async function lintAsync(filePatterns = defaultFilePatterns) {
   });
 
   const errors = results.filter(result => !!result.errorCount);
-  return errors;
+  const errorsCount = results.reduce((count, result) => count + result.failures.length, 0);
+  const fixesCount = results.reduce((count, result) => count + (result.fixes ? result.fixes.length : 0), 0);
+
+  return { errors, errorsCount, fixesCount };
 }
