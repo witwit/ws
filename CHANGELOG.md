@@ -1,10 +1,12 @@
 The changelog is currently handwritten.
 
-# next
+# 1.0.1-64 (2017-04-27)
 
 - Updated several deps (like TSLint from v4 to v5).
 - Changed linter rule [`indent`](https://palantir.github.io/tslint/rules/indent/) to [`ter-indent`](https://github.com/buzinas/tslint-eslint-rules/blob/master/src/docs/rules/terIndentRule.md).
+- Added linter rule [`object-curly-spacing`](https://github.com/buzinas/tslint-eslint-rules/blob/master/src/docs/rules/objectCurlySpacingRule.md).
 - We try to automatically fix linter errors now _whenever_ you call `$ ws lint`.
+- Switched from `awesome-typescript-loader` to `ts-loader` (again), because of [this bug](https://github.com/s-panferov/awesome-typescript-loader/issues/411).
 
 # 1.0.1-63 (2017-03-20)
 

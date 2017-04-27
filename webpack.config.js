@@ -55,11 +55,17 @@ module.exports = {
             options: Object.assign({}, babelConfig, { cacheDirectory: true })
           },
           {
-            loader: 'awesome-typescript-loader',
+            loader: 'ts-loader',
             options: {
-              silent: true
+              logLevel: 'warn'
             }
           }
+          // {
+          //   loader: 'awesome-typescript-loader',
+          //   options: {
+          //     silent: true
+          //   }
+          // }
         ]
       }
     ]

@@ -43,9 +43,9 @@ export const AppComponent = () => (
     <p>{commonColor()}</p>
     <p>{commonJanuary()}</p>
     <p>{appLoading()}</p>
-    <p>{appMessageFormatExample({ numPhotos: 0})}</p>
-    <p>{appMessageFormatExample({ numPhotos: 1})}</p>
-    <p>{appMessageFormatExample({ numPhotos: 2})}</p>
+    <p>{appMessageFormatExample({ numPhotos: 0 })}</p>
+    <p>{appMessageFormatExample({ numPhotos: 1 })}</p>
+    <p>{appMessageFormatExample({ numPhotos: 2 })}</p>
     <p>{appMessageFormatGender({ gender: 'f' })}</p>
     <p>{appMessageFormatGender({ gender: 'm' })}</p>
     <p>{appMessageFormatHomer({ name: 'Homer' })}</p>

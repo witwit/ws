@@ -148,21 +148,31 @@ const getTsLoaderConfig = (command: Command) => {
         }
       },
       {
-        loader: 'awesome-typescript-loader',
+        loader: 'ts-loader',
         options: {
-          silent: true,
-          // note 1: creating declarations only works with an *empty* cache
-          // note 2: it looks like using the cache and babel in this way isn't really faster currently
-          //         that's why we don't use it for now and just use `babel-loader`
-          // useCache: true,
-          // cacheDirectory: 'node_modules/.awesome-typescript-loader-cache',
-          // useBabel: true,
-          // babelOptions,
-          // babelCore: resolveFile('babel-core'),
-          declaration: isBrowserRelease || isNodeBuild,
-          outDir
+          logLevel: 'warn',
+          compilerOptions: {
+            declaration: isBrowserRelease || isNodeBuild
+            // outDir
+          }
         }
       }
+      // {
+      //   loader: 'awesome-typescript-loader',
+      //   options: {
+      //     silent: true,
+      //     // note 1: creating declarations only works with an *empty* cache
+      //     // note 2: it looks like using the cache and babel in this way isn't really faster currently
+      //     //         that's why we don't use it for now and just use `babel-loader`
+      //     // useCache: true,
+      //     // cacheDirectory: 'node_modules/.awesome-typescript-loader-cache',
+      //     // useBabel: true,
+      //     // babelOptions,
+      //     // babelCore: resolveFile('babel-core'),
+      //     declaration: isBrowserRelease || isNodeBuild,
+      //     outDir
+      //   }
+      // }
     ]
   };
 };
@@ -208,27 +218,11 @@ export const ttfLoader = {
   loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
 };
 
-export const productionOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
-  minimize: true,
-  debug: false
-});
-
 export const extractCssPlugin = new ExtractTextWebpackPlugin('style.css');
 
 // export const extractCssMinPlugin = new ExtractTextWebpackPlugin('style.min.css');
 
 export const extractCssHashPlugin = new ExtractTextWebpackPlugin('style-[contenthash].css');
-
-export const loaderOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
-  options: {
-    resolve: {},
-    postcss: () => [
-      autoprefixer({
-        browsers: project.ws.targets.browsers
-      })
-    ]
-  }
-});
 
 export const defineProductionPlugin = new DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify('production')
@@ -294,10 +288,35 @@ const mainFieldsBrowser = [
   'main'
 ];
 
+const extensions = project.ws.entryExtension === 'js' ? defaultExtensions : tsExtensions;
+
 export const resolve = {
-  extensions: project.ws.entryExtension === 'js' ? defaultExtensions : tsExtensions,
+  extensions,
   mainFields: project.ws.type === 'node' ? mainFieldsNode : mainFieldsBrowser
 };
+
+// TODO: Can this be removed? https://webpack.js.org/plugins/loader-options-plugin/
+const defaultLoaderOptions = {
+  resolve: {
+    extensions
+  },
+  postcss: () => [
+    autoprefixer({
+      browsers: project.ws.targets.browsers
+    })
+  ]
+};
+
+export const loaderOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
+  options: defaultLoaderOptions
+});
+
+export const productionOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
+  minimize: true,
+  debug: false,
+  options: defaultLoaderOptions
+});
+
 
 export const devtool = 'inline-source-map';
 

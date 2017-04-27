@@ -27,7 +27,7 @@ export class LazyComponent extends Component<LazyComponentProps, {}> {
   }
 
   render() {
-    const { fetcher, ...rest} = this.props;
+    const { fetcher, ...rest } = this.props;
     if (this.result) {
       switch (this.result.state) {
         case 'rejected':

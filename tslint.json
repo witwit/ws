@@ -37,6 +37,10 @@
     "no-trailing-whitespace": true,
     "no-var-keyword": true,
     "no-unused-expression": true,
+    "object-curly-spacing": [
+      true,
+      "always"
+    ],
     "object-literal-key-quotes": [
       true,
       "as-needed"
@@ -90,6 +94,7 @@
       true,
       "check-branch",
       "check-operator",
+
       "check-typecast"
     ]
   }
