@@ -7,6 +7,7 @@ export const getBrowserDevOptions = (): WebpackSingleConfig => ({
   // this is not really useful until then
   output: {
     ...outputDev,
+    publicPath: '/',
     libraryTarget: 'umd',
     library: project.name
   },

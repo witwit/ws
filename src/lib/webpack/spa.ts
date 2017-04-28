@@ -5,6 +5,7 @@ export const getSpaDevOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
   output: {
     ...outputDev,
+    publicPath: '/',
     libraryTarget: 'umd',
     filename: '[name].js'
   },
