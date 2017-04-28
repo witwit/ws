@@ -88,9 +88,7 @@ export const getJsLoaderConfig = (command: Command) => {
   const isE2e = command === 'e2e';
 
   const babelOptions = isNode || isE2e ? babelNode : babelBrowser;
-  const exclude = isNode
-    ? /node_modules/
-    : new RegExp(`(node_modules|${project.ws.i18n ? project.ws.i18n.locales.map(locale => `${project.ws.i18n!.distDir}\/${locale}`).join('|') : ''})`);
+  const exclude = /node_modules/;
 
   return {
     test: /\.js(x?)$/,
