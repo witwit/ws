@@ -37,14 +37,15 @@ export const getSpaReleaseOptions: () => WebpackSingleConfig = () => {
       chunkFilename: `[name].[chunkhash].lazy.js`
     },
     module: getModuleConfig('build -p'),
-    plugins: devOptions.plugins!.concat([
+    plugins: [
+      indexHtmlPlugin,
       new optimize.CommonsChunkPlugin({ names: ['manifest'] }),
       extractCssHashPlugin,
       loaderOptionsPlugin,
       defineProductionPlugin,
       minifyJsPlugin,
       productionOptionsPlugin
-    ]),
+    ],
     devtool: devtoolProduction
   };
 };
