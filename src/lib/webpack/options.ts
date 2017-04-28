@@ -208,7 +208,7 @@ export const extractCssPlugin = new ExtractTextWebpackPlugin('style.css');
 
 // export const extractCssMinPlugin = new ExtractTextWebpackPlugin('style.min.css');
 
-export const extractCssHashPlugin = new ExtractTextWebpackPlugin('style-[contenthash].css');
+export const extractCssHashPlugin = new ExtractTextWebpackPlugin('style-[chunkhash].css');
 
 export const defineProductionPlugin = new DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify('production')

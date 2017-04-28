@@ -1,5 +1,6 @@
 import { WebpackSingleConfig, outputDev, getModuleConfig, indexHtmlPlugin, extractCssPlugin, loaderOptionsPlugin, resolveLoader, resolve, devtool, outputRelease, extractCssHashPlugin, defineProductionPlugin, minifyJsPlugin, productionOptionsPlugin, devtoolProduction, outputTest, enzymeExternals, nodeSourceMapEntry, externalsNode } from './options';
 import { project } from '../../project';
+import { optimize } from 'webpack';
 
 export const getSpaDevOptions = (): WebpackSingleConfig => ({
   entry: project.ws.srcEntry,
@@ -32,10 +33,12 @@ export const getSpaReleaseOptions: () => WebpackSingleConfig = () => {
     output: {
       ...outputRelease,
       libraryTarget: 'umd',
-      filename: '[name]-[hash].js'
+      filename: '[name].[chunkhash].js',
+      chunkFilename: `[name].[chunkhash].lazy.js`
     },
     module: getModuleConfig('build -p'),
     plugins: devOptions.plugins!.concat([
+      new optimize.CommonsChunkPlugin({ names: ['manifest'] }),
       extractCssHashPlugin,
       loaderOptionsPlugin,
       defineProductionPlugin,
