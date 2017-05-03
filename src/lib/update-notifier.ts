@@ -17,7 +17,7 @@ const LOVE_EMOJI = [
 
 const getRandom = (arr: Array<any>): any => arr[Math.floor(Math.random() * arr.length)];
 
-export function updateNotifier(version: string) {
+export function updateNotifier(currentVersion: string) {
   return new Promise((resolve) => exec(`npm show @mercateo/ws dist-tags --json`, (error, stdout, stderr) => {
     if (error) {
       warn(`Couldn't check, if a new version of @mercateo/ws is available.`);
@@ -29,11 +29,16 @@ export function updateNotifier(version: string) {
       }
 
       const distTags = JSON.parse(stdout) as DistTags;
-      const isPrerelease = version.includes('-');
-      const remoteVersion = isPrerelease ? distTags.next : distTags.latest;
-      if (gt(remoteVersion, version)) {
+      const currentVersionIsPrerelease = currentVersion.includes('-');
+
+      const latestVersionIsGreater = gt(distTags.latest, currentVersion);
+      const nextVersionIsGreater = gt(distTags.next, currentVersion);
+      const hasRelevantUpdate = currentVersionIsPrerelease ? (latestVersionIsGreater || nextVersionIsGreater) : latestVersionIsGreater;
+      const relevantVersion = latestVersionIsGreater ? distTags.latest : distTags.next;
+
+      if (hasRelevantUpdate) {
         info(`
-  ${magenta(getRandom(LOVE_EMOJI))} Update available. The newest version of @mercateo/ws is ${magenta(remoteVersion)}.
+  ${magenta(getRandom(LOVE_EMOJI))} Update available. The newest version of @mercateo/ws is ${magenta(relevantVersion)}.
   See ${cyan(CHANGELOG_URL)} for details.
 `);
       } else {

@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 1.0.2 (2017-05-03)
+
+- Fixed update notifier.
+
 # 1.0.1 (2017-05-03)
 
 - Stop using prereleases. After 64 versions we should be pretty _stable_. But maybe... version 2 is around the corner, too.
