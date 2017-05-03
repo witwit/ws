@@ -2,7 +2,7 @@
 
 A tool which helps you to build, document and test web projects.
 
-> :warning: As long as we are in a prerelease phase we recommend you to use a fixed prerelease version of `ws` in your projects. (E.g. `"@mercateo/ws": "1.0.1-41"` would be good, `"@mercateo/ws": "^1.0.1-41"` would be bad.) As long as we use prereleases breaking changes can happen from time to time.
+> :warning: If you use prereleases you should use a fixed prerelease version of `ws` in your projects. (E.g. `"@mercateo/ws": "1.0.1-41"` would be good, `"@mercateo/ws": "^1.0.1-41"` would be bad.) Every new prerelease could be breaking.
 
 # Is this a build tool?
 
@@ -135,7 +135,7 @@ finished build ♥
 ```
 
 However this does _not_ work for commands or options which are supported by npm itself. E.g. calling `$ npm run -s ws --version` prints out the version of npm and _not_ of ws.
- 
+
 ```
 $ npm run -s ws --version
 3.10.6
