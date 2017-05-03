@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# 1.0.2 (2017-05-03)
+# 1.0.1 (2017-05-03)
 
 - Stop using prereleases. After 64 versions we should be pretty _stable_. But maybe... version 2 is around the corner, too.
 - Partly use `awesome-typescript-loader` again, because `ts-loader` is too slow on large projects :(
