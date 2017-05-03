@@ -112,24 +112,9 @@ const getTsLoaderConfig = (command: Command) => {
   const isE2e = command === 'e2e';
   const isNodeBuild = isNode && command === 'build';
   const isBrowserRelease = project.ws.type === 'browser' && command === 'build -p';
-
-  // only needed when declarations are generated
-  let outDir: string | undefined = undefined;
-  if (isBrowserRelease) {
-    // note! in earlier versions of the ws tool and the loaders we used it was not possible
-    // to generate the declaration file in a different directory than the compiled build
-    // that's why fir localized browser components we assume that the declaration should be
-    // inside the default locale build
-    if (project.ws.i18n && project.ws.i18n.locales.length > 0) {
-      outDir = join(project.ws.distReleaseDir, project.ws.i18n.locales[0]);
-    } else {
-      outDir = project.ws.distReleaseDir;
-    }
-  } else if (isNodeBuild) {
-    outDir = project.ws.distDir;
-  }
-
   const babelOptions = isNode || isE2e ? babelNode : babelBrowser;
+  const isSpa = project.ws.type === 'spa';
+
   return {
     test: /\.ts(x?)$/,
     use: [
@@ -147,32 +132,35 @@ const getTsLoaderConfig = (command: Command) => {
           cacheDirectory: true
         }
       },
-      {
-        loader: 'ts-loader',
-        options: {
-          logLevel: 'warn',
-          compilerOptions: {
-            declaration: isBrowserRelease || isNodeBuild
-            // outDir
+      ...[
+        isSpa ?
+        {
+          loader: 'awesome-typescript-loader',
+          options: {
+            silent: true,
+              // note 1: creating declarations only works with an *empty* cache
+              // note 2: it looks like using the cache and babel in this way isn't really faster currently
+              //         that's why we don't use it for now and just use `babel-loader`
+              // useCache: true,
+              // cacheDirectory: 'node_modules/.awesome-typescript-loader-cache',
+              // useBabel: true,
+              // babelOptions,
+              // babelCore: resolveFile('babel-core'),
+            declaration: false
           }
         }
-      }
-      // {
-      //   loader: 'awesome-typescript-loader',
-      //   options: {
-      //     silent: true,
-      //     // note 1: creating declarations only works with an *empty* cache
-      //     // note 2: it looks like using the cache and babel in this way isn't really faster currently
-      //     //         that's why we don't use it for now and just use `babel-loader`
-      //     // useCache: true,
-      //     // cacheDirectory: 'node_modules/.awesome-typescript-loader-cache',
-      //     // useBabel: true,
-      //     // babelOptions,
-      //     // babelCore: resolveFile('babel-core'),
-      //     declaration: isBrowserRelease || isNodeBuild,
-      //     outDir
-      //   }
-      // }
+          :
+        {
+          loader: 'ts-loader',
+          options: {
+            logLevel: 'warn',
+            compilerOptions: {
+              declaration: isBrowserRelease || isNodeBuild
+                // outDir
+            }
+          }
+        }
+      ]
     ]
   };
 };
