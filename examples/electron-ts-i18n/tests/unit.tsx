@@ -1,6 +1,5 @@
 import React from 'react';
 import expect from 'expect';
-import ReactTestUtils from 'react-addons-test-utils';
 import { HelloWorld } from '../src/HelloWorld';
 import { WsIntlProvider } from 'ws-intl';
 import { mount } from 'enzyme';

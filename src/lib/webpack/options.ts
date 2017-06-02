@@ -171,16 +171,74 @@ export const jsonLoader = {
 export const cssLoader = {
   test: /\.css$/,
   loader: ExtractTextWebpackPlugin.extract({
-    fallback: `style-loader?context=${process.cwd()}`,
-    use: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap`
+    fallback: [
+      // OLD: `style-loader?context=${process.cwd()}`
+      {
+        loader: 'style-loader'
+
+      }
+    ],
+    use: [
+      // OLD: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap`
+      // context = root?
+      {
+        loader: 'css-loader',
+        options: {
+          sourceMap: true
+        }
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: true,
+          plugins: () => [
+            autoprefixer({
+              browsers: project.ws.targets.browsers
+            })
+          ]
+        }
+      }
+    ]
   })
 };
 
 export const lessLoader = {
   test: /\.less/,
   loader: ExtractTextWebpackPlugin.extract({
-    fallback: `style-loader?context=${process.cwd()}`,
-    use: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
+    fallback: [
+      // OLD: `style-loader?context=${process.cwd()}`
+      {
+        loader: 'style-loader'
+
+      }
+    ],
+    use: [
+      // OLD: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
+      // context = root?
+      {
+        loader: 'css-loader',
+        options: {
+          sourceMap: true
+        }
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: true,
+          plugins: () => [
+            autoprefixer({
+              browsers: project.ws.targets.browsers
+            })
+          ]
+        }
+      },
+      {
+        loader: 'less-loader',
+        options: {
+          sourceMap: true
+        }
+      }
+    ]
   })
 };
 
@@ -275,12 +333,12 @@ export const resolve = {
 export const defaultLoaderOptions = {
   resolve: {
     extensions
-  },
-  postcss: () => [
-    autoprefixer({
-      browsers: project.ws.targets.browsers
-    })
-  ]
+  }
+  // postcss: () => [
+  //   autoprefixer({
+  //     browsers: project.ws.targets.browsers
+  //   })
+  // ]
 };
 
 export const loaderOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
@@ -326,7 +384,12 @@ export const externalsBrowser = [
   project.ws.externals
 ] : []);
 
-export const enzymeExternals = ['react/lib/ExecutionEnvironment', 'react/lib/ReactContext', 'react/addons'];
+export const enzymeExternals = [
+  'react/lib/ExecutionEnvironment',
+  'react/lib/ReactContext',
+  'react/addons',
+  'react-addons-test-utils'
+];
 
 export const getModuleConfig = (command: Command) => {
   const commonLoaders = [

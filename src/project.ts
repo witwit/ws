@@ -316,7 +316,7 @@ export function validate(pkg: any): PackageConfig {
   }
 
   if (!pkg.ws.targets.node) {
-    pkg.ws.targets.node = 6.9;
+    pkg.ws.targets.node = '6.10';
   }
 
   if (!pkg.ws.targets.browsers) {
@@ -324,7 +324,7 @@ export function validate(pkg: any): PackageConfig {
   }
 
   if (!pkg.ws.targets.electron) {
-    pkg.ws.targets.electron = 1.4;
+    pkg.ws.targets.electron = '1.4';
   }
 
   // defaults for selenium

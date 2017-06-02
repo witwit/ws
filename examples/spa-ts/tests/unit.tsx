@@ -1,12 +1,12 @@
 import expect from 'expect';
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
+import { createRenderer } from 'react-test-renderer/shallow';
 import { NameComponent, ImageTestComponent } from 'ws-examples-browser-ts-react';
 import { AppComponent } from '../src/app';
 
 describe('test my code', () => {
   it('should show my app', () => {
-    const renderer = ReactTestUtils.createRenderer();
+    const renderer = createRenderer();
     renderer.render(<AppComponent />);
     const output = renderer.getRenderOutput();
 
