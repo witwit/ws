@@ -1,5 +1,11 @@
 The changelog is currently handwritten.
 
+# 2.0.0-1 (2017-06-02)
+
+- First prerelease of next major version.
+- **Biggest change**: We removed the multi-locale output feature in favor of loading the translations asynchronous (see [#23](https://github.com/Mercateo/ws/pull/23)).
+- Support for the newest Enzyme version. `react-addons-test-utils` can't be loaded anymore, but it is deprecated anyway.
+
 # 1.0.1-64 (2017-04-27)
 
 - Updated several deps (like TSLint from v4 to v5).
