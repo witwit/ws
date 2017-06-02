@@ -9,6 +9,7 @@
   "scripts": {
     "build": "rimraf dist/ && webpack",
     "ws": "node ./bin/ws.js",
+    "pretest": "npm run -s build",
     "test": "node scripts/test.js",
     "postinstall": "node scripts/postinstall.js",
     "preversion": "npm run -s build && npm run -s ws lint",
