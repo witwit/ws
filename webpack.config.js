@@ -34,12 +34,10 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.js',
-    // don't use webpack:/// protocol for source maps
-    // devtoolModuleFilenameTemplate: () => './[resource-path]',
     sourcePrefix: ''  // removes tabs before multiline strings
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.ts(x?)$/,
         use: [
@@ -60,12 +58,6 @@ module.exports = {
               logLevel: 'warn'
             }
           }
-          // {
-          //   loader: 'awesome-typescript-loader',
-          //   options: {
-          //     silent: true
-          //   }
-          // }
         ]
       }
     ]

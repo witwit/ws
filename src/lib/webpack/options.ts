@@ -392,12 +392,12 @@ export const enzymeExternals = [
 ];
 
 export const getModuleConfig = (command: Command) => {
-  const commonLoaders = [
+  const commonRules = [
     getJsLoaderConfig(command),
     getTsLoaderConfig(command)
   ];
 
-  const specificLoaders = project.ws.type === 'node'
+  const specificRules = project.ws.type === 'node'
     ? []
     : [
       jsonLoader,
@@ -410,9 +410,9 @@ export const getModuleConfig = (command: Command) => {
     ];
 
   return {
-    loaders: [
-      ...commonLoaders,
-      ...specificLoaders
+    rules: [
+      ...commonRules,
+      ...specificRules
     ]
   };
 };
