@@ -3,9 +3,16 @@ import { error, info } from 'loglevel';
 import { existsAsync, readdirAsync } from 'fs-extra-promise';
 import { join } from 'path';
 import { lintAsync } from '../lib/tslint';
+import { formatAsync } from '../lib/prettier';
 import { project } from '../project';
 
 export default async function lint() {
+  // prettier
+  const formatCount = await formatAsync();
+  if (formatCount) {
+    info(`automatically formatted ${cyan(formatCount.toString())} file(s) ${cyan('(~‾▿‾)~')}`);
+  }
+
   // typescript
   const codeLintResult = await lintAsync();
   if (codeLintResult.errorsCount) {

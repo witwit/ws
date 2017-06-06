@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-2 (2017-06-06)
+
+- Added [`prettier`](https://github.com/prettier/prettier) support \o/ Uses the same default settings, but with `singleQuote: true`.
+
 # 2.0.0-1 (2017-06-02)
 
 - First prerelease of next major version.

@@ -15,7 +15,7 @@ commander.option('-l, --log-level <level>', 'set log level', (value) => {
   if (allowedLogLevels.some(allowedValue => value === allowedValue)) {
     return value;
   } else {
-    throw `Your log level  ${yellow(value)} doesn't match any of the valid values: ${yellow(allowedLogLevels.join(', '))}.`;
+    throw `Your log level ${yellow(value)} doesn't match any of the valid values: ${yellow(allowedLogLevels.join(', '))}.`;
   }
 }, 'info');
 
