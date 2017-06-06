@@ -143,6 +143,7 @@ const getTsLoaderConfig = (command: Command) => {
         options: {
           logLevel: 'warn',
           compilerOptions: {
+            sourceMap: true,
             declaration: isBrowserRelease || isNodeBuild
             // outDir
           }
