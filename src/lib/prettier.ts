@@ -1,10 +1,13 @@
 import { format } from 'prettier';
 import { readFileAsync, writeFileAsync } from 'fs-extra-promise';
 import globby from 'globby';
+import { error } from 'loglevel';
+import { red } from 'chalk';
 import { project } from '../project';
 
 const options = {
-  singleQuote: true
+  singleQuote: true,
+  parser: 'typescript'
 };
 
 const defaultFilePatterns = [
@@ -21,7 +24,15 @@ export async function formatAsync(filePatterns = defaultFilePatterns) {
   let fixesCount = 0;
   await Promise.all(filePaths.map((filePath, index) => {
     const content = contents[index];
-    const formattedContent = format(content, options);
+    let formattedContent;
+
+    try {
+      formattedContent = format(content, options);
+    } catch (err) {
+      error(`Couldn't format ${red(filePath)}.`);
+      throw err;
+    }
+
     if (content !== formattedContent) {
       fixesCount += 1;
       writeFileAsync(filePath, formattedContent);
