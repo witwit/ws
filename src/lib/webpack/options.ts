@@ -281,7 +281,6 @@ export const defineProductionPlugin = new DefinePlugin({
 export const minifyJsPlugin = new optimize.UglifyJsPlugin();
 
 export const indexHtmlPlugin = new HtmlWebpackPlugin({
-  filename: 'index.html',
   template: './src/index.html'
 });
 
