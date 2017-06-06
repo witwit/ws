@@ -6,7 +6,7 @@ import { HelloWorld } from '../src/HelloWorld';
 describe('test my electron app', () => {
   it('should render a react component', () => {
     const renderer = createRenderer();
-    renderer.render(<HelloWorld/>);
+    renderer.render(<HelloWorld />);
     const output = renderer.getRenderOutput();
 
     expect(output.type).toBe('div');

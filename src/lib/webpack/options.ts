@@ -52,30 +52,34 @@ export const outputTest = {
 
 export const babelNode = {
   presets: [
-    [resolveFile('babel-preset-env'), {
-      targets: { node: project.ws.targets.node },
-      useBuiltIns: true
-    }],
+    [
+      resolveFile('babel-preset-env'),
+      {
+        targets: { node: project.ws.targets.node },
+        useBuiltIns: true
+      }
+    ],
     resolveFile('babel-preset-stage-0')
   ],
-  plugins: [
-    resolveFile('babel-plugin-transform-decorators-legacy')
-  ]
+  plugins: [resolveFile('babel-plugin-transform-decorators-legacy')]
 };
 
 export const babelBrowser = {
   presets: [
-    [resolveFile('babel-preset-env'), {
-      targets: project.ws.type === 'electron' ? { electron: project.ws.targets.electron } : { browsers: project.ws.targets.browsers },
-      modules: false,
-      useBuiltIns: true
-    }],
+    [
+      resolveFile('babel-preset-env'),
+      {
+        targets: project.ws.type === 'electron'
+          ? { electron: project.ws.targets.electron }
+          : { browsers: project.ws.targets.browsers },
+        modules: false,
+        useBuiltIns: true
+      }
+    ],
     resolveFile('babel-preset-react'),
     resolveFile('babel-preset-stage-0')
   ],
-  plugins: [
-    resolveFile('babel-plugin-transform-decorators-legacy')
-  ],
+  plugins: [resolveFile('babel-plugin-transform-decorators-legacy')],
   // this removes the "[BABEL] Note: The code generator has deoptimised the styling of..." warning
   // I don't think we need `compact`, because our code is minified for production separately
   compact: false
@@ -105,7 +109,8 @@ const getTsLoaderConfig = (command: Command) => {
   const isNode = project.ws.type === 'node';
   const isE2e = command === 'e2e';
   const isNodeBuild = isNode && command === 'build';
-  const isBrowserRelease = project.ws.type === 'browser' && command === 'build -p';
+  const isBrowserRelease =
+    project.ws.type === 'browser' && command === 'build -p';
 
   // only needed when declarations are generated
   let outDir: string | undefined = undefined;
@@ -175,7 +180,6 @@ export const cssLoader = {
       // OLD: `style-loader?context=${process.cwd()}`
       {
         loader: 'style-loader'
-
       }
     ],
     use: [
@@ -209,7 +213,6 @@ export const lessLoader = {
       // OLD: `style-loader?context=${process.cwd()}`
       {
         loader: 'style-loader'
-
       }
     ],
     use: [
@@ -266,7 +269,9 @@ export const extractCssPlugin = new ExtractTextWebpackPlugin('style.css');
 
 // export const extractCssMinPlugin = new ExtractTextWebpackPlugin('style.min.css');
 
-export const extractCssHashPlugin = new ExtractTextWebpackPlugin('style-[chunkhash].css');
+export const extractCssHashPlugin = new ExtractTextWebpackPlugin(
+  'style-[chunkhash].css'
+);
 
 export const defineProductionPlugin = new DefinePlugin({
   'process.env.NODE_ENV': JSON.stringify('production')
@@ -290,20 +295,16 @@ export const resolveLoader = {
   ],
   alias: {
     // see https://www.npmjs.com/package/copy-loader
-    ['copy-loader']: `file-loader?name=[path][name].[ext]&context=./${project.ws.srcDir}`
+    ['copy-loader']: `file-loader?name=[path][name].[ext]&context=./${project.ws
+      .srcDir}`
   }
 };
 
 // defaults
 // see https://github.com/webpack/webpack/blob/dc50c0360e87204ea77172910e877f8c510f3bfb/lib/WebpackOptionsDefaulter.js#L75
-const defaultExtensions = [
-  '.js'
-];
+const defaultExtensions = ['.js'];
 
-const tsExtensions = [
-  '.ts',
-  '.tsx'
-].concat(defaultExtensions);
+const tsExtensions = ['.ts', '.tsx'].concat(defaultExtensions);
 
 const mainFieldsNode = [
   'webpack',
@@ -322,7 +323,9 @@ const mainFieldsBrowser = [
   'main'
 ];
 
-export const extensions = project.ws.entryExtension === 'js' ? defaultExtensions : tsExtensions;
+export const extensions = project.ws.entryExtension === 'js'
+  ? defaultExtensions
+  : tsExtensions;
 
 export const resolve = {
   extensions,
@@ -345,7 +348,8 @@ export const loaderOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
   options: defaultLoaderOptions
 });
 
-export const productionOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
+export const productionOptionsPlugin = new (webpack as any)
+  .LoaderOptionsPlugin({
   minimize: true,
   debug: false,
   options: defaultLoaderOptions
@@ -359,7 +363,7 @@ export const devtoolProduction = 'source-map';
 
 export const externalsNode = [
   // require json files with nodes built-in require logic
-  function (_context: any, request: any, callback: any) {
+  function(_context: any, request: any, callback: any) {
     if (/\.json$/.test(request)) {
       callback(null, 'commonjs ' + request);
     } else {
@@ -380,9 +384,7 @@ export const externalsBrowser = [
       callback();
     }
   }
-].concat(project.ws.externals ? [
-  project.ws.externals
-] : []);
+].concat(project.ws.externals ? [project.ws.externals] : []);
 
 export const enzymeExternals = [
   'react/lib/ExecutionEnvironment',
@@ -392,27 +394,21 @@ export const enzymeExternals = [
 ];
 
 export const getModuleConfig = (command: Command) => {
-  const commonRules = [
-    getJsLoaderConfig(command),
-    getTsLoaderConfig(command)
-  ];
+  const commonRules = [getJsLoaderConfig(command), getTsLoaderConfig(command)];
 
   const specificRules = project.ws.type === 'node'
     ? []
     : [
-      jsonLoader,
-      cssLoader,
-      lessLoader,
-      imageLoader,
-      eotLoader,
-      woffLoader,
-      ttfLoader
-    ];
+        jsonLoader,
+        cssLoader,
+        lessLoader,
+        imageLoader,
+        eotLoader,
+        woffLoader,
+        ttfLoader
+      ];
 
   return {
-    rules: [
-      ...commonRules,
-      ...specificRules
-    ]
+    rules: [...commonRules, ...specificRules]
   };
 };

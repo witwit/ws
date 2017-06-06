@@ -10,6 +10,12 @@ describe('test my code', () => {
     const output = renderer.getRenderOutput();
 
     expect(output.type).toBe('p');
-    expect(output.props.children).toEqual([ 'Hello ', 'foo', '! Sum is ', 3, '.' ]);
+    expect(output.props.children).toEqual([
+      'Hello ',
+      'foo',
+      '! Sum is ',
+      3,
+      '.'
+    ]);
   });
 });

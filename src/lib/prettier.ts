@@ -19,25 +19,29 @@ const defaultFilePatterns = [
 
 export async function formatAsync(filePatterns = defaultFilePatterns) {
   const filePaths = await globby(filePatterns);
-  const contents = await Promise.all(filePaths.map(filePath => readFileAsync(filePath, 'utf8') as any)) as string[];
+  const contents = (await Promise.all(
+    filePaths.map(filePath => readFileAsync(filePath, 'utf8') as any)
+  )) as string[];
 
   let fixesCount = 0;
-  await Promise.all(filePaths.map((filePath, index) => {
-    const content = contents[index];
-    let formattedContent;
+  await Promise.all(
+    filePaths.map((filePath, index) => {
+      const content = contents[index];
+      let formattedContent;
 
-    try {
-      formattedContent = format(content, options);
-    } catch (err) {
-      error(`Couldn't format ${red(filePath)}.`);
-      throw err;
-    }
+      try {
+        formattedContent = format(content, options);
+      } catch (err) {
+        error(`Couldn't format ${red(filePath)}.`);
+        throw err;
+      }
 
-    if (content !== formattedContent) {
-      fixesCount += 1;
-      writeFileAsync(filePath, formattedContent);
-    }
-  }));
+      if (content !== formattedContent) {
+        fixesCount += 1;
+        writeFileAsync(filePath, formattedContent);
+      }
+    })
+  );
 
   return fixesCount;
 }

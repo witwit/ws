@@ -21,12 +21,7 @@ export const TYPE = {
   ELECTRON: 'electron' as 'electron'
 };
 
-const TYPES = [
-  TYPE.SPA,
-  TYPE.NODE,
-  TYPE.BROWSER,
-  TYPE.ELECTRON
-];
+const TYPES = [TYPE.SPA, TYPE.NODE, TYPE.BROWSER, TYPE.ELECTRON];
 
 /**
  * Our selenium grid settings. Only needed if you run tests with a custom selenium grid.
@@ -215,7 +210,7 @@ export interface PackageConfig {
   /**
    * The dependencies of your project.
    */
-  dependencies?: { [dependency: string]: string; };
+  dependencies?: { [dependency: string]: string };
   /**
    * Flags if this package is private.
    */
@@ -249,15 +244,21 @@ const sampleConfig = `
 
 export function validate(pkg: any): PackageConfig {
   if (!pkg.ws) {
-    throw `Your ${yellow('package.json')} needs a ${yellow('ws')} config. It could look like this:${sampleConfig}`;
+    throw `Your ${yellow('package.json')} needs a ${yellow(
+      'ws'
+    )} config. It could look like this:${sampleConfig}`;
   }
 
   if (!pkg.ws.type) {
-    throw `You need to specify a ${yellow('type')}. This can be any of the following values: ${yellow(TYPES.join(', '))}.`;
+    throw `You need to specify a ${yellow(
+      'type'
+    )}. This can be any of the following values: ${yellow(TYPES.join(', '))}.`;
   }
 
   if (!TYPES.some(type => type === pkg.ws.type)) {
-    throw `Your type ${yellow(pkg.ws.type)} doesn't match any of the valid values: ${yellow(TYPES.join(', '))}.`;
+    throw `Your type ${yellow(
+      pkg.ws.type
+    )} doesn't match any of the valid values: ${yellow(TYPES.join(', '))}.`;
   }
 
   if (!pkg.name) {
@@ -306,7 +307,8 @@ export function validate(pkg: any): PackageConfig {
 
   // entry files
   pkg.ws.srcEntry = `./${pkg.ws.srcDir}/index.${pkg.ws.entryExtension}`;
-  pkg.ws.srcI18nEntry = `./${pkg.ws.srcDir}/index.i18n.${pkg.ws.entryExtension}`;
+  pkg.ws.srcI18nEntry = `./${pkg.ws.srcDir}/index.i18n.${pkg.ws
+    .entryExtension}`;
   pkg.ws.unitEntry = `./${pkg.ws.testsDir}/unit.${pkg.ws.entryExtension}`;
   pkg.ws.e2eEntry = `./${pkg.ws.testsDir}/e2e.${pkg.ws.entryExtension}`;
 

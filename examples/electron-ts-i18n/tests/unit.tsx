@@ -6,7 +6,11 @@ import { mount } from 'enzyme';
 
 describe('test my electron i18n app', () => {
   it('should render a react component', () => {
-    const provider = mount(<WsIntlProvider messages={require('../dist-i18n/en_GB')}><HelloWorld /></WsIntlProvider>);
+    const provider = mount(
+      <WsIntlProvider messages={require('../dist-i18n/en_GB')}>
+        <HelloWorld />
+      </WsIntlProvider>
+    );
     const consumer = provider.childAt(0);
     const comp = consumer.childAt(0);
 
