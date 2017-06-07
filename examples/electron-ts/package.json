@@ -11,7 +11,7 @@
   },
   "scripts": {
     "postinstall": "electron-rebuild",
-    "start": "electron .",
+    "start": "electron dist/electron.js",
     "ws": "node ../../bin/ws"
   },
   "dependencies": {
