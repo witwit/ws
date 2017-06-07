@@ -79,6 +79,7 @@
     "openport": "0.0.4",
     "phantomjs-prebuilt": "^2.1.14",
     "postcss-loader": "^2.0.5",
+    "prettier": "^1.4.2",
     "properties": "^1.2.1",
     "resolve-from": "^3.0.0",
     "sauce-connect-launcher": "^1.2.2",
@@ -102,7 +103,6 @@
   },
   "devDependencies": {
     "electron": "^1.6.10",
-    "prettier": "^1.4.2",
     "rimraf": "^2.6.1"
   },
   "keywords": [
