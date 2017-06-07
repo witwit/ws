@@ -15,11 +15,15 @@ import {
 import { project } from '../../project';
 
 export const getElectronDevOptions = (): Array<WebpackSingleConfig> => {
-  const defaultConfig = {
+  const mainProcessConfig: WebpackSingleConfig = {
+    entry: {
+      electron: project.ws.srcElectronEntry
+    },
     output: {
       ...outputDev,
       filename: '[name].js'
     },
+    target: 'electron-main',
     node: {
       __dirname: false,
       __filename: false
@@ -28,26 +32,23 @@ export const getElectronDevOptions = (): Array<WebpackSingleConfig> => {
     plugins: [indexHtmlPlugin, extractCssPlugin, loaderOptionsPlugin],
     externals: project.ws.externals ? [project.ws.externals] : [],
     resolveLoader,
+    performance: {
+      hints: false
+    },
     resolve,
     devtool
   };
 
-  return ([
+  return [
+    mainProcessConfig,
     {
-      ...defaultConfig,
-      target: 'electron-main',
-      entry: {
-        electron: project.ws.srcElectronEntry
-      }
-    },
-    {
-      ...defaultConfig,
+      ...mainProcessConfig,
       target: 'electron-renderer',
       entry: {
         index: project.ws.srcEntry
       }
     }
-  ] as any) as Array<WebpackSingleConfig>;
+  ];
 };
 
 export const getElectronReleaseOptions = () => {
