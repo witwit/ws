@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-4 (2017-06-08)
+
+- Electrons main process file can now be written in TypeScript, too. It is processed by `ws` correctly.
+
 # 2.0.0-3 (2017-06-07)
 
 - Added [`prettier`] as a real dependency, not a dev dependency.
