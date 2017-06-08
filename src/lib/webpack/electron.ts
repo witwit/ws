@@ -14,31 +14,50 @@ import {
 } from './options';
 import { project } from '../../project';
 
-export const getElectronDevOptions = (): WebpackSingleConfig => ({
-  entry: project.ws.srcEntry,
-  output: {
-    ...outputDev,
-    filename: '[name].js'
-  },
-  module: getModuleConfig('build'),
-  plugins: [indexHtmlPlugin, extractCssPlugin, loaderOptionsPlugin],
-  target: 'electron',
-  externals: project.ws.externals ? [project.ws.externals] : [],
-  performance: {
-    hints: false
-  },
-  resolveLoader,
-  resolve,
-  devtool
-});
+export const getElectronDevOptions = (): Array<WebpackSingleConfig> => {
+  const mainProcessConfig: WebpackSingleConfig = {
+    entry: {
+      electron: project.ws.srcElectronEntry
+    },
+    output: {
+      ...outputDev,
+      filename: '[name].js'
+    },
+    target: 'electron-main',
+    node: {
+      __dirname: false,
+      __filename: false
+    },
+    module: getModuleConfig('build'),
+    plugins: [indexHtmlPlugin, extractCssPlugin, loaderOptionsPlugin],
+    externals: project.ws.externals ? [project.ws.externals] : [],
+    resolveLoader,
+    performance: {
+      hints: false
+    },
+    resolve,
+    devtool
+  };
+
+  return [
+    mainProcessConfig,
+    {
+      ...mainProcessConfig,
+      target: 'electron-renderer',
+      entry: {
+        index: project.ws.srcEntry
+      }
+    }
+  ];
+};
 
 export const getElectronReleaseOptions = () => {
   const options = getElectronDevOptions();
 
-  return {
-    ...options,
-    plugins: [...options.plugins!, defineProductionPlugin]
-  };
+  return options.map(config => ({
+    ...config,
+    plugins: [...config.plugins!, defineProductionPlugin]
+  }));
 };
 
 export const electronUnitOptions: WebpackSingleConfig = {
@@ -46,7 +65,7 @@ export const electronUnitOptions: WebpackSingleConfig = {
   output: outputTest,
   module: getModuleConfig('unit'),
   plugins: [extractCssPlugin, loaderOptionsPlugin],
-  target: 'electron',
+  target: 'electron-renderer',
   externals: enzymeExternals.concat(
     project.ws.externals ? [project.ws.externals] : []
   ),

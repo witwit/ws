@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "start": "electron .",
+    "start": "electron dist/electron.js",
     "ws": "node ../../bin/ws"
   },
   "dependencies": {

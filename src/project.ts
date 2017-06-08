@@ -140,6 +140,11 @@ export interface WsConfig {
    */
   srcEntry: string;
   /**
+   * The entry file for your electron main process code. This value is set automatically.
+   * It could look this: `./src/electron.ts`.
+   */
+  srcElectronEntry: string;
+  /**
    * The _optional_ entry file for source code at the root level of a localized spa.
    * This value is set automatically.
    * It could look this: `./src/index.i18n.ts`.
@@ -309,6 +314,9 @@ export function validate(pkg: any): PackageConfig {
   pkg.ws.srcEntry = `./${pkg.ws.srcDir}/index.${pkg.ws.entryExtension}`;
   pkg.ws.srcI18nEntry = `./${pkg.ws.srcDir}/index.i18n.${pkg.ws
     .entryExtension}`;
+  pkg.ws.srcElectronEntry = `./${pkg.ws.srcDir}/electron.${!tsconfig
+    ? 'js'
+    : 'ts'}`;
   pkg.ws.unitEntry = `./${pkg.ws.testsDir}/unit.${pkg.ws.entryExtension}`;
   pkg.ws.e2eEntry = `./${pkg.ws.testsDir}/e2e.${pkg.ws.entryExtension}`;
 
