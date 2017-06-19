@@ -290,6 +290,9 @@ export const resolveLoader = {
   modules: [
     // relative to `dist/index.js`
     join(__dirname, '..', 'node_modules'),
+    // support pnpm
+    // see https://github.com/webpack/webpack/issues/5087
+    join(__dirname, '..', '..', '..'),
     join(process.cwd(), 'node_modules'),
     'node_modules'
   ],

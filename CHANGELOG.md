@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-5 (2017-06-19)
+
+- Support pnpm.
+
 # 2.0.0-4 (2017-06-08)
 
 - Electrons main process file can now be written in TypeScript, too. It is processed by `ws` correctly.
