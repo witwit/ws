@@ -177,6 +177,12 @@ export interface WsConfig {
    */
   distReleaseDir: string;
   /**
+   * SPA only.
+   * Public path of your app. Defaults to `""`
+   * See https://webpack.js.org/configuration/output/#output-publicpath for an explanation.
+   */
+  publicPath: string;
+  /**
    * `targets` taken from [`babel-preset-env`](https://github.com/babel/babel-preset-env).
    * We only use `browsers` and `node` properties for now.
    */
@@ -319,6 +325,10 @@ export function validate(pkg: any): PackageConfig {
     : 'ts'}`;
   pkg.ws.unitEntry = `./${pkg.ws.testsDir}/unit.${pkg.ws.entryExtension}`;
   pkg.ws.e2eEntry = `./${pkg.ws.testsDir}/e2e.${pkg.ws.entryExtension}`;
+
+  if (!pkg.ws.publicPath) {
+    pkg.ws.publicPath = '';
+  }
 
   // defaults for browsers
   if (!pkg.ws.targets) {
