@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-6 (2017-06-21)
+
+- Make [`publicPath`](https://webpack.js.org/configuration/output/#output-publicpath) configurable.
+
 # 2.0.0-5 (2017-06-19)
 
 - Support pnpm.
