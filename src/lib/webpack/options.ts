@@ -30,6 +30,7 @@ export type WebpackConfig = WebpackSingleConfig | Array<WebpackSingleConfig>;
 export const nodeSourceMapEntry = 'source-map-support/register';
 
 export const output = {
+  publicPath: project.ws.publicPath,
   filename: 'index.js',
   // removes tabs (better for multiline strings)
   sourcePrefix: ''
