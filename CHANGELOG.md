@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Fixed update notifier (same fix as in `1.0.2`).
+
 # 2.0.0-6 (2017-06-21)
 
 - Make [`publicPath`](https://webpack.js.org/configuration/output/#output-publicpath) configurable.
@@ -25,6 +29,15 @@ The changelog is currently handwritten.
 - First prerelease of next major version.
 - **Biggest change**: We removed the multi-locale output feature in favor of loading the translations asynchronous (see [#23](https://github.com/Mercateo/ws/pull/23)).
 - Support for the newest Enzyme version. `react-addons-test-utils` can't be loaded anymore, but it is deprecated anyway.
+
+# 1.0.2 (2017-05-03)
+
+- Fixed update notifier.
+
+# 1.0.1 (2017-05-03)
+
+- Stop using prereleases. After 64 versions we should be pretty _stable_. But maybe... version 2 is around the corner, too.
+- Partly use `awesome-typescript-loader` again, because `ts-loader` is too slow on large projects :(
 
 # 1.0.1-64 (2017-04-27)
 
