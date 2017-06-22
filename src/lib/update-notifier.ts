@@ -14,52 +14,56 @@ const LOVE_EMOJI = ['(☞ﾟヮﾟ)☞', '( ˘ ³˘)♥', '(ᵔᴥᵔ)'];
 const getRandom = (arr: Array<any>): any =>
   arr[Math.floor(Math.random() * arr.length)];
 
-export function updateNotifier(version: string) {
+export function updateNotifier(currentVersion: string) {
   return new Promise(resolve => {
     let state: 'pending' | 'timeout' | 'finished' = 'pending';
 
-    const child = exec(
-      `npm show @mercateo/ws dist-tags --json`,
-      (error, stdout, stderr) => {
-        if (state === 'timeout') {
-          warn(
-            'Timeout while trying to check, if a new version of @mercateo/ws is available.'
-          );
-          return resolve();
-        } else {
-          state = 'finished';
-        }
-
-        if (error) {
-          warn(
-            `Couldn't check, if a new version of @mercateo/ws is available.`
-          );
-          warn(error);
-          resolve();
-        } else {
-          if (stderr.trim()) {
-            warn(stderr);
-          }
-
-          const distTags = JSON.parse(stdout) as DistTags;
-          const isPrerelease = version.includes('-');
-          const remoteVersion = isPrerelease ? distTags.next : distTags.latest;
-          if (gt(remoteVersion, version)) {
-            info(`
-  ${magenta(
-    getRandom(LOVE_EMOJI)
-  )} Update available. The newest version of @mercateo/ws is ${magenta(
-              remoteVersion
-            )}.
-  See ${cyan(CHANGELOG_URL)} for details.
-`);
-          } else {
-            debug('Your version of @mercateo/ws is up to date.');
-          }
-          resolve();
-        }
+    const cmd = 'npm show @mercateo/ws dist-tags --json';
+    const child = exec(cmd, (error, stdout, stderr) => {
+      if (state === 'timeout') {
+        warn(
+          'Timeout while trying to check, if a new version of @mercateo/ws is available.'
+        );
+        return resolve();
+      } else {
+        state = 'finished';
       }
-    );
+
+      if (error) {
+        warn(`Couldn't check, if a new version of @mercateo/ws is available.`);
+        warn(error);
+        resolve();
+      } else {
+        if (stderr.trim()) {
+          warn(stderr);
+        }
+
+        const distTags = JSON.parse(stdout) as DistTags;
+        const currentVersionIsPrerelease = currentVersion.includes('-');
+
+        const latestVersionIsGreater = gt(distTags.latest, currentVersion);
+        const nextVersionIsGreater = gt(distTags.next, currentVersion);
+        const hasRelevantUpdate = currentVersionIsPrerelease
+          ? latestVersionIsGreater || nextVersionIsGreater
+          : latestVersionIsGreater;
+        const relevantVersion = latestVersionIsGreater
+          ? distTags.latest
+          : distTags.next;
+
+        if (hasRelevantUpdate) {
+          const emoji = magenta(getRandom(LOVE_EMOJI));
+          const version = magenta(relevantVersion);
+          const url = cyan(CHANGELOG_URL);
+          info(`
+  ${emoji} Update available. The newest version of @mercateo/ws is ${version}.
+  See ${url} for details.
+`);
+        } else {
+          debug('Your version of @mercateo/ws is up to date.');
+        }
+        resolve();
+      }
+    });
 
     // use timeout, so ws can be used without (or slow) internet connection
     setTimeout(() => {
