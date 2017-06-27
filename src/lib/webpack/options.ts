@@ -18,10 +18,7 @@ import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
 import { project } from '../../project';
 
-interface HappyPackPlugin extends Plugin {
-  new (options: any): HappyPackPlugin;
-}
-const HappyPack: HappyPackPlugin = require('happypack');
+const HappyPack: any = require('happypack');
 
 /**
  * We make some properties of `webpack.Configuration` mandatory. It is easier for future usage, so we don't
