@@ -30,7 +30,7 @@ export default async function unit(options: any) {
     case TYPE.NODE:
       const config = getNodeUnitConfig();
       await compileAsync(config);
-      const files = [path.join(config.output.path, config.output.filename)];
+      const files = [path.join(config.output.path, 'index.js')];
       exitCode = await mochaTestAsync(files);
       break;
     case TYPE.ELECTRON:
