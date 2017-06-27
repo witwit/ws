@@ -1,7 +1,7 @@
 import React from 'react';
-import { WsIntlConsumer } from 'ws-intl';
+import { Translate } from '@mercateo/ws-intl';
 
 export const HelloWorld = () =>
-  <WsIntlConsumer>
+  <Translate>
     {(messages: I18N) => <p>{messages.welcome()}</p>}
-  </WsIntlConsumer>;
+  </Translate>;

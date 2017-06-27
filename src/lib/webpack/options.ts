@@ -1,54 +1,46 @@
 import { join } from 'path';
-import webpack, { DefinePlugin, optimize } from 'webpack';
+import { pull } from 'lodash';
+import webpack, {
+  DefinePlugin,
+  optimize,
+  Configuration,
+  Rule,
+  Plugin,
+  PerformanceOptions,
+  Output,
+  Entry
+} from 'webpack';
 import ExtractTextWebpackPlugin from 'extract-text-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import { resolve as resolveFile } from '../resolve';
 import { project } from '../../project';
 
+interface HappyPackPlugin extends Plugin {
+  new (options: any): HappyPackPlugin;
+}
+const HappyPack: HappyPackPlugin = require('happypack');
+
 /**
  * We make some properties of `webpack.Configuration` mandatory. It is easier for future usage, so we don't
  * need to check, if they are available or not.
  */
-export interface WebpackSingleConfig extends webpack.Configuration {
-  entry: string | Array<string> | webpack.Entry;
-  output: webpack.Output & {
-    filename: string;
-    path: string;
-  };
-  // new option (see https://medium.com/webpack/webpack-performance-budgets-13d4880fbf6d)
-  performance?: {
-    maxAssetSize?: number;
-    maxEntrypointSize?: number;
-    hints?: false | 'warning' | 'error';
-  };
-}
+export type StrictOutput = Output & {
+  filename: string;
+  path: string;
+};
 
-export type WebpackConfig = WebpackSingleConfig | Array<WebpackSingleConfig>;
+export interface WebpackConfig extends Configuration {
+  entry: Entry;
+  output: StrictOutput;
+}
 
 export const nodeSourceMapEntry = 'source-map-support/register';
 
-export const output = {
-  publicPath: project.ws.publicPath,
-  filename: 'index.js',
-  // removes tabs (better for multiline strings)
-  sourcePrefix: ''
-};
-
-export const outputDev = {
-  ...output,
-  path: join(process.cwd(), project.ws.distDir)
-};
-
-export const outputRelease = {
-  ...output,
-  path: join(process.cwd(), project.ws.distReleaseDir)
-};
-
-export const outputTest = {
-  ...output,
-  path: join(process.cwd(), project.ws.distTestsDir)
+export const performance: PerformanceOptions = {
+  hints: false
 };
 
 export const babelNode = {
@@ -88,105 +80,106 @@ export const babelBrowser = {
 
 export type Command = 'build' | 'build -p' | 'unit' | 'e2e';
 
-export const getJsLoaderConfig = (command: Command) => {
-  const isNode = project.ws.type === 'node';
-  const isE2e = command === 'e2e';
-
-  const babelOptions = isNode || isE2e ? babelNode : babelBrowser;
-  const exclude = /node_modules/;
-
-  return {
-    test: /\.js(x?)$/,
-    exclude,
-    loader: 'babel-loader',
-    options: {
-      ...babelOptions,
-      cacheDirectory: true
-    }
-  };
+const getBabelOptions = (target: Target) => {
+  const babelOptions = target === 'node' ? babelNode : babelBrowser;
+  return babelOptions;
 };
 
-const getTsLoaderConfig = (command: Command) => {
-  const isNode = project.ws.type === 'node';
-  const isE2e = command === 'e2e';
-  const isNodeBuild = isNode && command === 'build';
-  const isBrowserRelease =
-    project.ws.type === 'browser' && command === 'build -p';
-
-  // only needed when declarations are generated
-  let outDir: string | undefined = undefined;
-  if (isBrowserRelease) {
-    outDir = project.ws.distReleaseDir;
-  } else if (isNodeBuild) {
-    outDir = project.ws.distDir;
-  }
-
-  const babelOptions = isNode || isE2e ? babelNode : babelBrowser;
-  return {
-    test: /\.ts(x?)$/,
-    use: [
-      {
-        loader: 'string-replace-loader',
-        options: {
-          search: /_import\(/g,
-          replace: 'import('
-        }
-      },
+export const getHappyPackPluginJs = (target: Target, command: Command) =>
+  new HappyPack({
+    id: `js-${target}-${command}`,
+    compilerId: `js-${target}-${command}`,
+    threads: 2,
+    verbose: false,
+    loaders: [
       {
         loader: 'babel-loader',
         options: {
-          ...babelOptions,
-          cacheDirectory: true
+          ...getBabelOptions(target)
+        }
+      }
+    ]
+  });
+
+export const getHappyPackPluginTs = (target: Target, command: Command) =>
+  new HappyPack({
+    id: `ts-${target}-${command}`,
+    compilerId: `ts-${target}-${command}`,
+    threads: 2,
+    verbose: false,
+    loaders: [
+      {
+        loader: 'babel-loader',
+        options: {
+          ...getBabelOptions(target)
         }
       },
       {
         loader: 'ts-loader',
         options: {
+          // this automatically sets `transpileOnly` to `true`
+          happyPackMode: true,
           logLevel: 'warn',
           compilerOptions: {
-            sourceMap: true,
-            declaration: isBrowserRelease || isNodeBuild
-            // outDir
+            sourceMap: true
           }
         }
       }
-      // {
-      //   loader: 'awesome-typescript-loader',
-      //   options: {
-      //     silent: true,
-      //     // note 1: creating declarations only works with an *empty* cache
-      //     // note 2: it looks like using the cache and babel in this way isn't really faster currently
-      //     //         that's why we don't use it for now and just use `babel-loader`
-      //     // useCache: true,
-      //     // cacheDirectory: 'node_modules/.awesome-typescript-loader-cache',
-      //     // useBabel: true,
-      //     // babelOptions,
-      //     // babelCore: resolveFile('babel-core'),
-      //     declaration: isBrowserRelease || isNodeBuild,
-      //     outDir
-      //   }
-      // }
     ]
-  };
-};
+  });
 
-export const jsonLoader = {
+const getJsRule = (target: Target, command: Command): Rule => ({
+  test: /\.js(x?)$/,
+  exclude: /node_modules/,
+  use: [
+    {
+      loader: 'cache-loader',
+      options: {
+        cacheDirectory: join(process.cwd(), 'node_modules', '.cache-loader')
+      }
+    },
+    {
+      loader: `happypack/loader?id=js-${target}-${command}&compilerId=js-${target}-${command}`
+    }
+  ]
+});
+
+const getTsRule = (target: Target, command: Command): Rule => ({
+  test: /\.ts(x?)$/,
+  use: [
+    {
+      loader: 'cache-loader',
+      options: {
+        cacheDirectory: join(process.cwd(), 'node_modules', '.cache-loader')
+      }
+    },
+    {
+      loader: 'string-replace-loader',
+      options: {
+        search: /_import\(/g,
+        replace: 'import('
+      }
+    },
+    {
+      loader: `happypack/loader?id=ts-${target}-${command}&compilerId=ts-${target}-${command}`
+    }
+  ]
+});
+
+export const jsonRule: Rule = {
   test: /\.json$/,
   loader: 'json-loader'
 };
 
-export const cssLoader = {
+export const cssRule: Rule = {
   test: /\.css$/,
-  loader: ExtractTextWebpackPlugin.extract({
+  use: ExtractTextWebpackPlugin.extract({
     fallback: [
-      // OLD: `style-loader?context=${process.cwd()}`
       {
         loader: 'style-loader'
       }
     ],
     use: [
-      // OLD: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap`
-      // context = root?
       {
         loader: 'css-loader',
         options: {
@@ -199,7 +192,8 @@ export const cssLoader = {
           sourceMap: true,
           plugins: () => [
             autoprefixer({
-              browsers: project.ws.targets.browsers
+              // see PR: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/17484
+              browsers: project.ws.targets.browsers as any
             })
           ]
         }
@@ -208,18 +202,15 @@ export const cssLoader = {
   })
 };
 
-export const lessLoader = {
+export const lessRule: Rule = {
   test: /\.less/,
-  loader: ExtractTextWebpackPlugin.extract({
+  use: ExtractTextWebpackPlugin.extract({
     fallback: [
-      // OLD: `style-loader?context=${process.cwd()}`
       {
         loader: 'style-loader'
       }
     ],
     use: [
-      // OLD: `css-loader?sourceMap&context=${process.cwd()}!postcss-loader?sourceMap!less-loader?sourceMap`
-      // context = root?
       {
         loader: 'css-loader',
         options: {
@@ -232,7 +223,8 @@ export const lessLoader = {
           sourceMap: true,
           plugins: () => [
             autoprefixer({
-              browsers: project.ws.targets.browsers
+              // see PR: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/17484
+              browsers: project.ws.targets.browsers as any
             })
           ]
         }
@@ -247,29 +239,27 @@ export const lessLoader = {
   })
 };
 
-export const imageLoader = {
+export const imageRule: Rule = {
   test: /\.(png|jpg|gif|svg)$/,
   loader: 'url-loader?limit=1000&name=[name]-[hash].[ext]'
 };
 
-export const eotLoader = {
+export const eotRule: Rule = {
   test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
   loader: 'file-loader'
 };
 
-export const woffLoader = {
+export const woffRule: Rule = {
   test: /\.(woff|woff2)$/,
   loader: 'url-loader?prefix=font/&limit=5000'
 };
 
-export const ttfLoader = {
+export const ttfRule: Rule = {
   test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
   loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
 };
 
 export const extractCssPlugin = new ExtractTextWebpackPlugin('style.css');
-
-// export const extractCssMinPlugin = new ExtractTextWebpackPlugin('style.min.css');
 
 export const extractCssHashPlugin = new ExtractTextWebpackPlugin(
   'style-[chunkhash].css'
@@ -280,6 +270,10 @@ export const defineProductionPlugin = new DefinePlugin({
 });
 
 export const minifyJsPlugin = new optimize.UglifyJsPlugin();
+
+export const commonsChunkPlugin = new optimize.CommonsChunkPlugin({
+  names: ['manifest']
+});
 
 export const indexHtmlPlugin = new HtmlWebpackPlugin({
   template: './src/index.html'
@@ -308,7 +302,7 @@ export const resolveLoader = {
 // see https://github.com/webpack/webpack/blob/dc50c0360e87204ea77172910e877f8c510f3bfb/lib/WebpackOptionsDefaulter.js#L75
 const defaultExtensions = ['.js'];
 
-const tsExtensions = ['.ts', '.tsx'].concat(defaultExtensions);
+const tsExtensions = ['.ts', '.tsx', ...defaultExtensions];
 
 const mainFieldsNode = [
   'webpack',
@@ -341,29 +335,29 @@ export const defaultLoaderOptions = {
   resolve: {
     extensions
   }
-  // postcss: () => [
-  //   autoprefixer({
-  //     browsers: project.ws.targets.browsers
-  //   })
-  // ]
 };
 
-export const loaderOptionsPlugin = new (webpack as any).LoaderOptionsPlugin({
+export const loaderOptionsPlugin = new webpack.LoaderOptionsPlugin({
   options: defaultLoaderOptions
 });
 
-export const productionOptionsPlugin = new (webpack as any)
-  .LoaderOptionsPlugin({
+export const productionOptionsPlugin = new webpack.LoaderOptionsPlugin({
   minimize: true,
   debug: false,
   options: defaultLoaderOptions
+});
+
+export const forkTsCheckerPlugin = new ForkTsCheckerWebpackPlugin({
+  silent: true,
+  // `watch` is optional, but docs say it improves performance (less stat calls)
+  watch: [project.ws.srcDir, project.ws.testsDir]
 });
 
 export const devtool = 'inline-source-map';
 
 export const devtoolProduction = 'source-map';
 
-// export const devtoolTest = 'inline-source-map';
+export const externalsSpa = project.ws.externals ? [project.ws.externals] : [];
 
 export const externalsNode = [
   // require json files with nodes built-in require logic
@@ -387,8 +381,9 @@ export const externalsBrowser = [
     } else {
       callback();
     }
-  }
-].concat(project.ws.externals ? [project.ws.externals] : []);
+  },
+  ...externalsSpa
+];
 
 export const enzymeExternals = [
   'react/lib/ExecutionEnvironment',
@@ -397,22 +392,149 @@ export const enzymeExternals = [
   'react-addons-test-utils'
 ];
 
-export const getModuleConfig = (command: Command) => {
-  const commonRules = [getJsLoaderConfig(command), getTsLoaderConfig(command)];
+export const node = {
+  __dirname: false,
+  __filename: false
+};
 
-  const specificRules = project.ws.type === 'node'
-    ? []
-    : [
-        jsonLoader,
-        cssLoader,
-        lessLoader,
-        imageLoader,
-        eotLoader,
-        woffLoader,
-        ttfLoader
-      ];
+export const baseConfig: Configuration = {
+  performance,
+  resolveLoader,
+  resolve,
+  devtool
+};
 
-  return {
-    rules: [...commonRules, ...specificRules]
+export const releaseConfig: Configuration = {
+  devtool: devtoolProduction,
+  performance: {
+    hints: 'warning'
+  }
+};
+
+export const nodeConfig: Configuration = {
+  target: 'node',
+  node,
+  externals: externalsNode
+};
+
+export const electronMainConfig: Configuration = {
+  target: 'electron-main',
+  node
+};
+
+export const electronRendererConfig: Configuration = {
+  target: 'electron-renderer',
+  node
+};
+
+export type Target =
+  | 'spa'
+  | 'node'
+  | 'browser'
+  | 'electron-main'
+  | 'electron-renderer';
+
+export const getEntryAndOutput = (target: Target, command: Command) => {
+  const entry: Entry = {
+    index: project.ws.srcEntry
   };
+
+  const output: StrictOutput = {
+    publicPath: project.ws.publicPath,
+    path: join(process.cwd(), project.ws.distDir),
+    filename: '[name].js',
+    // removes tabs (better for multiline strings)
+    sourcePrefix: ''
+  };
+
+  // command specific config
+  if (command === 'build -p') {
+    output.path = join(process.cwd(), project.ws.distReleaseDir);
+  } else if (command === 'unit') {
+    entry.index = project.ws.unitEntry;
+    output.path = join(process.cwd(), project.ws.distTestsDir);
+  } else if (command === 'e2e') {
+    entry.index = project.ws.e2eEntry;
+    output.path = join(process.cwd(), project.ws.distTestsDir);
+  }
+
+  // target specific config
+  if (target === 'browser') {
+    output.libraryTarget = 'umd';
+    output.library = project.name;
+  } else if (target === 'spa') {
+    output.libraryTarget = 'umd'; // is this needed?
+  } else if (target === 'node') {
+    entry.index = [nodeSourceMapEntry, entry.index as string];
+    output.libraryTarget = 'commonjs2';
+  } else if (target === 'electron-main') {
+    delete entry.index;
+    entry.electron = project.ws.srcElectronEntry;
+  }
+
+  // special cases
+  if (target === 'spa' && command === 'build -p') {
+    output.filename = '[name].[chunkhash].js';
+    output.chunkFilename = '[name].[chunkhash].lazy.js';
+  }
+
+  return { entry, output };
+};
+
+export const getModuleAndPlugins = (target: Target, command: Command) => {
+  const rules: Rule[] = [getJsRule(target, command)];
+  const plugins: Plugin[] = [getHappyPackPluginJs(target, command)];
+
+  if (project.ws.tsconfig) {
+    rules.push(getTsRule(target, command));
+    plugins.push(getHappyPackPluginTs(target, command));
+    plugins.push(forkTsCheckerPlugin);
+  }
+
+  // and `target !== 'electron-main'`?
+  if (target !== 'node') {
+    const browserRules = [
+      jsonRule,
+      cssRule,
+      lessRule,
+      imageRule,
+      eotRule,
+      woffRule,
+      ttfRule
+    ];
+    rules.push(...browserRules);
+
+    plugins.push(extractCssPlugin);
+    plugins.push(loaderOptionsPlugin);
+  }
+
+  if (target === 'spa' || target === 'electron-renderer') {
+    plugins.push(indexHtmlPlugin);
+  }
+
+  // does node need a production build?
+  if (command === 'build -p') {
+    plugins.push(defineProductionPlugin);
+  }
+
+  // it looks like i can't minify electron code...?
+
+  if (target === 'browser' && command === 'build -p') {
+    plugins.push(minifyJsPlugin);
+  }
+
+  if (target === 'spa' && command === 'build -p') {
+    plugins.push(commonsChunkPlugin);
+    plugins.push(minifyJsPlugin);
+
+    // should this be used in non-spa's, too?
+    // should we remove loaderOptionsPlugin then?
+    plugins.push(productionOptionsPlugin);
+
+    // switch css plugin
+    pull(plugins, extractCssPlugin);
+    plugins.push(extractCssHashPlugin);
+  }
+
+  return { module: { rules }, plugins };
 };

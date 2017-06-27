@@ -1,7 +1,6 @@
 import { join } from 'path';
 import { yellow } from 'chalk';
 import { readJsonSync } from 'fs-extra-promise';
-import { CompilerOptions } from 'typescript';
 
 const unvalidatedProject = readJsonSync(join(process.cwd(), 'package.json'));
 let tsconfig: any;
@@ -124,7 +123,7 @@ export interface WsConfig {
   /**
    * If this is a TypeScript project, we will save the `tsconfig.json` here.
    */
-  tsconfig?: CompilerOptions;
+  tsconfig?: any;
   /**
    * Probably only needed for 'browser' projects currently.
    * See https://webpack.github.io/docs/configuration.html#externals.

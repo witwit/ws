@@ -14,8 +14,8 @@ import {
   launchSauceConnect
 } from '../lib/selenium';
 import { compile as compileI18n } from '../lib/i18n';
-import { spaE2eOptions } from '../lib/webpack/spa';
-import { compileAsync } from '../lib/webpack/common';
+import { getSpaE2eConfig } from '../lib/webpack/spa';
+import { compileAsync } from '../lib/webpack/compiler';
 
 function spawnE2e(options: any, browser: Browser) {
   return new Promise((resolve, reject) => {
@@ -70,7 +70,7 @@ async function init(options: any) {
   }
 
   await removeAsync(project.ws.distTestsDir);
-  await compileAsync(spaE2eOptions);
+  await compileAsync(getSpaE2eConfig());
 
   // prepare selenium
   let seleniumProcess: any;
@@ -117,9 +117,8 @@ async function init(options: any) {
 }
 
 async function run() {
-  const files = [
-    join(spaE2eOptions.output.path, spaE2eOptions.output.filename)
-  ];
+  const { output } = getSpaE2eConfig();
+  const files = [join(output.path, output.filename)];
   const exitCode = await testAsync(files);
   if (exitCode !== 0) {
     throw `${cyan('e2e')} failed.`;

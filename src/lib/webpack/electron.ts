@@ -1,78 +1,58 @@
 import {
-  WebpackSingleConfig,
-  outputDev,
-  getModuleConfig,
-  indexHtmlPlugin,
-  extractCssPlugin,
-  loaderOptionsPlugin,
-  resolveLoader,
-  devtool,
-  resolve,
-  defineProductionPlugin,
-  outputTest,
-  enzymeExternals
+  WebpackConfig,
+  enzymeExternals,
+  baseConfig,
+  electronMainConfig,
+  electronRendererConfig,
+  externalsSpa,
+  getEntryAndOutput,
+  getModuleAndPlugins
 } from './options';
-import { project } from '../../project';
 
-export const getElectronDevOptions = (): Array<WebpackSingleConfig> => {
-  const mainProcessConfig: WebpackSingleConfig = {
-    entry: {
-      electron: project.ws.srcElectronEntry
-    },
-    output: {
-      ...outputDev,
-      filename: '[name].js'
-    },
-    target: 'electron-main',
-    node: {
-      __dirname: false,
-      __filename: false
-    },
-    module: getModuleConfig('build'),
-    plugins: [indexHtmlPlugin, extractCssPlugin, loaderOptionsPlugin],
-    externals: project.ws.externals ? [project.ws.externals] : [],
-    resolveLoader,
-    performance: {
-      hints: false
-    },
-    resolve,
-    devtool
+export const getElectronBuildConfig = () => {
+  const mainConfig: WebpackConfig = {
+    ...baseConfig,
+    ...electronMainConfig,
+    ...getEntryAndOutput('electron-main', 'build'),
+    ...getModuleAndPlugins('electron-main', 'build'),
+    externals: externalsSpa // is this needed here?
   };
 
-  return [
-    mainProcessConfig,
-    {
-      ...mainProcessConfig,
-      target: 'electron-renderer',
-      entry: {
-        index: project.ws.srcEntry
-      }
-    }
-  ];
+  const rendererConfig: WebpackConfig = {
+    ...baseConfig,
+    ...electronRendererConfig,
+    ...getEntryAndOutput('electron-renderer', 'build'),
+    ...getModuleAndPlugins('electron-renderer', 'build'),
+    externals: externalsSpa // is this needed here?
+  };
+
+  return [mainConfig, rendererConfig];
 };
 
-export const getElectronReleaseOptions = () => {
-  const options = getElectronDevOptions();
+export const getElectronReleaseConfig = () => {
+  const mainConfig: WebpackConfig = {
+    ...baseConfig,
+    ...electronMainConfig,
+    ...getEntryAndOutput('electron-main', 'build -p'),
+    ...getModuleAndPlugins('electron-main', 'build -p'),
+    externals: externalsSpa // is this needed here?
+  };
 
-  return options.map(config => ({
-    ...config,
-    plugins: [...config.plugins!, defineProductionPlugin]
-  }));
+  const rendererConfig: WebpackConfig = {
+    ...baseConfig,
+    ...electronRendererConfig,
+    ...getEntryAndOutput('electron-renderer', 'build -p'),
+    ...getModuleAndPlugins('electron-renderer', 'build -p'),
+    externals: externalsSpa // is this needed here?
+  };
+
+  return [mainConfig, rendererConfig];
 };
 
-export const electronUnitOptions: WebpackSingleConfig = {
-  entry: project.ws.unitEntry,
-  output: outputTest,
-  module: getModuleConfig('unit'),
-  plugins: [extractCssPlugin, loaderOptionsPlugin],
-  target: 'electron-renderer',
-  externals: enzymeExternals.concat(
-    project.ws.externals ? [project.ws.externals] : []
-  ),
-  performance: {
-    hints: false
-  },
-  resolveLoader,
-  resolve,
-  devtool
-};
+export const getElectronUnitConfig = (): WebpackConfig => ({
+  ...baseConfig,
+  ...electronRendererConfig,
+  ...getEntryAndOutput('electron-renderer', 'unit'),
+  ...getModuleAndPlugins('electron-renderer', 'unit'),
+  externals: enzymeExternals
+});

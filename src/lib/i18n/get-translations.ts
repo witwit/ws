@@ -70,14 +70,12 @@ export async function getTranslations() {
   // at this place we know i18n config is set, no need for null checks
   const i18n = project.ws.i18n as I18nConfig;
 
-  const translatedModules: Array<
-    {
-      cwd: string;
-      dir: string;
-      features: Array<string>;
-      localesAndLanguages: Array<string>;
-    }
-  > = [];
+  const translatedModules: Array<{
+    cwd: string;
+    dir: string;
+    features: Array<string>;
+    localesAndLanguages: Array<string>;
+  }> = [];
 
   translatedModules.push({
     cwd: process.cwd(),

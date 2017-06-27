@@ -7,16 +7,16 @@ import {
   OtherComponent
 } from 'ws-examples-browser-ts-react-i18n';
 import { getCwd } from 'ws-examples-node-ts';
-import { WsIntlProvider } from 'ws-intl';
+import { Translations } from '@mercateo/ws-intl';
 
 render(
   <div>
-    <WsIntlProvider messages={require('../dist-i18n/en_GB')}>
+    <Translations messages={require('../dist-i18n/en_GB')}>
       <SomeComponent />
       <OtherComponent />
       {getCwd()}
       <HelloWorld />
-    </WsIntlProvider>
+    </Translations>
   </div>,
   document.getElementById('app')
 );

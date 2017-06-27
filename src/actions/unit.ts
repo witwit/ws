@@ -6,11 +6,11 @@ import { project, TYPE } from '../project';
 import { testAsync as karmaTestAsync } from '../lib/karma';
 import { testAsync as mochaTestAsync } from '../lib/mocha';
 import { compile as compileI18n } from '../lib/i18n';
-import { compileAsync } from '../lib/webpack/common';
-import { nodeUnitOptions } from '../lib/webpack/node';
-import { electronUnitOptions } from '../lib/webpack/electron';
-import { spaUnitOptions } from '../lib/webpack/spa';
-import { getBrowserUnitOptions } from '../lib/webpack/browser';
+import { compileAsync } from '../lib/webpack/compiler';
+import { getNodeUnitConfig } from '../lib/webpack/node';
+import { getElectronUnitConfig } from '../lib/webpack/electron';
+import { getSpaUnitConfig } from '../lib/webpack/spa';
+import { getBrowserUnitConfig } from '../lib/webpack/browser';
 
 export default async function unit(options: any) {
   const hasUnitTests = await existsAsync(project.ws.unitEntry);
@@ -28,10 +28,9 @@ export default async function unit(options: any) {
   let exitCode = 0;
   switch (project.ws.type) {
     case TYPE.NODE:
-      await compileAsync(nodeUnitOptions);
-      const files = [
-        path.join(nodeUnitOptions.output.path, nodeUnitOptions.output.filename)
-      ];
+      const config = getNodeUnitConfig();
+      await compileAsync(config);
+      const files = [path.join(config.output.path, config.output.filename)];
       exitCode = await mochaTestAsync(files);
       break;
     case TYPE.ELECTRON:
@@ -39,7 +38,7 @@ export default async function unit(options: any) {
         await compileI18n();
       }
 
-      await compileAsync(electronUnitOptions);
+      await compileAsync(getElectronUnitConfig());
       exitCode = await karmaTestAsync(options);
 
       break;
@@ -48,7 +47,7 @@ export default async function unit(options: any) {
         await compileI18n();
       }
 
-      await compileAsync(spaUnitOptions);
+      await compileAsync(getSpaUnitConfig());
       exitCode = await karmaTestAsync(options);
 
       break;
@@ -57,7 +56,7 @@ export default async function unit(options: any) {
         await compileI18n();
       }
 
-      await compileAsync(getBrowserUnitOptions());
+      await compileAsync(getBrowserUnitConfig());
       exitCode = await karmaTestAsync(options);
 
       break;

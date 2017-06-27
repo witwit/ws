@@ -2,18 +2,6 @@ import { warn, error, info, getLevel, levels } from 'loglevel';
 import webpack, { compiler } from 'webpack';
 import { WebpackConfig } from './options';
 
-// interface SingleStats extends compiler.Stats {
-//   compilation: any;
-// }
-// interface MultiStats {
-//   stats: SingleStats;
-// }
-// // it looks like nested stats called "MultiStats" are used in "multi-compiler" mode (e.g. an array of configs)
-// // interface MultiStats {
-// //   stats: compiler.Stats;
-// // }
-// type Stats = SingleStats | MultiStats;
-
 export const statsStringifierOptions: compiler.StatsToStringOptions = {
   // minimal logging
   assets: false,
@@ -44,7 +32,7 @@ function isVerbose(): boolean {
   return getLevel() <= levels['DEBUG'];
 }
 
-function optionallyProfile(options: WebpackConfig) {
+function optionallyProfile(options: WebpackConfig | WebpackConfig[]) {
   if (isVerbose()) {
     if (Array.isArray(options)) {
       options.map(option => (option.profile = true));
@@ -151,7 +139,7 @@ async function onChange(
   }
 }
 
-export function compileAsync(options: WebpackConfig) {
+export function compileAsync(options: WebpackConfig | WebpackConfig[]) {
   optionallyProfile(options);
   const compiler = webpack(options);
   return new Promise((resolve, reject) => {
@@ -161,7 +149,7 @@ export function compileAsync(options: WebpackConfig) {
 
 export function watchAsync(
   livereloadServer: any,
-  options: WebpackConfig,
+  options: WebpackConfig | WebpackConfig[],
   onChangeSuccess?: (stats: compiler.Stats) => void
 ) {
   optionallyProfile(options);

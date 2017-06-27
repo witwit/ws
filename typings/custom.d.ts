@@ -6,9 +6,9 @@
 
 declare module 'prettier';
 
-declare module 'autoprefixer';
+// declare module 'autoprefixer';
 
-declare function _import<T>(path: string): Promise<T>;
+declare function _import<T>(path: string): Promise<T>
 
 declare module 'stringify-object' {
   export interface Options {
@@ -16,7 +16,10 @@ declare module 'stringify-object' {
     singleQuotes?: boolean;
   }
 
-  export default function stringifyObject(input: any, options?: Options): string;
+  export default function stringifyObject(
+    input: any,
+    options?: Options
+  ): string;
 }
 
 declare module 'globby' {
@@ -49,7 +52,10 @@ declare module 'globby' {
     realpathCache?: any;
   }
 
-  export default function globby(pattern: string | string[], options?: Options): Promise<string[]>;
+  export default function globby(
+    pattern: string | string[],
+    options?: Options
+  ): Promise<string[]>;
 }
 
 declare module 'browserslist' {
@@ -72,7 +78,10 @@ declare module 'sauce-connect-launcher' {
     close: () => void;
   }
 
-  export default function sauceConnectLauncher(options: SauceConnectOptions, callback: (error: any, sauceConnectProcess: SauceConnectProcess) => void): void;
+  export default function sauceConnectLauncher(
+    options: SauceConnectOptions,
+    callback: (error: any, sauceConnectProcess: SauceConnectProcess) => void
+  ): void;
 }
 
 declare module 'properties' {
@@ -88,9 +97,19 @@ declare module 'properties' {
     include?: boolean;
   }
 
-  export function parse(data: string, options: ParseOptions, callback: (error: any, res: any) => void): void;
-  export function parse(data: string, callback: (error: any, res: any) => void): void;
-  export function parse(options: ParseOptions, callback: (error: any, res: any) => void): void;
+  export function parse(
+    data: string,
+    options: ParseOptions,
+    callback: (error: any, res: any) => void
+  ): void;
+  export function parse(
+    data: string,
+    callback: (error: any, res: any) => void
+  ): void;
+  export function parse(
+    options: ParseOptions,
+    callback: (error: any, res: any) => void
+  ): void;
   export function parse(data: string, options: ParseOptions): any;
   export function parse(options: ParseOptions): any;
 }
@@ -104,18 +123,17 @@ declare module 'openport' {
     avoid?: number[];
   }
 
-  export function find(options: FindOptions, callback: (error: any, port: number) => void): void;
-}
-
-declare module 'html-webpack-plugin' {
-  export default class HtmlWebpackPlugin {
-    constructor(...params: any[]);
-  }
+  export function find(
+    options: FindOptions,
+    callback: (error: any, port: number) => void
+  ): void;
 }
 
 declare module 'webpack-node-externals' {
   import webpack from 'webpack';
-  export default function WebpackNodeExternals(...params: any[]): webpack.ExternalsFunctionElement;
+  export default function WebpackNodeExternals(
+    ...params: any[]
+  ): webpack.ExternalsFunctionElement;
 }
 
 declare module 'loglevel' {
@@ -178,11 +196,17 @@ declare module 'selenium-webdriver/firefox';
 
 declare module 'selenium-standalone' {
   export function install(callback: (error: any) => void): void;
-  export function start(callback: (error: any, childProcess: any) => void): void;
+  export function start(
+    callback: (error: any, childProcess: any) => void
+  ): void;
 }
 
 declare module 'babel-core' {
-  export function transformFile(filename: string, options: any, callback: (error: any, result: any) => void): void;
+  export function transformFile(
+    filename: string,
+    options: any,
+    callback: (error: any, result: any) => void
+  ): void;
 }
 
 declare module 'livereload' {
@@ -194,19 +218,9 @@ declare module 'connect-livereload' {
     port: number;
   }
 
-  export default function livereloadMiddleware(options?: LivereloadMiddlewareOptions): void;
-}
-
-declare module 'extract-text-webpack-plugin' {
-  class ExtractTextWebpackPlugin {
-    constructor(...params: any[]);
-  }
-
-  namespace ExtractTextWebpackPlugin {
-    function extract(...params: any[]): any;
-  }
-
-  export default ExtractTextWebpackPlugin;
+  export default function livereloadMiddleware(
+    options?: LivereloadMiddlewareOptions
+  ): void;
 }
 
 declare module 'selenium-grid-status' {
@@ -227,5 +241,8 @@ declare module 'selenium-grid-status' {
     browser: SeleniumBrowser[];
   }
 
-  export function available(config: SeleniumGridConfig, callback: (error: any, result: SeleniumNode[]) => void): void;
+  export function available(
+    config: SeleniumGridConfig,
+    callback: (error: any, result: SeleniumNode[]) => void
+  ): void;
 }

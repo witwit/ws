@@ -14,7 +14,7 @@ const lintOptions: ILinterOptions = {
   fix: true
 };
 
-const defaultFilePatterns = [
+export const defaultFilePatterns = [
   `${project.ws.srcDir}/**/*.tsx`,
   `${project.ws.srcDir}/**/*.ts`,
   `${project.ws.testsDir}/**/*.tsx`,

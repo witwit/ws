@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { WsIntlConsumer } from 'ws-intl';
+import { Translate } from '@mercateo/ws-intl';
 
 /**
  * This component shows a translated message.
@@ -7,9 +7,9 @@ import { WsIntlConsumer } from 'ws-intl';
 export class SomeComponent extends Component<{}, {}> {
   render() {
     return (
-      <WsIntlConsumer>
+      <Translate>
         {(messages: I18N) => <p>{messages.someContent()}</p>}
-      </WsIntlConsumer>
+      </Translate>
     );
   }
 }
@@ -20,10 +20,10 @@ export class SomeComponent extends Component<{}, {}> {
 export class OtherComponent extends Component<{}, {}> {
   render() {
     return (
-      <WsIntlConsumer>
+      <Translate>
         {(messages: I18N) =>
           <p>{messages.contentWithMessageFormat({ count: 1 })}</p>}
-      </WsIntlConsumer>
+      </Translate>
     );
   }
 }

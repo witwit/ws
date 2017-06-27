@@ -30,9 +30,7 @@ interface EnhancedConfigOptions extends ConfigOptions {
     showDiff: boolean;
   };
   // with new formatError added in 1.3
-  formatError?(
-    msg: string
-  ): string;
+  formatError?(msg: string): string;
   // new in karma 1.5.0
   browserConsoleLogOptions: {
     level?: string;

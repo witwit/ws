@@ -19,9 +19,10 @@ export interface ILazyComponent<P> {
 
 @observer
 export class LazyComponent extends Component<LazyComponentProps, {}> {
-  @observable private result: IPromiseBasedObservable<
-    { default: ILazyComponent<any> }
-  > | null = null;
+  @observable
+  private result: IPromiseBasedObservable<{
+    default: ILazyComponent<any>;
+  }> | null = null;
 
   componentDidMount() {
     this.result = fromPromise(this.props.fetcher());

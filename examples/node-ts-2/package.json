@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "webpack": "src/index.ts",
-  "typings": "dist/src/index.d.ts",
+  "typings": "dist/index.d.ts",
   "private": true,
   "scripts": {
     "ws": "node ../../bin/ws"

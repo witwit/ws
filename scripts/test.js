@@ -6,7 +6,7 @@ const execSync = require('child_process').execSync;
 const rimrafSync = require('rimraf').sync;
 
 const examples = [
-  'ws-intl',
+  'browser-js',
   'browser-less',
   'browser-ts',
   'browser-ts-react',
@@ -36,7 +36,11 @@ examples.forEach(example => {
 
     // test commands
     execSync('npm run -s ws -- build', { cwd, stdio });
-    if (example.includes('spa') || example.includes('browser') || example.includes('electron') || example === 'ws-intl') {
+    if (
+      example.includes('spa') ||
+      example.includes('browser') ||
+      example.includes('electron')
+    ) {
       execSync('npm run -s ws -- build --production', { cwd, stdio });
     }
     execSync('npm run -s ws -- lint', { cwd, stdio });
@@ -56,7 +60,7 @@ examples.forEach(example => {
     //   server.kill();
     // }
   } catch (err) {
-     throw `[ERROR] Couldn't update "${example}"!`;
+    throw `[ERROR] Couldn't update "${example}"!`;
   }
   console.log(`Finished updating "${example}".`);
 });

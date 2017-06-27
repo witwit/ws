@@ -8,11 +8,11 @@ import { project, TYPE } from '../project';
 import { findAsync } from '../lib/openport';
 import { listenAsync } from '../lib/express';
 import { compile as compileI18n } from '../lib/i18n';
-import { watchAsync } from '../lib/webpack/common';
-import { nodeBuildOptions } from '../lib/webpack/node';
-import { getElectronDevOptions } from '../lib/webpack/electron';
-import { getSpaDevOptions } from '../lib/webpack/spa';
-import { getBrowserDevOptions } from '../lib/webpack/browser';
+import { watchAsync } from '../lib/webpack/compiler';
+import { getNodeBuildConfig } from '../lib/webpack/node';
+import { getElectronBuildConfig } from '../lib/webpack/electron';
+import { getSpaBuildConfig } from '../lib/webpack/spa';
+import { getBrowserBuildConfig } from '../lib/webpack/browser';
 
 export interface WatchOptions {
   locales: Array<string>;
@@ -32,7 +32,7 @@ export default async function watch() {
     );
   switch (project.ws.type) {
     case TYPE.NODE:
-      await watchAsync(livereloadServer, nodeBuildOptions, onChangeSuccess);
+      await watchAsync(livereloadServer, getNodeBuildConfig(), onChangeSuccess);
       break;
     case TYPE.ELECTRON:
       if (project.ws.i18n) {
@@ -41,7 +41,7 @@ export default async function watch() {
 
       await watchAsync(
         livereloadServer,
-        getElectronDevOptions(),
+        getElectronBuildConfig(),
         async (stats: any) => {
           onChangeSuccess(stats);
         }
@@ -55,7 +55,7 @@ export default async function watch() {
 
       await watchAsync(
         livereloadServer,
-        getSpaDevOptions(),
+        getSpaBuildConfig(),
         async (stats: any) => {
           onChangeSuccess(stats);
         }
@@ -69,7 +69,7 @@ export default async function watch() {
 
       await watchAsync(
         livereloadServer,
-        getBrowserDevOptions(),
+        getBrowserBuildConfig(),
         onChangeSuccess
       );
       break;

@@ -1,15 +1,15 @@
 import React from 'react';
 import expect from 'expect';
 import { HelloWorld } from '../src/HelloWorld';
-import { WsIntlProvider } from 'ws-intl';
+import { Translations } from '@mercateo/ws-intl';
 import { mount } from 'enzyme';
 
 describe('test my electron i18n app', () => {
   it('should render a react component', () => {
     const provider = mount(
-      <WsIntlProvider messages={require('../dist-i18n/en_GB')}>
+      <Translations messages={require('../dist-i18n/en_GB')}>
         <HelloWorld />
-      </WsIntlProvider>
+      </Translations>
     );
     const consumer = provider.childAt(0);
     const comp = consumer.childAt(0);

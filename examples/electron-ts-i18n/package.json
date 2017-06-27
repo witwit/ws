@@ -18,6 +18,7 @@
     "ws": "node ../../bin/ws"
   },
   "dependencies": {
+    "@mercateo/ws-intl": "^1.0.3",
     "@types/enzyme": "^2.8.0",
     "@types/node": "^7.0.23",
     "@types/react": "^15.0.25",
@@ -29,8 +30,7 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "ws-examples-browser-ts-react-i18n": "file:../browser-ts-react-i18n",
-    "ws-examples-node-ts": "file:../node-ts",
-    "ws-intl": "file:../ws-intl"
+    "ws-examples-node-ts": "file:../node-ts"
   },
   "devDependencies": {
     "@types/expect": "^1.20.1",
