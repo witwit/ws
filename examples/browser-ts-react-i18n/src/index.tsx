@@ -8,7 +8,10 @@ export class SomeComponent extends Component<{}, {}> {
   render() {
     return (
       <Translate>
-        {(messages: I18N) => <p>{messages.someContent()}</p>}
+        {(messages: I18N) =>
+          <p>
+            {messages.someContent()}
+          </p>}
       </Translate>
     );
   }
@@ -22,7 +25,9 @@ export class OtherComponent extends Component<{}, {}> {
     return (
       <Translate>
         {(messages: I18N) =>
-          <p>{messages.contentWithMessageFormat({ count: 1 })}</p>}
+          <p>
+            {messages.contentWithMessageFormat({ count: 1 })}
+          </p>}
       </Translate>
     );
   }
