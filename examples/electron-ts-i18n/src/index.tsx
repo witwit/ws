@@ -12,10 +12,12 @@ import { Translations } from '@mercateo/ws-intl';
 render(
   <div>
     <Translations messages={require('../dist-i18n/en_GB')}>
-      <SomeComponent />
-      <OtherComponent />
-      {getCwd()}
-      <HelloWorld />
+      <div>
+        <SomeComponent />
+        <OtherComponent />
+        {getCwd()}
+        <HelloWorld />
+      </div>
     </Translations>
   </div>,
   document.getElementById('app')
