@@ -141,7 +141,8 @@ async function onChange(
 
 export function compileAsync(options: WebpackConfig | WebpackConfig[]) {
   optionallyProfile(options);
-  const compiler = webpack(options);
+  // https://github.com/Microsoft/TypeScript/issues/16816
+  const compiler = webpack(options as any);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => onBuild(resolve, reject, err, stats));
   });
@@ -153,7 +154,8 @@ export function watchAsync(
   onChangeSuccess?: (stats: compiler.Stats) => void
 ) {
   optionallyProfile(options);
-  const compiler = webpack(options);
+  // https://github.com/Microsoft/TypeScript/issues/16816
+  const compiler = webpack(options as any);
   let isInitialBuild = true;
   let hash: any;
   return new Promise((resolve, reject) => {

@@ -93,7 +93,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
     files: [join(project.ws.distTestsDir, 'index.js')],
     preprocessors: {
       [join(project.ws.distTestsDir, 'index.js')]: (project.ws.type ===
-        'electron'
+      'electron'
         ? ['electron']
         : []).concat(['sourcemap'])
     }

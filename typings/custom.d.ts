@@ -110,7 +110,7 @@ declare module 'properties' {
     options: ParseOptions,
     callback: (error: any, res: any) => void
   ): void;
-  export function parse(data: string, options: ParseOptions): any;
+  export function parse(data: string, options?: ParseOptions): any;
   export function parse(options: ParseOptions): any;
 }
 

@@ -59,9 +59,10 @@ export const babelBrowser = {
     [
       resolveFile('babel-preset-env'),
       {
-        targets: project.ws.type === 'electron'
-          ? { electron: project.ws.targets.electron }
-          : { browsers: project.ws.targets.browsers },
+        targets:
+          project.ws.type === 'electron'
+            ? { electron: project.ws.targets.electron }
+            : { browsers: project.ws.targets.browsers },
         modules: false,
         useBuiltIns: true
       }
@@ -318,9 +319,8 @@ const mainFieldsBrowser = [
   'main'
 ];
 
-export const extensions = project.ws.entryExtension === 'js'
-  ? defaultExtensions
-  : tsExtensions;
+export const extensions =
+  project.ws.entryExtension === 'js' ? defaultExtensions : tsExtensions;
 
 export const resolve = {
   extensions,

@@ -1,5 +1,7 @@
 import { debug } from 'loglevel';
-import sauceConnectLauncher, { SauceConnectProcess } from 'sauce-connect-launcher';
+import sauceConnectLauncher, {
+  SauceConnectProcess
+} from 'sauce-connect-launcher';
 import { SeleniumGridConfig } from '../../project';
 
 /**

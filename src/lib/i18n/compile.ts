@@ -29,16 +29,17 @@ function getArgumentTypes(ast: any) {
       .filter((element: any) => element.type === 'argumentElement')
       .map((element: any) => ({
         key: element.id,
-        type: element.format && element.format.type === 'pluralFormat'
-          ? 'number'
-          : element.format && element.format.type === 'selectFormat'
-            ? element.format.options
-                .map(
-                  ({ selector }: any) =>
-                    selector === 'other' ? 'string' : `'${selector}'`
-                )
-                .join(' | ')
-            : 'string'
+        type:
+          element.format && element.format.type === 'pluralFormat'
+            ? 'number'
+            : element.format && element.format.type === 'selectFormat'
+              ? element.format.options
+                  .map(
+                    ({ selector }: any) =>
+                      selector === 'other' ? 'string' : `'${selector}'`
+                  )
+                  .join(' | ')
+              : 'string'
       })),
     'key'
   );
