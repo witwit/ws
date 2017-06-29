@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.0.0-7 (2017-06-29)
 
 - Fixed update notifier (same fix as in `1.0.2`).
 - Better performance by using [`happypack`](https://github.com/amireh/happypack) and [`fork-ts-checker-webpack-plugin`](https://github.com/Realytics/fork-ts-checker-webpack-plugin). This is a big change, but it _should not_ break anything.
