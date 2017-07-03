@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-8 (2017-07-03)
+
+- Unit tests for browsers were incorrectly compiled as releases (e.g. minified).
+
 # 2.0.0-7 (2017-06-29)
 
 - Fixed update notifier (same fix as in `1.0.2`).

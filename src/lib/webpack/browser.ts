@@ -26,6 +26,6 @@ export const getBrowserReleaseConfig = (): WebpackConfig => ({
 export const getBrowserUnitConfig = (): WebpackConfig => ({
   ...baseConfig,
   ...getEntryAndOutput('browser', 'unit'),
-  ...getModuleAndPlugins('browser', 'build -p'),
+  ...getModuleAndPlugins('browser', 'unit'),
   externals: enzymeExternals
 });
