@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-9 (2017-07-09)
+
+- Fix E2E command.
+
 # 2.0.0-8 (2017-07-03)
 
 - Unit tests for browsers were incorrectly compiled as releases (e.g. minified).

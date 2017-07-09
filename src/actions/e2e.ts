@@ -118,7 +118,7 @@ async function init(options: any) {
 
 async function run() {
   const { output } = getSpaE2eConfig();
-  const files = [join(output.path, output.filename)];
+  const files = [join(output.path, 'index.js')];
   const exitCode = await testAsync(files);
   if (exitCode !== 0) {
     throw `${cyan('e2e')} failed.`;
