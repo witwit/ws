@@ -11,7 +11,8 @@ export async function listenAsync(
 ) {
   const app = express();
 
-  middlewares.push(express.static(root));
+  app.use(project.ws.publicPath, express.static(root));
+
   middlewares.push(fallback('index.html', { root }));
 
   for (const middleware of middlewares) {
