@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-10 (2017-08-11)
+
+- Respect `publicPath` in development builds.
+
 # 2.0.0-9 (2017-07-09)
 
 - Fix E2E command.
