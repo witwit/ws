@@ -32,3 +32,19 @@ export class OtherComponent extends Component<{}, {}> {
     );
   }
 }
+
+/**
+ * This component is only used to test the nested message format.
+ */
+export class NestedMessageFormatComponent extends Component<{}, {}> {
+  render() {
+    return (
+      <Translate>
+        {(messages: I18N) =>
+          <p>
+            {messages.contentWithNestedMessageFormat({ count: 1, thing: 'X' })}
+          </p>}
+      </Translate>
+    );
+  }
+}
