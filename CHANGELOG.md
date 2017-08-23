@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-11 (2017-08-23)
+
+- [@floric](https://github.com/floric) fixed a bug, so we can now use a nested message format for translations.
+
 # 2.0.0-10 (2017-08-11)
 
 - Respect `publicPath` in development builds.
