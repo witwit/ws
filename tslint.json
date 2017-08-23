@@ -1,22 +1,13 @@
 {
   "rules": {
-    "ban": [
-      true,
-      [ "it", "only" ]
-    ],
-    "comment-format": [
-      true,
-      "check-space"
-    ],
+    "ban": [true, ["it", "only"], ["describe", "only"]],
+    "comment-format": [true, "check-space"],
     "class-name": true,
     "jsdoc-format": true,
     "no-angle-bracket-type-assertion": true,
     "no-conditional-assignment": true,
     "no-duplicate-variable": true,
-    "no-inferrable-types": [
-      true,
-      "ignore-params"
-    ],
+    "no-inferrable-types": [true, "ignore-params"],
     "no-internal-module": true,
     "no-misused-new": true,
     "no-reference": true,
@@ -24,9 +15,6 @@
     "no-unused-expression": true,
     "object-literal-shorthand": true,
     "prefer-for-of": true,
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ]
+    "triple-equals": [true, "allow-null-check"]
   }
 }
