@@ -86,6 +86,7 @@ export async function eslintAsync(filePatterns = defaultFilePatterns) {
   );
 
   const errorsCount = stats.errorCount;
-  const errors = await Promise.all(stats.results.map(formatter));
+  const errorsOrEmpty = await Promise.all(stats.results.map(formatter));
+  const errors = errorsOrEmpty.filter(Boolean);
   return { errors, errorsCount, fixedFiles };
 }
