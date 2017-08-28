@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-13 (2017-08-28)
+
+- Allow eslint to parse JSX \o/
+
 # 2.0.0-12 (2017-08-28)
 
 - Extend `ban` lint rule to disallow `describe.only`.
