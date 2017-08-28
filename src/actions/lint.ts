@@ -2,87 +2,93 @@ import { yellow, cyan, red } from 'chalk';
 import { error, info } from 'loglevel';
 import { existsAsync, readdirAsync } from 'fs-extra-promise';
 import { join } from 'path';
-import { lintAsync } from '../lib/tslint';
+import plur from 'plur';
+import { tslintAsync } from '../lib/tslint';
+import { eslintAsync } from '../lib/eslint';
 import { formatAsync } from '../lib/prettier';
 import { project } from '../project';
 
+const smile = cyan('(~‾▿‾)~');
+const files = (count: number) => plur('file', count);
+const errors = (count: number) => plur('error', count);
+
 export default async function lint() {
   // prettier
-  const formatCount = await formatAsync();
-  if (formatCount) {
-    info(
-      `automatically formatted ${cyan(formatCount.toString())} file(s) ${cyan(
-        '(~‾▿‾)~'
-      )}`
-    );
+  const formattedFiles = await formatAsync();
+
+  // tslint
+  const tsintResult = await tslintAsync();
+  if (tsintResult.errorsCount) {
+    error('');
+    error(tsintResult.errors.join('\n'));
+    error('');
   }
 
-  // typescript
-  const codeLintResult = await lintAsync();
-  if (codeLintResult.errorsCount) {
+  // eslint
+  const eslintResult = await eslintAsync();
+  if (eslintResult.errorsCount) {
     error('');
-    for (const { output } of codeLintResult.errors) {
-      error(output);
-      error('');
-    }
+    error(eslintResult.errors.join('\n'));
+    error('');
   }
 
   // documentation
-  const documentationErrors: Array<string> = [];
+  const docsErrors: Array<string> = [];
   if (!project.private) {
     if (!await existsAsync(join(process.cwd(), 'README.md'))) {
-      documentationErrors.push(`You have ${yellow('no README.md')}.`);
+      docsErrors.push(`You have ${yellow('no README.md')}.`);
     }
     if (!project.keywords || !project.keywords.length) {
-      documentationErrors.push(
+      docsErrors.push(
         `You have ${yellow('no keywords')} set in your ${yellow(
           'package.json'
         )}.`
       );
     }
     if (!project.description) {
-      documentationErrors.push(
+      docsErrors.push(
         `You have ${yellow('no description')} set in your ${yellow(
           'package.json'
         )}.`
       );
     }
     if (!await existsAsync(join(process.cwd(), 'examples'))) {
-      documentationErrors.push(`You have ${yellow('no examples/')} directory.`);
+      docsErrors.push(`You have ${yellow('no examples/')} directory.`);
     } else {
       const contents = (await readdirAsync(
         join(process.cwd(), 'examples')
       )).filter(content => content !== '.DS_Store');
       if (!contents.length) {
-        documentationErrors.push(
+        docsErrors.push(
           `Your ${yellow('examples/')} directory ${yellow('is empty')}.`
         );
       }
     }
   }
-  if (documentationErrors.length) {
+  if (docsErrors.length) {
     error('');
     error(
-      `You're project ${yellow(`isn't private`)}, but it has ${yellow(
-        documentationErrors.length.toString()
-      )} documentation failure(s).`
+      `You're project ${yellow(
+        `isn't private`
+      )}, but it has the following ${errors(docsErrors.length)}.`
     );
-    documentationErrors.forEach(msg => error(`  ${msg}`));
+    docsErrors.forEach(msg => error(`  ${msg}`));
     error('');
   }
 
   // result
-  if (codeLintResult.fixesCount) {
-    info(
-      `automatically fixed ${cyan(
-        codeLintResult.fixesCount.toString()
-      )} error(s) ${cyan('(~‾▿‾)~')}`
-    );
+  const totalFixes =
+    formattedFiles + tsintResult.fixedFiles + eslintResult.fixedFiles;
+  if (totalFixes) {
+    const count = cyan(totalFixes.toString());
+    info(`automatically fixed ${count} ${files(totalFixes)} ${smile}`);
   }
 
-  const totalErrors = codeLintResult.errorsCount + documentationErrors.length;
+  const totalErrors =
+    tsintResult.errorsCount + docsErrors.length + eslintResult.errorsCount;
   if (totalErrors) {
-    error(`found ${red(totalErrors.toString())} error(s)`);
+    const count = red(totalErrors.toString());
+    error(`found ${count} ${errors(totalErrors)}`);
     error('');
     throw `${cyan('lint')} failed.`;
   }

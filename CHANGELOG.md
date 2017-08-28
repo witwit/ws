@@ -1,8 +1,9 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.0.0-12 (2017-08-28)
 
 - Extend `ban` lint rule to disallow `describe.only`.
+- Added eslint support \o/
 
 # 2.0.0-11 (2017-08-23)
 

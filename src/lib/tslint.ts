@@ -21,7 +21,7 @@ export const defaultFilePatterns = [
   `${project.ws.testsDir}/**/*.ts`
 ];
 
-export async function lintAsync(filePatterns = defaultFilePatterns) {
+export async function tslintAsync(filePatterns = defaultFilePatterns) {
   const filePaths = await globby(filePatterns);
   const contents = (await Promise.all(
     filePaths.map(filePath => fs.readFileAsync(filePath, 'utf8') as any)
@@ -35,15 +35,17 @@ export async function lintAsync(filePatterns = defaultFilePatterns) {
     return linter.getResult();
   });
 
-  const errors = results.filter(result => !!result.errorCount);
+  const errors = results
+    .filter(result => !!result.errorCount)
+    .map(({ output }) => output);
   const errorsCount = results.reduce(
     (count, result) => count + result.failures.length,
     0
   );
-  const fixesCount = results.reduce(
-    (count, result) => count + (result.fixes ? result.fixes.length : 0),
+  const fixedFiles = results.reduce(
+    (count, result) => count + (result.fixes && result.fixes.length ? 1 : 0),
     0
   );
 
-  return { errors, errorsCount, fixesCount };
+  return { errors, errorsCount, fixedFiles };
 }

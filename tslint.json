@@ -1,7 +1,6 @@
 {
   "rules": {
     "ban": [true, ["it", "only"], ["describe", "only"]],
-    "comment-format": [true, "check-space"],
     "class-name": true,
     "jsdoc-format": true,
     "no-angle-bracket-type-assertion": true,
