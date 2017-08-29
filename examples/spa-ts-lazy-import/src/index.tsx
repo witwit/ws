@@ -42,25 +42,27 @@ export class LazyComponent extends Component<LazyComponentProps, {}> {
   }
 }
 
-const Prelude = () =>
+const Prelude = () => (
   <div>
     <p>
       Click here and the component <code>AppComponent</code> should be lazily
       loaded.
     </p>
     <Link to="/app">Show app.</Link>
-  </div>;
+  </div>
+);
 
 render(
   <Router history={hashHistory}>
     <Route path="/" component={Prelude} />
     <Route
       path="/app"
-      component={props =>
+      component={props => (
         <LazyComponent
           fetcher={() => _import<ILazyComponent<{}>>('./app')}
           {...props}
-        />}
+        />
+      )}
     />
   </Router>,
   document.getElementById('app')

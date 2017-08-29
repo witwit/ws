@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.0-15 (2017-08-29)
+
+- Enable `no-unused-variable` rule in TSLint.
+
 # 2.0.0-14 (2017-08-28)
 
 - Don't log empty lines in the case of eslint errors.

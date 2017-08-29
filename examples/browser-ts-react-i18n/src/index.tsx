@@ -8,10 +8,7 @@ export class SomeComponent extends Component<{}, {}> {
   render() {
     return (
       <Translate>
-        {(messages: I18N) =>
-          <p>
-            {messages.someContent()}
-          </p>}
+        {(messages: I18N) => <p>{messages.someContent()}</p>}
       </Translate>
     );
   }
@@ -24,10 +21,9 @@ export class OtherComponent extends Component<{}, {}> {
   render() {
     return (
       <Translate>
-        {(messages: I18N) =>
-          <p>
-            {messages.contentWithMessageFormat({ count: 1 })}
-          </p>}
+        {(messages: I18N) => (
+          <p>{messages.contentWithMessageFormat({ count: 1 })}</p>
+        )}
       </Translate>
     );
   }
@@ -40,10 +36,11 @@ export class NestedMessageFormatComponent extends Component<{}, {}> {
   render() {
     return (
       <Translate>
-        {(messages: I18N) =>
+        {(messages: I18N) => (
           <p>
             {messages.contentWithNestedMessageFormat({ count: 1, thing: 'X' })}
-          </p>}
+          </p>
+        )}
       </Translate>
     );
   }

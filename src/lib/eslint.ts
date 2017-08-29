@@ -3,7 +3,7 @@ import { join, relative } from 'path';
 import { dim, red } from 'chalk';
 import { CLIEngine } from 'eslint';
 import codeFrame from 'babel-code-frame';
-import { project } from '../project';
+import { defaultFilePatterns } from '../project';
 
 // relative from dist/index.js
 const configPath = join(__dirname, '..', '.eslintrc.json');
@@ -11,13 +11,6 @@ const config = readJsonSync(configPath);
 // learn about the caveats of `config.fix = true` here: https://github.com/eslint/eslint/issues/9147
 config.fix = true;
 const engine = new CLIEngine(config);
-
-const defaultFilePatterns = [
-  `${project.ws.srcDir}/**/*.tsx`,
-  `${project.ws.srcDir}/**/*.ts`,
-  `${project.ws.testsDir}/**/*.tsx`,
-  `${project.ws.testsDir}/**/*.ts`
-];
 
 interface Message {
   ruleId: string;

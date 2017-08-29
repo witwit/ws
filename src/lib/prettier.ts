@@ -3,19 +3,12 @@ import { readFileAsync, writeFileAsync } from 'fs-extra-promise';
 import globby from 'globby';
 import { error } from 'loglevel';
 import { red } from 'chalk';
-import { project } from '../project';
+import { defaultFilePatterns } from '../project';
 
 const options = {
   singleQuote: true,
   parser: 'typescript'
 };
-
-const defaultFilePatterns = [
-  `${project.ws.srcDir}/**/*.tsx`,
-  `${project.ws.srcDir}/**/*.ts`,
-  `${project.ws.testsDir}/**/*.tsx`,
-  `${project.ws.testsDir}/**/*.ts`
-];
 
 export async function formatAsync(filePatterns = defaultFilePatterns) {
   const filePaths = await globby(filePatterns);

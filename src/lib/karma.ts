@@ -71,17 +71,20 @@ const defaultConfig: EnhancedConfigOptions = {
   formatError(msg) {
     return msg
       .split('\n')
-      .reduce((list, line) => {
-        // filter node_modules
-        if (line.includes('/~/')) {
-          return list;
-        }
+      .reduce(
+        (list, line) => {
+          // filter node_modules
+          if (line.includes('/~/')) {
+            return list;
+          }
 
-        // show only source line (without webpack protocol)
-        const sourceLine = line.split(' <- ')[0].replace('webpack:///', './');
-        list.push(`    ${sourceLine}`);
-        return list;
-      }, [] as Array<string>)
+          // show only source line (without webpack protocol)
+          const sourceLine = line.split(' <- ')[0].replace('webpack:///', './');
+          list.push(`    ${sourceLine}`);
+          return list;
+        },
+        [] as Array<string>
+      )
       .join('\n');
   }
 };

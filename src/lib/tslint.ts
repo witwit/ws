@@ -1,8 +1,5 @@
 import { Linter, ILinterOptions, Configuration } from 'tslint';
-import fs from 'fs-extra-promise';
-import globby from 'globby';
 import { join } from 'path';
-import { project } from '../project';
 
 // relative from dist/index.js
 const configPath = join(__dirname, '..', 'tslint.json');
@@ -14,24 +11,16 @@ const lintOptions: ILinterOptions = {
   fix: true
 };
 
-export const defaultFilePatterns = [
-  `${project.ws.srcDir}/**/*.tsx`,
-  `${project.ws.srcDir}/**/*.ts`,
-  `${project.ws.testsDir}/**/*.tsx`,
-  `${project.ws.testsDir}/**/*.ts`
-];
+const program = Linter.createProgram('tsconfig.json');
 
-export async function tslintAsync(filePatterns = defaultFilePatterns) {
-  const filePaths = await globby(filePatterns);
-  const contents = (await Promise.all(
-    filePaths.map(filePath => fs.readFileAsync(filePath, 'utf8') as any)
-  )) as string[];
-
-  const results = filePaths.map((filePath, index) => {
-    const content = contents[index];
-    const configLoad = Configuration.findConfiguration(configPath, filePath);
-    const linter = new Linter(lintOptions);
-    linter.lint(filePath, content, configLoad.results);
+export async function tslintAsync() {
+  const files = Linter.getFileNames(program);
+  const results = files.map(file => {
+    const fileContents = program.getSourceFile(file).getFullText();
+    const configuration = Configuration.findConfiguration(configPath, file)
+      .results;
+    const linter = new Linter(lintOptions, program);
+    linter.lint(file, fileContents, configuration);
     return linter.getResult();
   });
 

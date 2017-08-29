@@ -31,7 +31,9 @@ function importTranslation(locale: string, feature: string, i18n: I18nConfig) {
         if (IGNORED_CONTENTS.some(content => body === content)) {
           resolve();
         } else {
-          outputFileAsync(outputPath, body).then(() => resolve()).catch(reject);
+          outputFileAsync(outputPath, body)
+            .then(() => resolve())
+            .catch(reject);
         }
       });
     }).on('error', reject);

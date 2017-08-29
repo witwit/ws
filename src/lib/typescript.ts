@@ -4,7 +4,7 @@ import { existsAsync } from 'fs-extra-promise';
 import { createProgram } from 'typescript';
 import { red } from 'chalk';
 import { project } from '../project';
-import { defaultFilePatterns } from './tslint';
+import { defaultFilePatterns } from '../project';
 
 export async function generateTypings(
   declarationDir: string,

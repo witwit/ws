@@ -363,3 +363,10 @@ export function validate(pkg: any): PackageConfig {
 }
 
 export const project = validate(unvalidatedProject);
+
+export const defaultFilePatterns = [
+  `${project.ws.srcDir}/**/*.tsx`,
+  `${project.ws.srcDir}/**/*.ts`,
+  `${project.ws.testsDir}/**/*.tsx`,
+  `${project.ws.testsDir}/**/*.ts`
+];

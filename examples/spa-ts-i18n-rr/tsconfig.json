@@ -7,15 +7,9 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "strictNullChecks": true,
     "jsx": "react",
-    "types": [
-      "mocha"
-    ]
+    "types": ["mocha"]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
