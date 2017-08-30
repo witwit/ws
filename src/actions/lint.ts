@@ -13,9 +13,6 @@ const files = (count: number) => plur('file', count);
 const errors = (count: number) => plur('error', count);
 
 export default async function lint() {
-  // prettier
-  const formattedFiles = await formatAsync();
-
   // tslint
   const tsintResult = await tslintAsync();
   if (tsintResult.errorsCount) {
@@ -31,6 +28,9 @@ export default async function lint() {
     error(eslintResult.errors.join('\n'));
     error('');
   }
+
+  // prettier
+  const formattedFiles = await formatAsync();
 
   // documentation
   const docsErrors: Array<string> = [];

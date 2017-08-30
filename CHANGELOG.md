@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Run prettier after TSLint and ESLint.
+
 # 2.0.0-15 (2017-08-29)
 
 - Enable `no-unused-variable` rule in TSLint.
