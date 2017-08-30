@@ -2,5 +2,16 @@
   "editor.formatOnSave": true,
   "typescript.tsdk": "./node_modules/typescript/lib",
   "tslint.configFile": "./tslint.json",
-  "prettier.singleQuote": true
+  "prettier.singleQuote": true,
+  "eslint.options": {
+    "configFile": "./.eslintrc.json"
+  },
+  // https://github.com/Microsoft/vscode-eslint/issues/284#issuecomment-325913370
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ]
 }

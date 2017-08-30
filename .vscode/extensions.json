@@ -5,6 +5,9 @@
     "eg2.tslint",
     // prettier support
     // see https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    // eslint support
+    // see https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+    "dbaeumer.vscode-eslint"
   ]
 }
