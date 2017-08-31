@@ -1,8 +1,9 @@
 import { yellow, cyan, red } from 'chalk';
-import { error, info } from 'loglevel';
+import { error, info, debug } from 'loglevel';
 import { existsAsync, readdirAsync } from 'fs-extra-promise';
 import { join } from 'path';
 import plur from 'plur';
+import { uniq } from 'lodash';
 import { tslintAsync } from '../lib/tslint';
 import { eslintAsync } from '../lib/eslint';
 import { formatAsync } from '../lib/prettier';
@@ -77,11 +78,17 @@ export default async function lint() {
   }
 
   // result
-  const totalFixes =
-    formattedFiles + tsintResult.fixedFiles + eslintResult.fixedFiles;
-  if (totalFixes) {
-    const count = cyan(totalFixes.toString());
-    info(`automatically fixed ${count} ${files(totalFixes)} ${smile}`);
+  // all file paths here are absolute
+  const fixedFiles = uniq([
+    ...tsintResult.fixedFiles,
+    ...eslintResult.fixedFiles,
+    ...formattedFiles
+  ]);
+
+  if (fixedFiles.length) {
+    const count = cyan(fixedFiles.length.toString());
+    info(`automatically fixed ${count} ${files(fixedFiles.length)} ${smile}`);
+    debug(`list of fixed files: ${fixedFiles.join(', ')}`);
   }
 
   const totalErrors =

@@ -4,11 +4,11 @@ import { existsAsync } from 'fs-extra-promise';
 import { createProgram } from 'typescript';
 import { red } from 'chalk';
 import { project } from '../project';
-import { defaultFilePatterns } from '../project';
+import { sourceFilePatterns } from '../project';
 
 export async function generateTypings(
   declarationDir: string,
-  filePatterns = defaultFilePatterns
+  filePatterns = sourceFilePatterns
 ) {
   if (project.typings) {
     const filePaths = await globby(filePatterns);

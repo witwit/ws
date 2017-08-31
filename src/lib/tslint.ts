@@ -11,30 +11,32 @@ const lintOptions: ILinterOptions = {
   fix: true
 };
 
-const program = Linter.createProgram('tsconfig.json');
-
 export async function tslintAsync() {
+  const program = Linter.createProgram('tsconfig.json');
   const files = Linter.getFileNames(program);
+
   const results = files.map(file => {
     const fileContents = program.getSourceFile(file).getFullText();
     const configuration = Configuration.findConfiguration(configPath, file)
       .results;
     const linter = new Linter(lintOptions, program);
     linter.lint(file, fileContents, configuration);
-    return linter.getResult();
+    const result = linter.getResult();
+    return { result, file };
   });
 
   const errors = results
-    .filter(result => !!result.errorCount)
-    .map(({ output }) => output);
+    .filter(({ result }) => !!result.errorCount)
+    .map(({ result }) => result.output);
+
   const errorsCount = results.reduce(
-    (count, result) => count + result.failures.length,
+    (count, { result }) => count + result.failures.length,
     0
   );
-  const fixedFiles = results.reduce(
-    (count, result) => count + (result.fixes && result.fixes.length ? 1 : 0),
-    0
-  );
+
+  const fixedFiles = results
+    .filter(({ result }) => result.fixes && result.fixes.length)
+    .map(({ file }) => file);
 
   return { errors, errorsCount, fixedFiles };
 }

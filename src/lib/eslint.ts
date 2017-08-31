@@ -3,7 +3,7 @@ import { join, relative } from 'path';
 import { dim, red } from 'chalk';
 import { CLIEngine } from 'eslint';
 import codeFrame from 'babel-code-frame';
-import { defaultFilePatterns } from '../project';
+import { sourceFilePatterns } from '../project';
 
 // relative from dist/index.js
 const configPath = join(__dirname, '..', '.eslintrc.json');
@@ -64,16 +64,16 @@ const formatter = async (result: Result) => {
   return `${filename}\n${messagesOutput.join('\n\n')}`;
 };
 
-export async function eslintAsync(filePatterns = defaultFilePatterns) {
+export async function eslintAsync(filePatterns = sourceFilePatterns) {
   const stats: Stats = engine.executeOnFiles(filePatterns);
 
-  let fixedFiles = 0;
+  const fixedFiles: string[] = [];
   await Promise.all(
     stats.results.map(async result => {
       const wasFixed = result.output !== undefined;
       if (wasFixed) {
+        fixedFiles.push(result.filePath);
         await writeFileAsync(result.filePath, result.output);
-        fixedFiles += 1;
       }
     })
   );

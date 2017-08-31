@@ -3,22 +3,22 @@ import { readFileAsync, writeFileAsync } from 'fs-extra-promise';
 import globby from 'globby';
 import { error } from 'loglevel';
 import { red } from 'chalk';
-import { defaultFilePatterns } from '../project';
+import { sourceFilePatterns } from '../project';
 
 const options = {
   singleQuote: true,
   parser: 'typescript'
 };
 
-export async function formatAsync(filePatterns = defaultFilePatterns) {
-  const filePaths = await globby(filePatterns);
-  const contents = (await Promise.all(
-    filePaths.map(filePath => readFileAsync(filePath, 'utf8') as any)
-  )) as string[];
+export async function formatAsync(filePatterns = sourceFilePatterns) {
+  const filePaths = await globby(filePatterns, { absolute: true });
+  const contents = await Promise.all(
+    filePaths.map(filePath => readFileAsync(filePath, 'utf8'))
+  );
 
-  let fixesCount = 0;
+  const fixedFiles: string[] = [];
   await Promise.all(
-    filePaths.map((filePath, index) => {
+    filePaths.map(async (filePath, index) => {
       const content = contents[index];
       let formattedContent;
 
@@ -30,11 +30,11 @@ export async function formatAsync(filePatterns = defaultFilePatterns) {
       }
 
       if (content !== formattedContent) {
-        fixesCount += 1;
-        writeFileAsync(filePath, formattedContent);
+        fixedFiles.push(filePath);
+        await writeFileAsync(filePath, formattedContent);
       }
     })
   );
 
-  return fixesCount;
+  return fixedFiles;
 }

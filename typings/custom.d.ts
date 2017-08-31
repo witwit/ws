@@ -24,6 +24,7 @@ declare module 'stringify-object' {
 
 declare module 'globby' {
   export interface Options {
+    absolute?: boolean;
     cwd?: string;
     root?: string;
     dot?: boolean;

@@ -1,8 +1,9 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.0.0-16 (2017-08-31)
 
 - Run prettier after TSLint and ESLint.
+- If a file was changed by TSLint, ESLint _and_ prettier it will only be logged as _one_ file change.
 
 # 2.0.0-15 (2017-08-29)
 
