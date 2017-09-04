@@ -13,13 +13,13 @@ const lintOptions: ILinterOptions = {
 
 export async function tslintAsync() {
   const program = Linter.createProgram('tsconfig.json');
+  const linter = new Linter(lintOptions, program);
   const files = Linter.getFileNames(program);
 
   const results = files.map(file => {
     const fileContents = program.getSourceFile(file).getFullText();
     const configuration = Configuration.findConfiguration(configPath, file)
       .results;
-    const linter = new Linter(lintOptions, program);
     linter.lint(file, fileContents, configuration);
     const result = linter.getResult();
     return { result, file };
