@@ -1,5 +1,6 @@
 import { Linter, ILinterOptions, Configuration } from 'tslint';
 import { join } from 'path';
+import { uniq } from 'lodash';
 
 // relative from dist/index.js
 const configPath = join(__dirname, '..', 'tslint.json');
@@ -16,27 +17,16 @@ export async function tslintAsync() {
   const linter = new Linter(lintOptions, program);
   const files = Linter.getFileNames(program);
 
-  const results = files.map(file => {
+  files.forEach(file => {
     const fileContents = program.getSourceFile(file).getFullText();
-    const configuration = Configuration.findConfiguration(configPath, file)
-      .results;
-    linter.lint(file, fileContents, configuration);
-    const result = linter.getResult();
-    return { result, file };
+    const conf = Configuration.findConfiguration(configPath, file).results;
+    linter.lint(file, fileContents, conf);
   });
 
-  const errors = results
-    .filter(({ result }) => !!result.errorCount)
-    .map(({ result }) => result.output);
-
-  const errorsCount = results.reduce(
-    (count, { result }) => count + result.failures.length,
-    0
-  );
-
-  const fixedFiles = results
-    .filter(({ result }) => result.fixes && result.fixes.length)
-    .map(({ file }) => file);
+  const result = linter.getResult();
+  const errors = result.output;
+  const errorsCount = result.errorCount;
+  const fixedFiles = uniq((result.fixes || []).map(({ fileName }) => fileName));
 
   return { errors, errorsCount, fixedFiles };
 }

@@ -18,7 +18,7 @@ export default async function lint() {
   const tsintResult = await tslintAsync();
   if (tsintResult.errorsCount) {
     error('');
-    error(tsintResult.errors.join('\n'));
+    error(tsintResult.errors);
     error('');
   }
 
