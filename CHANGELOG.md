@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# 2.0.1 (2017-09-05)
+# 2.0.0 (2017-09-05)
 
 - Fixed incorrect TSLint logging.
 
