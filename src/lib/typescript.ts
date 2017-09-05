@@ -1,3 +1,4 @@
+import { debug } from 'loglevel';
 import { join } from 'path';
 import globby from 'globby';
 import { existsAsync } from 'fs-extra-promise';
@@ -11,6 +12,7 @@ export async function generateTypings(
   filePatterns = sourceFilePatterns
 ) {
   if (project.typings) {
+    debug('Generate typings.');
     const filePaths = await globby(filePatterns);
     const options = {
       declaration: true,

@@ -62,8 +62,10 @@ export default async function build(options: BuildOptions) {
       break;
   }
 
-  // typings (only if typings are set in package.json)
+  // typings (will be only genereated, if typings are set in package.json)
   if (options.production) {
     await generateTypings(project.ws.distReleaseDir);
+  } else if (project.ws.type === TYPE.NODE) {
+    await generateTypings(project.ws.distDir);
   }
 }
