@@ -6,7 +6,7 @@ import { cyan, yellow, magenta } from 'chalk';
 import { project, SeleniumGridConfig } from '../project';
 import { testAsync } from '../lib/mocha';
 import {
-  startSeleniumServer,
+  runSeleniumServer,
   Browser,
   parseBrowser,
   getBrowsers,
@@ -17,20 +17,20 @@ import { compile as compileI18n } from '../lib/i18n';
 import { getSpaE2eConfig } from '../lib/webpack/spa';
 import { compileAsync } from '../lib/webpack/compiler';
 
-function spawnE2e(options: any, browser: Browser) {
+function spawnE2e(options: any, { browserName, version, id }: Browser) {
+  debug(`Spawn E2E test for ${id}.`);
+
   return new Promise((resolve, reject) => {
     const [node, ws] = process.argv;
     const env = Object.assign({}, process.env, {
       WS_E2E_IS_SPAWNED: true,
       WS_E2E_SELENIUM_URL: options.seleniumUrl,
-      WS_E2E_BROWSER_NAME: browser.browserName,
-      WS_E2E_BROWSER_VERSION: browser.version,
+      WS_E2E_BROWSER_NAME: browserName,
+      WS_E2E_BROWSER_VERSION: version,
       FORCE_COLOR: 'true'
     });
 
-    const childPrefix = `[${magenta(
-      browser.browserName + (browser.version ? `-${browser.version}` : '')
-    )}] `;
+    const childPrefix = `[${magenta(id)}] `;
     const childProcess = spawn(
       node,
       [ws, 'e2e', '--log-level', options.parent.logLevel],
@@ -57,6 +57,8 @@ function spawnE2e(options: any, browser: Browser) {
 }
 
 async function init(options: any) {
+  debug(`Init E2E tests.`);
+
   // build
   const e2eEntry = `./${project.ws.testsDir}/e2e.${project.ws.entryExtension}`;
   const hasE2eTests = await existsAsync(e2eEntry);
@@ -71,6 +73,7 @@ async function init(options: any) {
 
   await removeAsync(project.ws.distTestsDir);
   await compileAsync(getSpaE2eConfig());
+  debug(`Build E2E tests.`);
 
   // prepare selenium
   let seleniumProcess: any;
@@ -92,12 +95,13 @@ async function init(options: any) {
     }
   } else {
     options.seleniumUrl = `http://localhost:4444/wd/hub`;
-    seleniumProcess = await startSeleniumServer();
+    seleniumProcess = await runSeleniumServer();
     const defaultBrowsers = 'ff'; // 'chrome,ff'
     browsers = (options.browsers || defaultBrowsers)
       .split(',')
       .map(parseBrowser);
   }
+  debug(`Configured selenium.`);
 
   // spawn tests
   // TODO: For now run everything in parallel. We could check `options.sequentially` to run it  sequentially in the future.

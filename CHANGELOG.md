@@ -1,5 +1,10 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Added better debug logging for running E2E tests.
+- Added timeout for installing Selenium.
+
 # 2.0.0 (2017-09-05)
 
 - Fixed incorrect TSLint logging.

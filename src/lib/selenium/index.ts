@@ -1,5 +1,4 @@
 import { Browser } from './get-browsers';
-
 export {
   queryBrowsers,
   getFilteredAvailableBrowsers,
@@ -7,7 +6,7 @@ export {
   Browser,
   getBrowsers
 } from './get-browsers';
-export { startSeleniumServer } from './selenium-standalone';
+export { runSeleniumServer } from './selenium-standalone';
 export { launchSauceConnect } from './sauce-connect';
 
 // converts
