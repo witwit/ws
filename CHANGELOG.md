@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.1 (2017-09-05)
+
+- Fixed incorrect TSLint logging.
+
 # 2.0.0-17 (2017-09-04)
 
 - Fixed error in TSLint usage (see [this issue](https://github.com/palantir/tslint/issues/3188)).
