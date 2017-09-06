@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.2 (2017-09-06)
+
+- Use new major version of `typescript-eslint-parser`.
+
 # 2.0.1 (2017-09-05)
 
 - Added better debug logging for running E2E tests.
