@@ -1,8 +1,6 @@
 import { install, start } from 'selenium-standalone';
 import { warn } from 'loglevel';
 
-const TIMEOUT_LIMIT = 10000;
-
 const timeout = duration =>
   new Promise((_, reject) =>
     setTimeout(() => reject(new Error('TIMEOUT')), duration)
