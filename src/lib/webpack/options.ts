@@ -190,8 +190,7 @@ export const cssRule: Rule = {
           sourceMap: true,
           plugins: () => [
             autoprefixer({
-              // see PR: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/17484
-              browsers: project.ws.targets.browsers as any
+              browsers: project.ws.targets.browsers
             })
           ]
         }
@@ -221,8 +220,7 @@ export const lessRule: Rule = {
           sourceMap: true,
           plugins: () => [
             autoprefixer({
-              // see PR: https://github.com/DefinitelyTyped/DefinitelyTyped/pull/17484
-              browsers: project.ws.targets.browsers as any
+              browsers: project.ws.targets.browsers
             })
           ]
         }
@@ -346,6 +344,8 @@ export const productionOptionsPlugin = new webpack.LoaderOptionsPlugin({
 
 export const forkTsCheckerPlugin = new ForkTsCheckerWebpackPlugin({
   silent: true,
+  async: false,
+  checkSyntacticErrors: true,
   // `watch` is optional, but docs say it improves performance (less stat calls)
   watch: [project.ws.srcDir, project.ws.testsDir]
 });

@@ -125,9 +125,9 @@ async function onChange(
   // filter changes for live reloading
   const modules = getModules(stats);
   const changedModules = modules.filter(
-    (module: any) => module.built && module.resource
+    module => module.built && module.resource
   );
-  const changedStyleModules = changedModules.filter((module: any) =>
+  const changedStyleModules = changedModules.filter(module =>
     module.resource.match(/\.(css|less|sass)$/)
   );
   let hasOnlyStyleChanges =

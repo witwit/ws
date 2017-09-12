@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.3 (2017-09-12)
+
+- Fix: TypeScript errors are now logged again in watch mode.
+
 # 2.0.2 (2017-09-06)
 
 - Use new major version of `typescript-eslint-parser`.
