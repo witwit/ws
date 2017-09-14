@@ -1,19 +1,16 @@
 The changelog is currently handwritten.
 
-# 2.0.4 (2017-09-14)
+# 2.0.3 (2017-09-14)
 
 - Fixed edge case where non-source files were linted by TSLint.
 
-# 2.0.3 (2017-09-12)
+# 2.0.2 (2017-09-12)
 
 - Fix: TypeScript errors are now logged again in watch mode.
 
-# 2.0.2 (2017-09-06)
+# 2.0.1 (2017-09-06)
 
-- Use new major version of `typescript-eslint-parser`.
-
-# 2.0.1 (2017-09-05)
-
+- Use new major version of `typescript-eslint-parser` so it's compatible with newest TypeScript version.
 - Added better debug logging for running E2E tests.
 - Added timeout for installing Selenium.
 - Oh snap! Declaration files weren't emitted for Node projects. Now they are.
