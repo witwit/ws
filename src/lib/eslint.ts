@@ -65,7 +65,7 @@ const formatter = async (result: Result) => {
 };
 
 export async function eslintAsync(filePatterns = sourceFilePatterns) {
-  const stats: Stats = engine.executeOnFiles(filePatterns);
+  const stats: Stats = engine.executeOnFiles([filePatterns]);
 
   const fixedFiles: string[] = [];
   await Promise.all(

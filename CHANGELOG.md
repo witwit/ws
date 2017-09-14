@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.0.4 (2017-09-14)
+
+- Fixed edge case where non-source files were linted by TSLint.
+
 # 2.0.3 (2017-09-12)
 
 - Fix: TypeScript errors are now logged again in watch mode.
