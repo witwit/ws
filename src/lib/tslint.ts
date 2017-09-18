@@ -17,7 +17,7 @@ const lintOptions: ILinterOptions = {
 // a matcher which checks, if a given absolute path matches your source files
 const sourceFileMatcher = globToRegExp(
   join(process.cwd(), sourceFilePatterns),
-  { extended: true }
+  { extended: true, globstar: true }
 );
 const isSourceFile = (file: string) => file.match(sourceFileMatcher);
 
