@@ -146,7 +146,7 @@ switch (project.ws.type) {
 }
 
 // handle unknown commands
-commander.on('*', (unknownCommand: string) => {
+commander.on('command:*', (unknownCommand: string) => {
   commander.outputHelp();
   throw `${yellow(
     unknownCommand

@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Small fix: If you use an unknown command the help is shown again.
+
 # 2.0.4 (2017-09-18)
 
 - Fixed issue where some source files were _not_ linted by TSLint.
