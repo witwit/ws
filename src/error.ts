@@ -42,7 +42,7 @@ export function handleError(err: Error) {
   }
 
   error(`${red('error!')} ( ╯°□°)╯ ┻━━┻`);
-  process.exit(1);
+  process.exitCode = 1;
 }
 
 process.on('uncaughtException', handleError);

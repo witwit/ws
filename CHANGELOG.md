@@ -4,6 +4,7 @@ The changelog is currently handwritten.
 
 - Small fix: If you use an unknown command the help is shown again.
 - Small fix: `watch` should not show too many initial builds anymore.
+- Small fix: Exit gracefully, so logs aren't cut off in edge cases.
 
 # 2.0.4 (2017-09-18)
 
