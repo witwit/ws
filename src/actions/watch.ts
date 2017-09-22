@@ -42,9 +42,7 @@ export default async function watch() {
       await watchAsync(
         livereloadServer,
         getElectronBuildConfig(),
-        async (stats: any) => {
-          onChangeSuccess(stats);
-        }
+        onChangeSuccess
       );
 
       break;
@@ -53,13 +51,7 @@ export default async function watch() {
         await compileI18n();
       }
 
-      await watchAsync(
-        livereloadServer,
-        getSpaBuildConfig(),
-        async (stats: any) => {
-          onChangeSuccess(stats);
-        }
-      );
+      await watchAsync(livereloadServer, getSpaBuildConfig(), onChangeSuccess);
 
       break;
     case TYPE.BROWSER:

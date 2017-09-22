@@ -156,6 +156,18 @@ export function watchAsync(
   optionallyProfile(options);
   // https://github.com/Microsoft/TypeScript/issues/16816
   const compiler = webpack(options as any);
+
+  // workaround for too many initial builds
+  // see https://github.com/webpack/watchpack/issues/25#issuecomment-319292564
+  const timefix = 11000;
+  compiler.plugin('watch-run', (watching, callback) => {
+    watching.startTime += timefix;
+    callback();
+  });
+  compiler.plugin('done', stats => {
+    stats.startTime -= timefix;
+  });
+
   let isInitialBuild = true;
   let hash: any;
   return new Promise((resolve, reject) => {
