@@ -30,6 +30,7 @@ commander.option(
   },
   'info'
 );
+commander.option('-u, --ignore-updates', 'ignore updates');
 
 function handleAction(
   importAction: () => Promise<{ default: (options?: any) => Promise<any> }>
@@ -39,15 +40,18 @@ function handleAction(
     setLevel(levels[options.parent.logLevel.toUpperCase()]);
     // handle specific action
     try {
-      // update notifier runs parallel to action
-      const handleUpdateNotifier = project.ws.ignoreUpdates
+      // update notifier runs parallel to action (if it's not ignored)
+      const ignoreUpdates =
+        options.parent.ignoreUpdate || project.ws.ignoreUpdates;
+      const handleUpdateNotifier = ignoreUpdates
         ? undefined
         : initializeUpdateNotifier(pkg.version);
-      console.log('handleUpdateNotifier', !!handleUpdateNotifier);
+
       info(`run ${cyan(options.name())}...`);
       const actionModule = await importAction();
       await actionModule.default(options);
       info(`finished ${cyan(options.name())} ♥`);
+
       if (handleUpdateNotifier) {
         handleUpdateNotifier();
       }

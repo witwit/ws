@@ -211,9 +211,9 @@ export interface WsConfig {
    */
   i18n?: I18nConfig;
   /**
-   * Set this to `true` to ignore update notifications. Defaults to `false`.
+   * Set this to `true` to ignore update notifications.
    */
-  ignoreUpdates: boolean;
+  ignoreUpdates?: boolean;
 }
 
 export interface PackageConfig {
@@ -362,9 +362,6 @@ export function validate(pkg: any): PackageConfig {
       pkg.ws.selenium.password = process.env[pkg.ws.selenium.envPassword];
     }
   }
-
-  // default for update notification
-  pkg.ws.ignoreUpdates = !!pkg.ws.ignoreUpdates;
 
   return pkg;
 }

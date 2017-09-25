@@ -7,6 +7,7 @@ The changelog is currently handwritten.
 - Small fix: Exit gracefully, so logs aren't cut off in edge cases.
 - Update notifier now runs in parallel and is aborted, if it's too slow.
 - You can set `"ws": { "ignoreUpdates": true }` in your `package.json` to disable the update notifier.
+- You can also ignore updates via command line: `-u` or `--ingore-updates`.
 
 # 2.0.4 (2017-09-18)
 
