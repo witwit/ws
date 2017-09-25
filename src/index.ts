@@ -3,6 +3,7 @@ import commander from 'commander';
 import { info, setLevel, levels } from 'loglevel';
 import { yellow, cyan } from 'chalk';
 import { project, TYPE } from './project';
+import { initializeUpdateNotifier } from './lib/update-notifier';
 
 // common setup
 const pkg = require('../package.json');
@@ -31,19 +32,23 @@ commander.option(
 );
 
 function handleAction(
-  lazyAction: () => Promise<{ default: (options?: any) => Promise<any> }>
+  importAction: () => Promise<{ default: (options?: any) => Promise<any> }>
 ) {
-  return (options: any) => {
+  return async (options: any) => {
     // handle global options
     setLevel(levels[options.parent.logLevel.toUpperCase()]);
     // handle specific action
-    return _import<any>('./lib/update-notifier')
-      .then(module => module.updateNotifier(pkg.version))
-      .then(() => info(`run ${cyan(options.name())}...`))
-      .then(() => lazyAction())
-      .then(module => module.default(options))
-      .then(() => info(`finished ${cyan(options.name())} ♥`))
-      .catch(handleError);
+    try {
+      // update notifier runs parallel to action
+      const handleUpdateNotifier = initializeUpdateNotifier(pkg.version);
+      info(`run ${cyan(options.name())}...`);
+      const actionModule = await importAction();
+      await actionModule.default(options);
+      info(`finished ${cyan(options.name())} ♥`);
+      handleUpdateNotifier();
+    } catch (err) {
+      handleError(err);
+    }
   };
 }
 
