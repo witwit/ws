@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.1.0 (2017-09-25)
 
 - Small fix: If you use an unknown command the help is shown again.
 - Small fix: `watch` should not show too many initial builds anymore.
