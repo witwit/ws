@@ -6,6 +6,7 @@ The changelog is currently handwritten.
 - Small fix: `watch` should not show too many initial builds anymore.
 - Small fix: Exit gracefully, so logs aren't cut off in edge cases.
 - Update notifier now runs in parallel and is aborted, if it's too slow.
+- You can set `"ws": { "ignoreUpdates": true }` in your `package.json` to disable the update notifier.
 
 # 2.0.4 (2017-09-18)
 

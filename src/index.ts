@@ -40,12 +40,17 @@ function handleAction(
     // handle specific action
     try {
       // update notifier runs parallel to action
-      const handleUpdateNotifier = initializeUpdateNotifier(pkg.version);
+      const handleUpdateNotifier = project.ws.ignoreUpdates
+        ? undefined
+        : initializeUpdateNotifier(pkg.version);
+      console.log('handleUpdateNotifier', !!handleUpdateNotifier);
       info(`run ${cyan(options.name())}...`);
       const actionModule = await importAction();
       await actionModule.default(options);
       info(`finished ${cyan(options.name())} ♥`);
-      handleUpdateNotifier();
+      if (handleUpdateNotifier) {
+        handleUpdateNotifier();
+      }
     } catch (err) {
       handleError(err);
     }
