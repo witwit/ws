@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.1.1 (2017-09-26)
 
 - If generated declarations contain errors, they are now logged correctly.
 
