@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- If generated declarations contain errors, they are now logged correctly.
+
 # 2.1.0 (2017-09-25)
 
 - Small fix: If you use an unknown command the help is shown again.
