@@ -53,18 +53,6 @@ export default async function lint() {
         )}.`
       );
     }
-    if (!await existsAsync(join(process.cwd(), 'examples'))) {
-      docsErrors.push(`You have ${yellow('no examples/')} directory.`);
-    } else {
-      const contents = (await readdirAsync(
-        join(process.cwd(), 'examples')
-      )).filter(content => content !== '.DS_Store');
-      if (!contents.length) {
-        docsErrors.push(
-          `Your ${yellow('examples/')} directory ${yellow('is empty')}.`
-        );
-      }
-    }
   }
   if (docsErrors.length) {
     error('');

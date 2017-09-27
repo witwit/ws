@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Removed the linter check for the `examples/` directory based on feedback and because examples could be placed quite differently in workspace based projects.
+
 # 2.1.1 (2017-09-26)
 
 - If generated declarations contain errors, they are now logged correctly.
