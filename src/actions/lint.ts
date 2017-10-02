@@ -1,6 +1,6 @@
 import { yellow, cyan, red } from 'chalk';
 import { error, info, debug } from 'loglevel';
-import { existsAsync, readdirAsync } from 'fs-extra-promise';
+import { existsAsync } from 'fs-extra-promise';
 import { join } from 'path';
 import plur from 'plur';
 import { uniq } from 'lodash';
