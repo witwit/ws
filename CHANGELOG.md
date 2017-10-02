@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.2.0 (2017-10-02)
 
 - Removed the linter check for the `examples/` directory based on feedback and because examples could be placed quite differently in workspace based projects.
 - Added a _highly_ experimental feature to modify our webpack config. See [here](examples/browser-ts-react/ws.config.js).
