@@ -4,15 +4,16 @@ const WebpackNodeExternals = require('webpack-node-externals');
 
 const babelConfig = {
   presets: [
-    ['babel-preset-env', {
-      targets: { node: '6.10' },
-      useBuiltIns: true
-    }],
+    [
+      'babel-preset-env',
+      {
+        targets: { node: '6.10' },
+        useBuiltIns: true
+      }
+    ],
     'babel-preset-stage-0'
   ],
-  plugins: [
-    'babel-plugin-transform-decorators-legacy'
-  ]
+  plugins: ['babel-plugin-transform-decorators-legacy']
 };
 
 module.exports = {
@@ -27,14 +28,11 @@ module.exports = {
     chunkModules: false,
     children: false
   },
-  entry: [
-    'source-map-support/register',
-    './src/index.ts'
-  ],
+  entry: ['source-map-support/register', './src/index.ts'],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'index.js',
-    sourcePrefix: ''  // removes tabs before multiline strings
+    sourcePrefix: '' // removes tabs before multiline strings
   },
   module: {
     rules: [
@@ -83,6 +81,6 @@ module.exports = {
   devtool: 'cheap-module-inline-source-map',
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
-    extensions: [ '.ts', '.tsx', '.js' ]
+    extensions: ['.ts', '.tsx', '.js']
   }
 };
