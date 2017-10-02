@@ -15,7 +15,11 @@ describe('test my code', () => {
       'foo',
       '! Sum is ',
       3,
-      '.'
+      '. This is for @otbe.'
     ]);
+  });
+
+  it('should use custom babel plugin for markdown', () => {
+    expect(markdown`# hello`).toBe('<h1>hello</h1>\n');
   });
 });

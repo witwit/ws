@@ -1,6 +1,8 @@
 import { warn, error, info, getLevel, levels } from 'loglevel';
 import webpack, { compiler } from 'webpack';
-import { WebpackConfig } from './options';
+import { existsSync } from 'fs-extra-promise';
+import { join } from 'path';
+import { WebpackConfig, Command } from './options';
 
 export const statsStringifierOptions: compiler.StatsToStringOptions = {
   // minimal logging
@@ -139,8 +141,24 @@ async function onChange(
   }
 }
 
-export function compileAsync(options: WebpackConfig | WebpackConfig[]) {
+function optionallyModifyWebpackConfig(
+  options: WebpackConfig | WebpackConfig[],
+  command: Command
+) {
+  const path = join(process.cwd(), 'ws.config.js');
+  const exists = existsSync(path);
+  if (exists) {
+    const modifyWebpackConfig = __non_webpack_require__(path);
+    modifyWebpackConfig(command, options);
+  }
+}
+
+export function compileAsync(
+  options: WebpackConfig | WebpackConfig[],
+  command: Command
+) {
   optionallyProfile(options);
+  optionallyModifyWebpackConfig(options, command);
   // https://github.com/Microsoft/TypeScript/issues/16816
   const compiler = webpack(options as any);
   return new Promise((resolve, reject) => {
@@ -151,9 +169,11 @@ export function compileAsync(options: WebpackConfig | WebpackConfig[]) {
 export function watchAsync(
   livereloadServer: any,
   options: WebpackConfig | WebpackConfig[],
+  command: Command,
   onChangeSuccess?: (stats: compiler.Stats) => void
 ) {
   optionallyProfile(options);
+  optionallyModifyWebpackConfig(options, command);
   // https://github.com/Microsoft/TypeScript/issues/16816
   const compiler = webpack(options as any);
 

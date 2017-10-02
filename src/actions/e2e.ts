@@ -72,7 +72,7 @@ async function init(options: any) {
   }
 
   await removeAsync(project.ws.distTestsDir);
-  await compileAsync(getSpaE2eConfig());
+  await compileAsync(getSpaE2eConfig(), 'e2e');
   debug(`Build E2E tests.`);
 
   // prepare selenium

@@ -29,7 +29,7 @@ export default async function unit(options: any) {
   switch (project.ws.type) {
     case TYPE.NODE:
       const config = getNodeUnitConfig();
-      await compileAsync(config);
+      await compileAsync(config, 'unit');
       const files = [path.join(config.output.path, 'index.js')];
       exitCode = await mochaTestAsync(files);
       break;
@@ -38,7 +38,7 @@ export default async function unit(options: any) {
         await compileI18n();
       }
 
-      await compileAsync(getElectronUnitConfig());
+      await compileAsync(getElectronUnitConfig(), 'unit');
       exitCode = await karmaTestAsync(options);
 
       break;
@@ -47,7 +47,7 @@ export default async function unit(options: any) {
         await compileI18n();
       }
 
-      await compileAsync(getSpaUnitConfig());
+      await compileAsync(getSpaUnitConfig(), 'unit');
       exitCode = await karmaTestAsync(options);
 
       break;
@@ -56,7 +56,7 @@ export default async function unit(options: any) {
         await compileI18n();
       }
 
-      await compileAsync(getBrowserUnitConfig());
+      await compileAsync(getBrowserUnitConfig(), 'unit');
       exitCode = await karmaTestAsync(options);
 
       break;

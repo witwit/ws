@@ -37,7 +37,7 @@ export class NameComponent extends Component<NameComponentProps, {}> {
     const { name, a, b } = this.props;
     return (
       <p className="name-component">
-        Hello {name}! Sum is {add(a, b)}.
+        Hello {name}! Sum is {add(a, b)}. This is for @BOO.
       </p>
     );
   }

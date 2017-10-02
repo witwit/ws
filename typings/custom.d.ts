@@ -4,11 +4,16 @@
 //   ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void) => void;
 // };
 
+/**
+ * Nodes native `require` inside webpack-based Node projects.
+ */
+declare function __non_webpack_require__(path: string): any;
+
 declare module 'prettier';
 
 // declare module 'autoprefixer';
 
-declare function _import<T>(path: string): Promise<T>
+declare function _import<T>(path: string): Promise<T>;
 
 declare module 'stringify-object' {
   export interface Options {

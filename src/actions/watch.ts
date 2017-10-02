@@ -32,7 +32,12 @@ export default async function watch() {
     );
   switch (project.ws.type) {
     case TYPE.NODE:
-      await watchAsync(livereloadServer, getNodeBuildConfig(), onChangeSuccess);
+      await watchAsync(
+        livereloadServer,
+        getNodeBuildConfig(),
+        'build',
+        onChangeSuccess
+      );
       break;
     case TYPE.ELECTRON:
       if (project.ws.i18n) {
@@ -42,6 +47,7 @@ export default async function watch() {
       await watchAsync(
         livereloadServer,
         getElectronBuildConfig(),
+        'build',
         onChangeSuccess
       );
 
@@ -51,7 +57,12 @@ export default async function watch() {
         await compileI18n();
       }
 
-      await watchAsync(livereloadServer, getSpaBuildConfig(), onChangeSuccess);
+      await watchAsync(
+        livereloadServer,
+        getSpaBuildConfig(),
+        'build',
+        onChangeSuccess
+      );
 
       break;
     case TYPE.BROWSER:
@@ -62,6 +73,7 @@ export default async function watch() {
       await watchAsync(
         livereloadServer,
         getBrowserBuildConfig(),
+        'build',
         onChangeSuccess
       );
       break;

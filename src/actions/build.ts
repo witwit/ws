@@ -37,27 +37,27 @@ export default async function build(options: BuildOptions) {
   // build
   switch (project.ws.type) {
     case TYPE.NODE:
-      await compileAsync(getNodeBuildConfig());
+      await compileAsync(getNodeBuildConfig(), 'build');
       break;
     case TYPE.ELECTRON:
       if (options.production) {
-        await compileAsync(getElectronReleaseConfig());
+        await compileAsync(getElectronReleaseConfig(), 'build -p');
       } else {
-        await compileAsync(getElectronBuildConfig());
+        await compileAsync(getElectronBuildConfig(), 'build');
       }
       break;
     case TYPE.SPA:
       if (options.production) {
-        await compileAsync(getSpaReleaseConfig());
+        await compileAsync(getSpaReleaseConfig(), 'build -p');
       } else {
-        await compileAsync(getSpaBuildConfig());
+        await compileAsync(getSpaBuildConfig(), 'build');
       }
       break;
     case TYPE.BROWSER:
       if (options.production) {
-        await compileAsync(getBrowserReleaseConfig());
+        await compileAsync(getBrowserReleaseConfig(), 'build -p');
       } else {
-        await compileAsync(getBrowserBuildConfig());
+        await compileAsync(getBrowserBuildConfig(), 'build');
       }
       break;
   }

@@ -160,12 +160,15 @@ Currently we have no in-depth documentation for `ws` as long as we try to add mo
 
 # Config
 
-The ws specific config must be set in the `package.json` in a `"ws"` property. You can see an example for this [here](https://github.com/Mercateo/ws/blob/c9324980c8fc097879741901c7d788a4a44ed25a/examples/node-ts/package.json#L9). The only mandatory setting is the `type` which must be either `"spa"`, `"browser"`, `"node"` or `"electron"`. You can see all your possible configurations [here](https://github.com/Mercateo/ws/blob/1f9b7fc9b842f9021372eb516e860f3ce59e9c55/src/project.ts#L123).
+The ws specific config must be set in the `package.json` in a `"ws"` property. You can see multiple examples in the [`examples/`](examples) directory. The only mandatory setting is the `type` which must be either `"spa"`, `"browser"`, `"node"` or `"electron"`. You can see all your possible configurations [here](src/project.ts).
 
 If you want to write a TypeScript-based project, you need to create a [`tsconfig.json`](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) as well.
+
+# `ws.config.js`
+
+We have a _highly_ experimental feature to modify our webpack config. This should be used mainly for tests and experiments or _if you know what you're doing_. You can see an example [here](examples/browser-ts-react/ws.config.js). _Don't_ treat this as a stable feature..
 
 # Limits
 
 Support for libs is currently limited by webpack. E.g. it not possible to output ES6 modules _without_ informations about loaders. You can follow [this issue](https://github.com/webpack/webpack/issues/2933) for example.
 
-i18n support is not optimal. It is quite hacky as we need to copy some assets here and there to avoid using a multi-compiler config fro mwebpack, which is _really_ slow and leads to OoM issue in larger projects. You can read about some of the problems [here](https://github.com/donaldpipowitch/webpack-i18n-example).
