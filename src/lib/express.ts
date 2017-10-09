@@ -11,12 +11,11 @@ export async function listenAsync(
 ) {
   const app = express();
 
-  app.use(project.ws.publicPath, express.static(root));
-
+  middlewares.push([project.ws.publicPath, express.static(root)]);
   middlewares.push(fallback('index.html', { root }));
 
   for (const middleware of middlewares) {
-    app.use(middleware);
+    Array.isArray(middleware) ? app.use(...middleware) : app.use(middleware);
   }
 
   const port = await findAsync();

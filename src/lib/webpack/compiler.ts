@@ -133,7 +133,7 @@ async function onChange(
   const changedStyleModules = changedModules.filter(module =>
     module.resource.match(/\.(css|less|sass)$/)
   );
-  let hasOnlyStyleChanges =
+  const hasOnlyStyleChanges =
     changedModules.length === changedStyleModules.length;
   if (hasOnlyStyleChanges) {
     livereloadServer.refresh('style.css');
