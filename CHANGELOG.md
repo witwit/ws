@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Remove PhantomJS for unit tests and use headless Chrome instead.
+
 # 2.2.1 (2017-10-09)
 
 - Quick fix to exit programm correctly on error in all cases.

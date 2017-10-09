@@ -45,7 +45,6 @@ const SAUCE_LABS_PLATFORMS =
 // - iPad: iOS Safari
 // - iPhone: iOS Safari
 // - android: Android Browser
-// - phantomjs: PhantomJS
 // - htmlunit: HtmlUnit
 
 // intersection between browserslist and selenium

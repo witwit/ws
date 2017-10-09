@@ -45,7 +45,7 @@ const defaultConfig: EnhancedConfigOptions = {
   // (this is less error prone)
   plugins: [
     'karma-mocha',
-    'karma-phantomjs-launcher',
+    'karma-chrome-launcher',
     project.ws.type === 'electron'
       ? 'karma-electron'
       : 'karma-webdriver-launcher',
@@ -57,7 +57,7 @@ const defaultConfig: EnhancedConfigOptions = {
   mochaReporter: {
     showDiff: true
   },
-  browsers: [project.ws.type === 'electron' ? 'Electron' : 'PhantomJS'],
+  browsers: [project.ws.type === 'electron' ? 'Electron' : 'ChromeHeadless'],
   logLevel: 'WARN',
   browserConsoleLogOptions: {
     level: 'log',
