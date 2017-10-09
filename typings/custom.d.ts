@@ -216,7 +216,12 @@ declare module 'babel-core' {
 }
 
 declare module 'livereload' {
-  export function createServer(options?: { port: number }): void;
+  // https://github.com/napcs/node-livereload/blob/master/lib/livereload.js#L27
+  export interface Server {
+    close: () => void;
+    refresh: (filepath: string) => void;
+  }
+  export function createServer(options?: { port: number }): Server;
 }
 
 declare module 'connect-livereload' {

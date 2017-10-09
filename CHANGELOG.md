@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Quick fix to exit programm correctly on error in all cases.
+
 # 2.2.0 (2017-10-02)
 
 - Removed the linter check for the `examples/` directory based on feedback and because examples could be placed quite differently in workspace based projects.

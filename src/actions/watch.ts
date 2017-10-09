@@ -25,6 +25,8 @@ export default async function watch() {
     startingPort: 35729
   });
 
+  // TODO: Maybe refactor this so the liverelodServer is created
+  // *after* the initial build.
   const livereloadServer = livereload.createServer({ port });
   const onChangeSuccess = (stats: any) =>
     info(

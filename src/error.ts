@@ -43,6 +43,11 @@ export function handleError(err: Error) {
 
   error(`${red('error!')} ( ╯°□°)╯ ┻━━┻`);
   process.exitCode = 1;
+  // call process.exit with a slight delay to reduce risk of trimmed error logs
+  // (e.g. if you call process.exit directly there is a change that some
+  // console.log's aren't printed to the console - but we *want* to process.exit,
+  // because some commands create server/background tasks which aren't closed otherwise)
+  setTimeout(process.exit, 1);
 }
 
 process.on('uncaughtException', handleError);

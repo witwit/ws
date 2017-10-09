@@ -2,6 +2,7 @@ import { warn, error, info, getLevel, levels } from 'loglevel';
 import webpack, { compiler } from 'webpack';
 import { existsSync } from 'fs-extra-promise';
 import { join } from 'path';
+import { Server } from 'livereload';
 import { WebpackConfig, Command } from './options';
 
 export const statsStringifierOptions: compiler.StatsToStringOptions = {
@@ -99,7 +100,7 @@ function onBuild(
 async function onChange(
   err: any,
   stats: compiler.Stats,
-  livereloadServer: any,
+  livereloadServer: Server,
   onChangeSuccess?: any
 ) {
   if (err) {
@@ -167,7 +168,7 @@ export function compileAsync(
 }
 
 export function watchAsync(
-  livereloadServer: any,
+  livereloadServer: Server,
   options: WebpackConfig | WebpackConfig[],
   command: Command,
   onChangeSuccess?: (stats: compiler.Stats) => void
