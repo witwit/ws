@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.2.1 (2017-10-09)
 
 - Quick fix to exit programm correctly on error in all cases.
 - Live Reload should work again in watch mode.
