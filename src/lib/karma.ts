@@ -5,6 +5,9 @@ import getIpAddress from './ip-address';
 import { getBrowsers, isSauceLabsHost, launchSauceConnect } from './selenium';
 import { project, SeleniumGridConfig } from '../project';
 
+// uses puppeteers chrome version for headless chrome
+process.env.CHROME_BIN = require('puppeteer').executablePath();
+
 function toCustomLaunchersObject(customLaunchers: any, browser: any) {
   // at this place we know selenium config is set, no need for null checks
   const selenium = project.ws.selenium as SeleniumGridConfig;
