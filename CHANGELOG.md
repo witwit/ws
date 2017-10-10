@@ -1,6 +1,6 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.3.0 (2017-10-10)
 
 - Remove PhantomJS for unit tests and use headless Chrome instead.
 - Fixed stack trace formatting in unit tests.
