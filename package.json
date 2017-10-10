@@ -1,6 +1,6 @@
 {
   "name": "@mercateo/ws",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "main": "./dist/index.js",
   "description": "Scripts for building web projects.",
   "bin": {
@@ -12,8 +12,7 @@
     "pretest": "npm run -s build",
     "test": "node scripts/test.js",
     "preversion": "npm run -s build && npm run -s ws lint",
-    "prerelease":
-      "npm version prerelease && git push && npm publish --tag next --access public",
+    "prerelease": "npm version prerelease && git push && npm publish --tag next --access public",
     "patch": "npm version patch && git push && npm publish --access public",
     "minor": "npm version minor && git push && npm publish --access public",
     "major": "npm version major && git push && npm publish --access public"
@@ -119,7 +118,11 @@
     "electron": "^1.6.11",
     "rimraf": "^2.6.1"
   },
-  "keywords": ["build", "test", "tool"],
+  "keywords": [
+    "build",
+    "test",
+    "tool"
+  ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
