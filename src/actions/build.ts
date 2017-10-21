@@ -16,7 +16,6 @@ import {
 import { generateTypings } from '../lib/typescript';
 
 export interface BuildOptions {
-  locales: Array<string>;
   production?: true;
 }
 

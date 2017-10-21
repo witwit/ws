@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.4.0 (2017-10-21)
+
+- Experimental support for hot module reloading ♥ Check `examples/spa-ts` and run `$ ws watch --hot` (or `$ ws w -h`) to test it.
+
 # 2.3.0 (2017-10-10)
 
 - Remove PhantomJS for unit tests and use headless Chrome instead.

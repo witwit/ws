@@ -70,7 +70,10 @@ export const babelBrowser = {
     resolveFile('babel-preset-react'),
     resolveFile('babel-preset-stage-0')
   ],
-  plugins: [resolveFile('babel-plugin-transform-decorators-legacy')],
+  plugins: [
+    resolveFile('babel-plugin-transform-decorators-legacy'),
+    resolveFile('react-hot-loader/babel')
+  ],
   // this removes the "[BABEL] Note: The code generator has deoptimised the styling of..." warning
   // I don't think we need `compact`, because our code is minified for production separately
   compact: false

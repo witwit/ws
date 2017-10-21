@@ -40,13 +40,6 @@ module.exports = {
         test: /\.ts(x?)$/,
         use: [
           {
-            loader: 'string-replace-loader',
-            options: {
-              search: /_import\(/g,
-              replace: 'import('
-            }
-          },
-          {
             loader: 'babel-loader',
             options: Object.assign({}, babelConfig, { cacheDirectory: true })
           },

@@ -72,7 +72,7 @@ switch (project.ws.type) {
       .alias('s')
       .description('serve the project')
       .option('-p, --production', 'serve production build')
-      .action(handleAction(() => _import('./actions/serve')));
+      .action(handleAction(() => import('./actions/serve')));
 
     const e2eCommand = commander
       .command('e2e')
@@ -86,10 +86,10 @@ switch (project.ws.type) {
         if (args.length === 2) {
           const [browsers, options] = args;
           options.browsers = browsers;
-          handleAction(() => _import('./actions/e2e'))(options);
+          handleAction(() => import('./actions/e2e'))(options);
         } else {
           const [options] = args;
-          handleAction(() => _import('./actions/e2e'))(options);
+          handleAction(() => import('./actions/e2e'))(options);
         }
       });
 
@@ -110,7 +110,7 @@ if (project.ws.i18n && project.ws.i18n.importUrl) {
     .command('i18n:import')
     .alias('i18n:i')
     .description('import translations')
-    .action(handleAction(() => _import('./actions/i18n-import')));
+    .action(handleAction(() => import('./actions/i18n-import')));
 }
 
 // shared setup
@@ -123,7 +123,7 @@ switch (project.ws.type) {
       .command('build')
       .alias('b')
       .description('build the project')
-      .action(handleAction(() => _import('./actions/build')));
+      .action(handleAction(() => import('./actions/build')));
 
     if (
       project.ws.type === TYPE.SPA ||
@@ -133,25 +133,28 @@ switch (project.ws.type) {
       buildCommand.option('-p, --production', 'create production build');
     }
 
-    commander
+    const watchCommand = commander
       .command('watch')
       .alias('w')
       .description('continuously build and serve the project')
-      // .option('-H, --hot', 'enables hot reloading (experimental)')
-      .action(handleAction(() => _import('./actions/watch')));
+      .action(handleAction(() => import('./actions/watch')));
+
+    if (project.ws.type === TYPE.SPA) {
+      watchCommand.option('-H, --hot', 'enables hot reloading (experimental)');
+    }
 
     commander
       .command('lint')
       .alias('l')
       .description('run linter')
-      .action(handleAction(() => _import('./actions/lint')));
+      .action(handleAction(() => import('./actions/lint')));
 
     const unitCommand = commander
       .command('unit')
       .alias('u')
       .description('run unit tests')
       // .option('-c, --coverage', 'generates code coverage')
-      .action(handleAction(() => _import('./actions/unit')));
+      .action(handleAction(() => import('./actions/unit')));
 
     if (project.ws.selenium) {
       unitCommand.option('-g, --grid', 'run on selenium grid');

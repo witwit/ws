@@ -5,7 +5,7 @@ import { join } from 'path';
 import { Server } from 'livereload';
 import { WebpackConfig, Command } from './options';
 
-export const statsStringifierOptions: compiler.StatsToStringOptions = {
+const statsStringifierOptions: compiler.StatsToStringOptions = {
   // minimal logging
   assets: false,
   colors: true,
@@ -18,7 +18,7 @@ export const statsStringifierOptions: compiler.StatsToStringOptions = {
   children: true
 };
 
-export const verboseStatsStringifierOptions: compiler.StatsToStringOptions = {
+const verboseStatsStringifierOptions: compiler.StatsToStringOptions = {
   // maximal logging
   assets: true,
   colors: true,
@@ -43,6 +43,10 @@ function optionallyProfile(options: WebpackConfig | WebpackConfig[]) {
       options.profile = true;
     }
   }
+}
+
+export function getStatsOptions() {
+  return isVerbose() ? verboseStatsStringifierOptions : statsStringifierOptions;
 }
 
 function stringifyStats(stats: any): string {
@@ -154,7 +158,7 @@ function optionallyModifyWebpackConfig(
   }
 }
 
-export function compileAsync(
+export function getCompiler(
   options: WebpackConfig | WebpackConfig[],
   command: Command
 ) {
@@ -162,6 +166,14 @@ export function compileAsync(
   optionallyModifyWebpackConfig(options, command);
   // https://github.com/Microsoft/TypeScript/issues/16816
   const compiler = webpack(options as any);
+  return compiler;
+}
+
+export function compileAsync(
+  options: WebpackConfig | WebpackConfig[],
+  command: Command
+) {
+  const compiler = getCompiler(options, command);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => onBuild(resolve, reject, err, stats));
   });
@@ -173,10 +185,7 @@ export function watchAsync(
   command: Command,
   onChangeSuccess?: (stats: compiler.Stats) => void
 ) {
-  optionallyProfile(options);
-  optionallyModifyWebpackConfig(options, command);
-  // https://github.com/Microsoft/TypeScript/issues/16816
-  const compiler = webpack(options as any);
+  const compiler = getCompiler(options, command);
 
   // workaround for too many initial builds
   // see https://github.com/webpack/watchpack/issues/25#issuecomment-319292564

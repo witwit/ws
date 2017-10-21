@@ -11,10 +11,6 @@ declare function __non_webpack_require__(path: string): any;
 
 declare module 'prettier';
 
-// declare module 'autoprefixer';
-
-declare function _import<T>(path: string): Promise<T>;
-
 declare module 'stringify-object' {
   export interface Options {
     indent?: string;

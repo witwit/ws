@@ -6,3 +6,7 @@ declare module 'selenium-webdriver' {
   export const By: any;
   export const until: any;
 }
+
+declare const module: {
+  hot?: { accept: (path: string, callback: () => void) => void };
+};
