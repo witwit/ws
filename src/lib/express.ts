@@ -1,9 +1,11 @@
 import { info } from 'loglevel';
-import { cyan } from 'chalk';
+import chalk from 'chalk';
 import express from 'express';
 import fallback from 'express-history-api-fallback';
 import { project } from '../project';
 import { findAsync } from './openport';
+
+const { cyan } = chalk;
 
 export async function listenAsync(
   middlewares: Array<any> = [],

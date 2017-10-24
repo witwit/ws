@@ -1,7 +1,9 @@
 import { exec } from 'child_process';
 import { gt } from 'semver';
 import { debug, warn, info } from 'loglevel';
-import { cyan, magenta } from 'chalk';
+import chalk from 'chalk';
+
+const { cyan, magenta } = chalk;
 
 interface DistTags {
   next: string;

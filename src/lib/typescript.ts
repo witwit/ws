@@ -3,10 +3,12 @@ import { join } from 'path';
 import globby from 'globby';
 import { existsAsync } from 'fs-extra-promise';
 import { createProgram } from 'typescript';
-import { red } from 'chalk';
+import chalk from 'chalk';
 import codeFrame from 'babel-code-frame';
 import { project } from '../project';
 import { sourceFilePatterns } from '../project';
+
+const { red } = chalk;
 
 export async function generateTypings(
   declarationDir: string,

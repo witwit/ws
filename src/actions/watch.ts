@@ -1,5 +1,5 @@
 import { info } from 'loglevel';
-import { cyan } from 'chalk';
+import chalk from 'chalk';
 import moment from 'moment';
 import livereload from 'livereload';
 import livereloadMiddleware from 'connect-livereload';
@@ -21,6 +21,8 @@ import { getElectronBuildConfig } from '../lib/webpack/electron';
 import { getSpaBuildConfig } from '../lib/webpack/spa';
 import { getBrowserBuildConfig } from '../lib/webpack/browser';
 import { resolve } from '../lib/resolve';
+
+const { cyan } = chalk;
 
 export interface WatchOptions {
   hot?: true;

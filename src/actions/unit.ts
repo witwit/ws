@@ -1,7 +1,7 @@
 import { warn } from 'loglevel';
 import path from 'path';
 import { removeAsync, existsAsync } from 'fs-extra-promise';
-import { cyan, yellow } from 'chalk';
+import chalk from 'chalk';
 import { project, TYPE } from '../project';
 import { testAsync as karmaTestAsync } from '../lib/karma';
 import { testAsync as mochaTestAsync } from '../lib/mocha';
@@ -11,6 +11,8 @@ import { getNodeUnitConfig } from '../lib/webpack/node';
 import { getElectronUnitConfig } from '../lib/webpack/electron';
 import { getSpaUnitConfig } from '../lib/webpack/spa';
 import { getBrowserUnitConfig } from '../lib/webpack/browser';
+
+const { cyan, yellow } = chalk;
 
 export default async function unit(options: any) {
   const hasUnitTests = await existsAsync(project.ws.unitEntry);

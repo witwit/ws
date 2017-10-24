@@ -94,7 +94,8 @@ export async function testAsync(options: { grid?: boolean } = {}) {
       [join(project.ws.distTestsDir, 'index.js')]: (project.ws.type ===
       'electron'
         ? ['electron']
-        : []).concat(['sourcemap'])
+        : []
+      ).concat(['sourcemap'])
     }
   });
 

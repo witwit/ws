@@ -1,4 +1,4 @@
-import { yellow, cyan, red } from 'chalk';
+import chalk from 'chalk';
 import { error, info, debug } from 'loglevel';
 import { existsAsync } from 'fs-extra-promise';
 import { join } from 'path';
@@ -8,6 +8,8 @@ import { tslintAsync } from '../lib/tslint';
 import { eslintAsync } from '../lib/eslint';
 import { formatAsync } from '../lib/prettier';
 import { project } from '../project';
+
+const { yellow, cyan, red } = chalk;
 
 const smile = cyan('(~‾▿‾)~');
 const files = (count: number) => plur('file', count);

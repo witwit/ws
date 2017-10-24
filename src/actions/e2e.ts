@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import { warn, error, debug } from 'loglevel';
 import { join } from 'path';
 import { removeAsync, existsAsync } from 'fs-extra-promise';
-import { cyan, yellow, magenta } from 'chalk';
+import chalk from 'chalk';
 import { project, SeleniumGridConfig } from '../project';
 import { testAsync } from '../lib/mocha';
 import {
@@ -16,6 +16,8 @@ import {
 import { compile as compileI18n } from '../lib/i18n';
 import { getSpaE2eConfig } from '../lib/webpack/spa';
 import { compileAsync } from '../lib/webpack/compiler';
+
+const { cyan, yellow, magenta } = chalk;
 
 function spawnE2e(options: any, { browserName, version, id }: Browser) {
   debug(`Spawn E2E test for ${id}.`);

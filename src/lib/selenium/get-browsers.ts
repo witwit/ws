@@ -1,12 +1,14 @@
 // we can find nodes in a selenium grid or browser available on sauce labs
 import { debug } from 'loglevel';
 import { flatten, uniqBy } from 'lodash';
-import { yellow } from 'chalk';
+import chalk from 'chalk';
 import { rcompare } from 'semver';
 import { get } from 'https';
 import browserslist from 'browserslist';
 import grid from 'selenium-grid-status';
 import { project } from '../../project';
+
+const { yellow } = chalk;
 
 export interface Browser {
   browserName: string;

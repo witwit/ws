@@ -1,9 +1,11 @@
 import { handleError } from './error';
 import commander from 'commander';
 import { info, setLevel, levels } from 'loglevel';
-import { yellow, cyan } from 'chalk';
+import chalk from 'chalk';
 import { project, TYPE } from './project';
 import { initializeUpdateNotifier } from './lib/update-notifier';
+
+const { yellow, cyan } = chalk;
 
 // common setup
 const pkg = require('../package.json');
@@ -80,8 +82,9 @@ switch (project.ws.type) {
       .description('run e2e tests')
       .option(
         '--browsers <browsers>',
-        `browsers to used (comma separated list, e.g. 'ie-9,ff-36,chrome-41')`
+        `browsers to use (comma separated list, e.g. 'ie-9,ff-36,chrome-41')`
       )
+      .option('--headless', `use headless mode, if possible`)
       .action((...args) => {
         if (args.length === 2) {
           const [browsers, options] = args;

@@ -2,8 +2,10 @@ import { format } from 'prettier';
 import { readFileAsync, writeFileAsync } from 'fs-extra-promise';
 import globby from 'globby';
 import { error } from 'loglevel';
-import { red } from 'chalk';
+import chalk from 'chalk';
 import { sourceFilePatterns } from '../project';
+
+const { red } = chalk;
 
 const options = {
   singleQuote: true,

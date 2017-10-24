@@ -1,5 +1,7 @@
-import { red } from 'chalk';
+import chalk from 'chalk';
 import { error } from 'loglevel';
+
+const { red } = chalk;
 
 const IGNORED_TRACE_LINES = [
   // our bin

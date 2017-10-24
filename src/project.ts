@@ -1,6 +1,8 @@
 import { join } from 'path';
-import { yellow } from 'chalk';
+import chalk from 'chalk';
 import { readJsonSync } from 'fs-extra-promise';
+
+const { yellow } = chalk;
 
 const unvalidatedProject = readJsonSync(join(process.cwd(), 'package.json'));
 let tsconfig: any;

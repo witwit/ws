@@ -1,9 +1,11 @@
 import { readJsonSync, writeFileAsync, readFileAsync } from 'fs-extra-promise';
 import { join, relative } from 'path';
-import { dim, red } from 'chalk';
+import chalk from 'chalk';
 import { CLIEngine } from 'eslint';
 import codeFrame from 'babel-code-frame';
 import { sourceFilePatterns } from '../project';
+
+const { dim, red } = chalk;
 
 // relative from dist/index.js
 const configPath = join(__dirname, '..', '.eslintrc.json');
