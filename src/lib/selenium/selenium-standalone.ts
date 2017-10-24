@@ -1,5 +1,4 @@
 import { install, start } from 'selenium-standalone';
-import { warn } from 'loglevel';
 
 const options = {
   requestOpts: {
