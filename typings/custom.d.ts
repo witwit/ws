@@ -197,7 +197,7 @@ declare module 'selenium-webdriver/chrome';
 declare module 'selenium-webdriver/firefox';
 
 declare module 'selenium-standalone' {
-  export function install(callback: (error: any) => void): void;
+  export function install(options: any, callback: (error: any) => void): void;
   export function start(
     callback: (error: any, childProcess: any) => void
   ): void;

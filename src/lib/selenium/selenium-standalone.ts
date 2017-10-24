@@ -1,14 +1,15 @@
 import { install, start } from 'selenium-standalone';
 import { warn } from 'loglevel';
 
-const timeout = duration =>
-  new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('TIMEOUT')), duration)
-  );
+const options = {
+  requestOpts: {
+    timeout: 10000
+  }
+};
 
 const installAsync = () =>
   new Promise((resolve, reject) => {
-    install(err => {
+    install(options, err => {
       if (err) {
         reject(err);
       } else {
@@ -16,19 +17,6 @@ const installAsync = () =>
       }
     });
   });
-
-const safeInstallAsync = async () => {
-  try {
-    await Promise.race([installAsync(), timeout(10000)]);
-  } catch (err) {
-    if (err.message === 'TIMEOUT') {
-      warn(`Timeout! Couldn't install or update Selenium in 10s.`);
-      warn(`We'll try to run Selenium in the case it is locally available.`);
-    } else {
-      throw err;
-    }
-  }
-};
 
 const startAsync = () =>
   new Promise<any>((resolve, reject) => {
@@ -47,6 +35,6 @@ const startAsync = () =>
  * Run a local selenium server.
  */
 export async function runSeleniumServer() {
-  await safeInstallAsync();
+  await installAsync();
   return startAsync();
 }
