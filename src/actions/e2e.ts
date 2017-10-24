@@ -24,13 +24,17 @@ function spawnE2e(options: any, { browserName, version, id }: Browser) {
 
   return new Promise((resolve, reject) => {
     const [node, ws] = process.argv;
-    const env = Object.assign({}, process.env, {
+    const env: any = {
+      ...process.env,
       WS_E2E_IS_SPAWNED: true,
       WS_E2E_SELENIUM_URL: options.seleniumUrl,
       WS_E2E_BROWSER_NAME: browserName,
       WS_E2E_BROWSER_VERSION: version,
       FORCE_COLOR: 'true'
-    });
+    };
+    if (options.headless) {
+      env.WS_E2E_PREFER_HEADLESS = true;
+    }
 
     const childPrefix = `[${magenta(id)}] `;
     const childProcess = spawn(

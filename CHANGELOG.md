@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.5.0 (2017-10-24)
+
+- Experimental support to pass headless flag to E2E tests.
+
 # 2.4.0 (2017-10-21)
 
 - Experimental support for hot module reloading ♥ Check `examples/spa-ts` and run `$ ws watch --hot` (or `$ ws w -H`) to test it.
