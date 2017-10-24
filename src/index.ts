@@ -84,7 +84,7 @@ switch (project.ws.type) {
         '--browsers <browsers>',
         `browsers to use (comma separated list, e.g. 'ie-9,ff-36,chrome-41')`
       )
-      .option('--headless', `use headless mode, if possible`)
+      // .option('--headless', `use headless mode, if possible`)
       .action((...args) => {
         if (args.length === 2) {
           const [browsers, options] = args;
