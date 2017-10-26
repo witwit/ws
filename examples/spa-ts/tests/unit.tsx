@@ -5,7 +5,7 @@ import {
   NameComponent,
   ImageTestComponent
 } from 'ws-examples-browser-ts-react';
-import { AppComponent } from '../src/app';
+import { AppComponent, Counter } from '../src/app';
 
 describe('test my code', () => {
   it('should show my app', () => {
@@ -15,6 +15,7 @@ describe('test my code', () => {
 
     expect(output.type).toBe('div');
     expect(output.props.children).toEqual([
+      <Counter />,
       <NameComponent a={1} b={2} name="_otbe_" />,
       <ImageTestComponent />,
       <p>Dev Build</p>
