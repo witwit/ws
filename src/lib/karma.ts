@@ -1,6 +1,7 @@
 import { debug } from 'loglevel';
 import { join } from 'path';
 import { ConfigOptions, Server } from 'karma';
+import { platform } from 'os';
 import getIpAddress from './ip-address';
 import { getBrowsers, isSauceLabsHost, launchSauceConnect } from './selenium';
 import { project, SeleniumGridConfig } from '../project';
@@ -13,7 +14,8 @@ function toCustomLaunchersObject(customLaunchers: any, browser: any) {
   const selenium = project.ws.selenium as SeleniumGridConfig;
 
   const id = `grid-${browser.browserName}-${browser.version}`;
-  customLaunchers[id] = Object.assign({}, browser, {
+  customLaunchers[id] = {
+    ...browser,
     base: 'WebDriver',
     // allways inject <meta> to use edge mode for IE
     'x-ua-compatible': 'IE=edge',
@@ -23,7 +25,7 @@ function toCustomLaunchersObject(customLaunchers: any, browser: any) {
       user: selenium.user,
       pwd: selenium.password
     }
-  });
+  };
   return customLaunchers;
 }
 
@@ -43,6 +45,24 @@ interface EnhancedConfigOptions extends ConfigOptions {
   };
 }
 
+const electronConfig = {
+  browsers: ['Electron']
+};
+
+const headlessChromeConfig = {
+  browsers: ['CustomChromeHeadless'],
+  customLaunchers: {
+    CustomChromeHeadless: {
+      base: 'ChromeHeadless',
+      flags:
+        // see https://github.com/Googlechrome/puppeteer/issues/290#issuecomment-322852784
+        platform() === 'linux'
+          ? ['--no-sandbox', '--disable-setuid-sandbox']
+          : []
+    }
+  }
+};
+
 const defaultConfig: EnhancedConfigOptions = {
   // explicitly set plugins here, so they aren't just loaded from karmas sibling directories
   // (this is less error prone)
@@ -60,7 +80,7 @@ const defaultConfig: EnhancedConfigOptions = {
   mochaReporter: {
     showDiff: true
   },
-  browsers: [project.ws.type === 'electron' ? 'Electron' : 'ChromeHeadless'],
+  ...project.ws.type === 'electron' ? electronConfig : headlessChromeConfig,
   logLevel: 'WARN',
   browserConsoleLogOptions: {
     level: 'log',
@@ -87,7 +107,8 @@ const defaultConfig: EnhancedConfigOptions = {
 
 export async function testAsync(options: { grid?: boolean } = {}) {
   debug(`Configure Karma...`);
-  const karmaConfig = Object.assign({}, defaultConfig, {
+  const karmaConfig = {
+    ...defaultConfig,
     basePath: process.cwd(),
     files: [join(project.ws.distTestsDir, 'index.js')],
     preprocessors: {
@@ -97,7 +118,7 @@ export async function testAsync(options: { grid?: boolean } = {}) {
         : []
       ).concat(['sourcemap'])
     }
-  });
+  };
 
   let sauceConnectProcess: any;
   if (options.grid) {

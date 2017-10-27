@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.5.1 (2017-10-27)
+
+- Better support for headless chrome in unit tests, if you use Linux.
+
 # 2.5.0 (2017-10-24)
 
 - Experimental support to pass headless flag to E2E tests.
