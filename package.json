@@ -9,10 +9,11 @@
   "scripts": {
     "build": "rimraf dist/ && webpack",
     "ws": "node ./bin/ws.js",
-    "pretest": "npm run -s build",
+    "pretest": "yarn build",
     "test": "node scripts/test.js",
-    "preversion": "npm run -s build && npm run -s ws lint",
-    "prerelease": "npm version prerelease && git push && npm publish --tag next --access public",
+    "preversion": "yarn build && yarn ws lint",
+    "prerelease":
+      "npm version prerelease && git push && npm publish --tag next --access public",
     "patch": "npm version patch && git push && npm publish --access public",
     "minor": "npm version minor && git push && npm publish --access public",
     "major": "npm version major && git push && npm publish --access public"
@@ -124,11 +125,7 @@
     "electron": "^1.7.9",
     "rimraf": "^2.6.1"
   },
-  "keywords": [
-    "build",
-    "test",
-    "tool"
-  ],
+  "keywords": ["build", "test", "tool"],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",

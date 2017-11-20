@@ -53,3 +53,4 @@ export function handleError(err: Error) {
 }
 
 process.on('uncaughtException', handleError);
+process.on('unhandledRejection', handleError);

@@ -12,7 +12,7 @@ rimrafSync(join(cwd, '**', 'dist-release'));
 const stdio = 'inherit';
 const options = { cwd, stdio };
 
-console.log('Update deps...');
+console.log('Update example dependencies...');
 execSync('yarn', options);
 
 console.log('Run actions...');
