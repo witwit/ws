@@ -122,6 +122,8 @@ export default async function watch(options: WatchOptions) {
 
   info('Finished initial build.');
 
-  const middlewares: Array<any> = [livereloadMiddleware({ port })];
-  await listenAsync(middlewares);
+  if (project.ws.type !== TYPE.NODE) {
+    const middlewares: Array<any> = [livereloadMiddleware({ port })];
+    await listenAsync(middlewares);
+  }
 }
