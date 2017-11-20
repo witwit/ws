@@ -1,6 +1,6 @@
 {
   "name": "@mercateo/ws",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "main": "./dist/index.js",
   "description": "Scripts for building web projects.",
   "bin": {
