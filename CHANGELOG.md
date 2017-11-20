@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# HEAD
+
+- Translations can now be found in parent directories. (Sometimes needed for workspace based projects.)
+
 # 2.5.2 (2017-11-20)
 
 - Remove pointless logging for `$ watch` in Node projects.
