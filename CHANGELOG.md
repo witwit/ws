@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.5.2 (2017-11-20)
+
+- Remove pointless logging for `$ watch` in Node projects.
+
 # 2.5.1 (2017-10-27)
 
 - Better support for headless chrome in unit tests, if you use Linux.
