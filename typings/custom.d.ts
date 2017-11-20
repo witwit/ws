@@ -10,6 +10,13 @@
 declare function __non_webpack_require__(path: string): any;
 
 declare module 'prettier';
+declare module 'fork-ts-checker-webpack-plugin';
+declare module 'babel-code-frame';
+declare module 'glob-to-regexp';
+declare module 'express-history-api-fallback';
+declare module 'eslint';
+declare module 'plur';
+declare module 'commander';
 
 declare module 'stringify-object' {
   export interface Options {

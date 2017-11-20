@@ -19,7 +19,7 @@ const allowedLogLevels = Object.keys(levels).map(level =>
 commander.option(
   '-l, --log-level <level>',
   'set log level',
-  value => {
+  (value: any) => {
     if (allowedLogLevels.some(allowedValue => value === allowedValue)) {
       return value;
     } else {
@@ -85,7 +85,7 @@ switch (project.ws.type) {
         `browsers to use (comma separated list, e.g. 'ie-9,ff-36,chrome-41')`
       )
       .option('--headless', `prefer headless mode`)
-      .action((...args) => {
+      .action((...args: any[]) => {
         if (args.length === 2) {
           const [browsers, options] = args;
           options.browsers = browsers;

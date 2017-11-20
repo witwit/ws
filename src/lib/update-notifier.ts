@@ -19,7 +19,7 @@ const getRandom = (arr: Array<any>): any =>
 type NotifierState = 'pending' | 'warn' | 'outdated' | 'up-to-date';
 
 export function initializeUpdateNotifier(currentVersion: string) {
-  let message;
+  let message: any;
   let state: NotifierState = 'pending';
   const cmd = 'npm show @mercateo/ws dist-tags --json';
 
