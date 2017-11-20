@@ -125,10 +125,11 @@ var cachedMessages = {};
 ${keys
     .map(
       key => `
-module.exports['${key}'] = function(${hasArguments(translation.asts[key])
-        ? 'data'
-        : ''}) {${translation.asts[key]
-        ? `
+module.exports['${key}'] = function(${
+        hasArguments(translation.asts[key]) ? 'data' : ''
+      }) {${
+        translation.asts[key]
+          ? `
   if (!cachedMessages['${key}']) {
     var ast = ${indent(
       '    ',
@@ -137,10 +138,11 @@ module.exports['${key}'] = function(${hasArguments(translation.asts[key])
     cachedMessages['${key}'] = new IntlMessageFormat(ast, '${intlLocale}');
   }
 
-  return cachedMessages['${key}'].format(${hasArguments(translation.asts[key])
-            ? 'data'
-            : ''});`
-        : `return 'Missing key "${key}".';`}
+  return cachedMessages['${key}'].format(${
+              hasArguments(translation.asts[key]) ? 'data' : ''
+            });`
+          : `return 'Missing key "${key}".';`
+      }
 };
 `
     )
@@ -180,9 +182,11 @@ declare interface I18N {
       key =>
         `
 ${getDocumentation(translations, key)}
-  ${key}: (${hasArguments(defaultTranslation.asts[key])
-          ? `data: ${getArgumentTypes(defaultTranslation.asts[key])}`
-          : ''}) => string,`
+  ${key}: (${
+          hasArguments(defaultTranslation.asts[key])
+            ? `data: ${getArgumentTypes(defaultTranslation.asts[key])}`
+            : ''
+        }) => string,`
     )
     .join('\n')}
 }

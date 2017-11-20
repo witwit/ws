@@ -323,11 +323,12 @@ export function validate(pkg: any): PackageConfig {
 
   // entry files
   pkg.ws.srcEntry = `./${pkg.ws.srcDir}/index.${pkg.ws.entryExtension}`;
-  pkg.ws.srcI18nEntry = `./${pkg.ws.srcDir}/index.i18n.${pkg.ws
-    .entryExtension}`;
-  pkg.ws.srcElectronEntry = `./${pkg.ws.srcDir}/electron.${!tsconfig
-    ? 'js'
-    : 'ts'}`;
+  pkg.ws.srcI18nEntry = `./${pkg.ws.srcDir}/index.i18n.${
+    pkg.ws.entryExtension
+  }`;
+  pkg.ws.srcElectronEntry = `./${pkg.ws.srcDir}/electron.${
+    !tsconfig ? 'js' : 'ts'
+  }`;
   pkg.ws.unitEntry = `./${pkg.ws.testsDir}/unit.${pkg.ws.entryExtension}`;
   pkg.ws.e2eEntry = `./${pkg.ws.testsDir}/e2e.${pkg.ws.entryExtension}`;
 
@@ -371,4 +372,6 @@ export function validate(pkg: any): PackageConfig {
 export const project = validate(unvalidatedProject);
 
 const { srcDir, testsDir } = project.ws;
-export const sourceFilePatterns = `{${srcDir},${testsDir}}/**/*.{tsx,ts,jsx,js}`;
+export const sourceFilePatterns = `{${srcDir},${
+  testsDir
+}}/**/*.{tsx,ts,jsx,js}`;

@@ -4,6 +4,7 @@ import { parse } from 'properties';
 import { join, dirname } from 'path';
 import { camelCase } from 'lodash';
 import { readFileAsync, readJsonAsync } from 'fs-extra-promise';
+import parentDirs from 'parent-dirs';
 import { concatLanguages, isMatchingLocaleOrLanguage } from './utils';
 import { project, I18nConfig } from '../../project';
 
@@ -85,7 +86,11 @@ export async function getTranslations() {
   });
 
   // get translations from all deps (this is very dumb right now)
-  const deps = await globby('node_modules/**/package.json');
+  // we also look into parent directories for workspace based projects
+  const patterns = parentDirs().map(dir =>
+    join(dir, 'node_modules/**/package.json')
+  );
+  const deps = await globby(patterns);
   await Promise.all(
     deps.map(dep =>
       readJsonAsync(dep).then(pkg => {
@@ -118,37 +123,37 @@ export async function getTranslations() {
   );
   const translations: Array<Translation> = await Promise.all(readPromises);
 
-  const groupedTranslations: Array<
-    GroupedTranslation
-  > = i18n.locales.map(locale => ({
-    locale,
-    translations: translations.filter(translation =>
-      isMatchingLocaleOrLanguage(translation.locale, locale)
-    )
-  }));
-
-  const mergedTranslations: Array<
-    Translation
-  > = groupedTranslations.map(({ locale, translations }) => ({
-    locale,
-    data: translations
-      .reverse()
-      .reduce(
-        (acc, translation) => Object.assign(acc, translation.data),
-        {} as TranslationMap
+  const groupedTranslations: Array<GroupedTranslation> = i18n.locales.map(
+    locale => ({
+      locale,
+      translations: translations.filter(translation =>
+        isMatchingLocaleOrLanguage(translation.locale, locale)
       )
-  }));
+    })
+  );
 
-  const parsedTranslations: Array<
-    ParsedTranslation
-  > = mergedTranslations.map(translation => {
-    const asts: { [s: string]: any } = {};
-    Object.keys(translation.data).forEach(key => {
-      const ast = parser.parse(translation.data[key]);
-      asts[key] = ast;
-    });
-    return Object.assign({ asts }, translation);
-  });
+  const mergedTranslations: Array<Translation> = groupedTranslations.map(
+    ({ locale, translations }) => ({
+      locale,
+      data: translations
+        .reverse()
+        .reduce(
+          (acc, translation) => Object.assign(acc, translation.data),
+          {} as TranslationMap
+        )
+    })
+  );
+
+  const parsedTranslations: Array<ParsedTranslation> = mergedTranslations.map(
+    translation => {
+      const asts: { [s: string]: any } = {};
+      Object.keys(translation.data).forEach(key => {
+        const ast = parser.parse(translation.data[key]);
+        asts[key] = ast;
+      });
+      return Object.assign({ asts }, translation);
+    }
+  );
 
   return parsedTranslations;
 }

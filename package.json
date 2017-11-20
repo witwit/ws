@@ -90,6 +90,7 @@
     "mocha": "^3.5.0",
     "moment": "^2.18.1",
     "openport": "0.0.4",
+    "parent-dirs": "^1.0.0",
     "plur": "^2.1.2",
     "postcss-loader": "^2.0.5",
     "prettier": "^1.6.1",

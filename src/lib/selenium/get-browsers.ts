@@ -171,7 +171,9 @@ function convertToValidSemver(version: string) {
       return version;
     } else {
       // more than two dots found
-      throw `${version} can't be converted to valid semver (more than two dots).`;
+      throw `${
+        version
+      } can't be converted to valid semver (more than two dots).`;
     }
   } else {
     if (isNaN(version as any)) {
@@ -221,13 +223,13 @@ async function getAllAvailableBrowsers(): Promise<Browser[]> {
     // convert status like https://github.com/davglass/selenium-grid-status#usage
     // to a list of unique browsers containing just the `browserName`, `version` and `id`
     const nodes = await getNodes();
-    browsersWithoutId = flatten(
-      nodes.map(node => node.browser)
-    ).map(({ browserName, version }) => ({
-      // treat 'iphone' like 'ipad' (same browser)
-      browserName: browserName === 'iphone' ? 'ipad' : browserName,
-      version
-    }));
+    browsersWithoutId = flatten(nodes.map(node => node.browser)).map(
+      ({ browserName, version }) => ({
+        // treat 'iphone' like 'ipad' (same browser)
+        browserName: browserName === 'iphone' ? 'ipad' : browserName,
+        version
+      })
+    );
   }
   const browsersWithId: Browser[] = browsersWithoutId.map(
     ({ version, browserName }) => ({

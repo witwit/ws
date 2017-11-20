@@ -140,7 +140,9 @@ const getJsRule = (target: Target, command: Command): Rule => ({
       }
     },
     {
-      loader: `happypack/loader?id=js-${target}-${command}&compilerId=js-${target}-${command}`
+      loader: `happypack/loader?id=js-${target}-${command}&compilerId=js-${
+        target
+      }-${command}`
     }
   ]
 });
@@ -162,7 +164,9 @@ const getTsRule = (target: Target, command: Command): Rule => ({
       }
     },
     {
-      loader: `happypack/loader?id=ts-${target}-${command}&compilerId=ts-${target}-${command}`
+      loader: `happypack/loader?id=ts-${target}-${command}&compilerId=ts-${
+        target
+      }-${command}`
     }
   ]
 });
@@ -292,8 +296,9 @@ export const resolveLoader = {
   ],
   alias: {
     // see https://www.npmjs.com/package/copy-loader
-    ['copy-loader']: `file-loader?name=[path][name].[ext]&context=./${project.ws
-      .srcDir}`
+    ['copy-loader']: `file-loader?name=[path][name].[ext]&context=./${
+      project.ws.srcDir
+    }`
   }
 };
 

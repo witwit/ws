@@ -32,5 +32,7 @@ export async function toIntlLocale(locale: string): Promise<string> {
     return shortIntlLocale;
   }
 
-  throw `The locale ${locale} can't be converted to a locale which "intl" understands.`;
+  throw `The locale ${
+    locale
+  } can't be converted to a locale which "intl" understands.`;
 }

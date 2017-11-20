@@ -89,9 +89,9 @@ async function init(options: any) {
     // at this place we know selenium config is set, no need for null checks
     const selenium = project.ws.selenium as SeleniumGridConfig;
     const { host, port, user, password } = selenium;
-    options.seleniumUrl = `http://${user
-      ? `${user}:${password}@`
-      : ''}${host}:${port}/wd/hub`;
+    options.seleniumUrl = `http://${user ? `${user}:${password}@` : ''}${
+      host
+    }:${port}/wd/hub`;
     browsers = options.browsers
       ? options.browsers.split(',').map(parseBrowser)
       : await getBrowsers();

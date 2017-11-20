@@ -18,6 +18,11 @@ declare module 'eslint';
 declare module 'plur';
 declare module 'commander';
 
+declare module 'parent-dirs' {
+  function parentDirs(cwd?: string): string[];
+  export = parentDirs;
+}
+
 declare module 'stringify-object' {
   export interface Options {
     indent?: string;
