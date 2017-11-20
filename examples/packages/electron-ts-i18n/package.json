@@ -1,5 +1,5 @@
 {
-  "name": "example-electron-i18n",
+  "name": "example-electron-ts-i18n",
   "version": "1.0.0",
   "private": true,
   "ws": {
