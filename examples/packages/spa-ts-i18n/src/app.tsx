@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
-import {
-  NameComponent,
-  ImageTestComponent
-} from 'example-browser-ts-react';
-import {
-  SomeComponent,
-  OtherComponent
-} from 'example-browser-ts-react-i18n';
+import { NameComponent, ImageTestComponent } from 'example-browser-ts-react';
+import { SomeComponent, OtherComponent } from 'example-browser-ts-react-i18n';
 import { Translations } from '@mercateo/ws-intl';
 
 require('normalize.css/normalize.css');

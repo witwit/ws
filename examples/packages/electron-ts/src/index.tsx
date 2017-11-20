@@ -2,10 +2,7 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { HelloWorld } from './HelloWorld';
-import {
-  NameComponent,
-  ImageTestComponent
-} from 'example-browser-ts-react';
+import { NameComponent, ImageTestComponent } from 'example-browser-ts-react';
 import { getCwd } from 'example-node-ts';
 import { genSalt } from 'bcrypt';
 

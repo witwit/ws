@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  NameComponent,
-  ImageTestComponent
-} from 'example-browser-ts-react';
+import { NameComponent, ImageTestComponent } from 'example-browser-ts-react';
 import { ILazyComponent } from './index';
 
 /**

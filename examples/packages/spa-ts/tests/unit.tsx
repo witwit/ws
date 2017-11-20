@@ -1,10 +1,7 @@
 import expect from 'expect';
 import React from 'react';
 import { createRenderer } from 'react-test-renderer/shallow';
-import {
-  NameComponent,
-  ImageTestComponent
-} from 'example-browser-ts-react';
+import { NameComponent, ImageTestComponent } from 'example-browser-ts-react';
 import { AppComponent, Counter } from '../src/app';
 
 describe('test my code', () => {

@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import {
-  NameComponent,
-  ImageTestComponent
-} from 'example-browser-ts-react';
+import { NameComponent, ImageTestComponent } from 'example-browser-ts-react';
 
 export class Counter extends Component<{}, { value: number }> {
   state = {

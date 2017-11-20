@@ -1,9 +1,6 @@
 import expect from 'expect';
 import React from 'react';
-import {
-  NameComponent,
-  ImageTestComponent
-} from 'example-browser-ts-react';
+import { NameComponent, ImageTestComponent } from 'example-browser-ts-react';
 import { SomeComponent } from 'example-browser-ts-react-i18n';
 import { AppComponent } from '../src/app';
 import { mount } from 'enzyme';
