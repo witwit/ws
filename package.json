@@ -89,6 +89,7 @@
     "loglevel": "^1.4.1",
     "mocha": "^3.5.0",
     "moment": "^2.18.1",
+    "nodemon": "^1.12.1",
     "openport": "0.0.4",
     "parent-dirs": "^1.0.0",
     "plur": "^2.1.2",

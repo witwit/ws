@@ -21,6 +21,7 @@ import { getElectronBuildConfig } from '../lib/webpack/electron';
 import { getSpaBuildConfig } from '../lib/webpack/spa';
 import { getBrowserBuildConfig } from '../lib/webpack/browser';
 import { resolve } from '../lib/resolve';
+import { nodemonAsync } from '../lib/nodemon';
 
 const { cyan } = chalk;
 
@@ -122,7 +123,9 @@ export default async function watch(options: WatchOptions) {
 
   info('Finished initial build.');
 
-  if (project.ws.type !== TYPE.NODE) {
+  if (project.ws.type === TYPE.NODE) {
+    await nodemonAsync();
+  } else {
     const middlewares: Array<any> = [livereloadMiddleware({ port })];
     await listenAsync(middlewares);
   }

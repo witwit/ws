@@ -17,6 +17,7 @@ declare module 'express-history-api-fallback';
 declare module 'eslint';
 declare module 'plur';
 declare module 'commander';
+declare module 'nodemon';
 
 declare module 'parent-dirs' {
   function parentDirs(cwd?: string): string[];

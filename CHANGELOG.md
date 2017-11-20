@@ -1,8 +1,9 @@
 The changelog is currently handwritten.
 
-# HEAD
+# 2.6.0 (2017-11-20)
 
 - Translations can now be found in parent directories. (Sometimes needed for workspace based projects.)
+- Integrated `nodemon` to `$ watch` in Node projects. (This probably needs some polish for more complex scenarios.)
 
 # 2.5.2 (2017-11-20)
 
