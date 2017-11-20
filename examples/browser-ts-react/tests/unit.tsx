@@ -20,6 +20,8 @@ describe('test my code', () => {
   });
 
   it('should use custom babel plugin for markdown', () => {
+    // TODO: Remove this line https://github.com/prettier/prettier/issues/3292
+    // prettier-ignore
     expect(markdown`# hello`).toBe('<h1>hello</h1>\n');
   });
 });
