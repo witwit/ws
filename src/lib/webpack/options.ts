@@ -487,30 +487,26 @@ export const getEntryAndOutput = (target: Target, command: Command) => {
 };
 
 export const getModuleAndPlugins = (target: Target, command: Command) => {
-  const rules: Rule[] = [getJsRule(target, command)];
-  const plugins: Plugin[] = [getHappyPackPluginJs(target, command)];
+  const rules: Rule[] = [
+    getJsRule(target, command),
+    jsonRule,
+    cssRule,
+    lessRule,
+    imageRule,
+    eotRule,
+    woffRule,
+    ttfRule
+  ];
+  const plugins: Plugin[] = [
+    getHappyPackPluginJs(target, command),
+    extractCssPlugin,
+    loaderOptionsPlugin
+  ];
 
   if (project.ws.tsconfig) {
     rules.push(getTsRule(target, command));
     plugins.push(getHappyPackPluginTs(target, command));
     plugins.push(forkTsCheckerPlugin);
-  }
-
-  // and `target !== 'electron-main'`?
-  if (target !== 'node') {
-    const browserRules = [
-      jsonRule,
-      cssRule,
-      lessRule,
-      imageRule,
-      eotRule,
-      woffRule,
-      ttfRule
-    ];
-    rules.push(...browserRules);
-
-    plugins.push(extractCssPlugin);
-    plugins.push(loaderOptionsPlugin);
   }
 
   if (target === 'spa' || target === 'electron-renderer') {

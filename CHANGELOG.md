@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.7.0 (2017-11-23)
+
+- Allow importing images and other assets in Node projects (e.g. for SSR).
+
 # 2.6.0 (2017-11-20)
 
 - Translations can now be found in parent directories. (Sometimes needed for workspace based projects.)
