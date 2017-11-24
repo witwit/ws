@@ -15,7 +15,8 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import WebpackNodeExternals from 'webpack-node-externals';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import autoprefixer from 'autoprefixer';
-import { resolve as resolveFile } from '../resolve';
+import { readJsonSync } from 'fs-extra-promise';
+import { resolve as resolveModule } from '../resolve';
 import { project } from '../../project';
 
 const HappyPack: any = require('happypack');
@@ -43,21 +44,21 @@ export const performance: PerformanceOptions = {
 export const babelNode = {
   presets: [
     [
-      resolveFile('babel-preset-env'),
+      resolveModule('babel-preset-env'),
       {
         targets: { node: project.ws.targets.node },
         useBuiltIns: true
       }
     ],
-    resolveFile('babel-preset-stage-0')
+    resolveModule('babel-preset-stage-0')
   ],
-  plugins: [resolveFile('babel-plugin-transform-decorators-legacy')]
+  plugins: [resolveModule('babel-plugin-transform-decorators-legacy')]
 };
 
 export const babelBrowser = {
   presets: [
     [
-      resolveFile('babel-preset-env'),
+      resolveModule('babel-preset-env'),
       {
         targets:
           project.ws.type === 'electron'
@@ -67,12 +68,12 @@ export const babelBrowser = {
         useBuiltIns: true
       }
     ],
-    resolveFile('babel-preset-react'),
-    resolveFile('babel-preset-stage-0')
+    resolveModule('babel-preset-react'),
+    resolveModule('babel-preset-stage-0')
   ],
   plugins: [
-    resolveFile('babel-plugin-transform-decorators-legacy'),
-    resolveFile('react-hot-loader/babel')
+    resolveModule('babel-plugin-transform-decorators-legacy'),
+    resolveModule('react-hot-loader/babel')
   ],
   // this removes the "[BABEL] Note: The code generator has deoptimised the styling of..." warning
   // I don't think we need `compact`, because our code is minified for production separately
@@ -364,6 +365,15 @@ export const devtoolProduction = 'source-map';
 
 export const externalsSpa = project.ws.externals ? [project.ws.externals] : [];
 
+// dirty fix until https://github.com/liady/webpack-node-externals/issues/39 is solved
+let isWorkspace = false;
+try {
+  const pkg = readJsonSync(join(process.cwd(), '..', '..', 'package.json'));
+  isWorkspace = !!pkg.workspaces;
+} catch (err) {
+  // no workspace
+}
+
 export const externalsNode = [
   // require json files with nodes built-in require logic
   function(_context: any, request: any, callback: any) {
@@ -374,7 +384,9 @@ export const externalsNode = [
     }
   },
   // in order to ignore all modules in node_modules folder
-  WebpackNodeExternals()
+  WebpackNodeExternals({
+    modulesDir: isWorkspace ? join(process.cwd(), '..', '..') : undefined
+  })
 ];
 
 export const externalsBrowser = [
