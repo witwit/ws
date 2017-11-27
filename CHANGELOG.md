@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.7.1 (2017-11-27)
+
+- Added `.prettierignore` which can be used by our projects.
+
 # 2.7.0 (2017-11-23)
 
 - Allow importing images and other assets in Node projects (e.g. for SSR).
