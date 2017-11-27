@@ -27,6 +27,10 @@ export default async function unit(options: any) {
 
   await removeAsync(project.ws.distTestsDir);
 
+  if (project.ws.i18n) {
+    await compileI18n();
+  }
+
   let exitCode = 0;
   switch (project.ws.type) {
     case TYPE.NODE:
@@ -36,31 +40,16 @@ export default async function unit(options: any) {
       exitCode = await mochaTestAsync(files);
       break;
     case TYPE.ELECTRON:
-      if (project.ws.i18n) {
-        await compileI18n();
-      }
-
       await compileAsync(getElectronUnitConfig(), 'unit');
       exitCode = await karmaTestAsync(options);
-
       break;
     case TYPE.SPA:
-      if (project.ws.i18n) {
-        await compileI18n();
-      }
-
       await compileAsync(getSpaUnitConfig(), 'unit');
       exitCode = await karmaTestAsync(options);
-
       break;
     case TYPE.BROWSER:
-      if (project.ws.i18n) {
-        await compileI18n();
-      }
-
       await compileAsync(getBrowserUnitConfig(), 'unit');
       exitCode = await karmaTestAsync(options);
-
       break;
   }
 

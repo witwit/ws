@@ -52,7 +52,10 @@ export const babelNode = {
     ],
     resolveModule('babel-preset-stage-0')
   ],
-  plugins: [resolveModule('babel-plugin-transform-decorators-legacy')]
+  plugins: [resolveModule('babel-plugin-transform-decorators-legacy')],
+  // this removes the "[BABEL] Note: The code generator has deoptimised the styling of..." warning
+  // I don't think we need `compact`, because our code is minified for production separately
+  compact: false
 };
 
 export const babelBrowser = {
