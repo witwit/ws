@@ -72,6 +72,11 @@ export default async function watch(options: WatchOptions) {
     info(
       `Finished build at ${cyan(moment(stats.endTime).format('HH:mm:ss'))}.`
     );
+
+  if (project.ws.i18n) {
+    await compileI18n();
+  }
+
   switch (project.ws.type) {
     case TYPE.NODE:
       await watchAsync(
@@ -82,10 +87,6 @@ export default async function watch(options: WatchOptions) {
       );
       break;
     case TYPE.ELECTRON:
-      if (project.ws.i18n) {
-        await compileI18n();
-      }
-
       await watchAsync(
         livereloadServer,
         getElectronBuildConfig(),
@@ -95,10 +96,6 @@ export default async function watch(options: WatchOptions) {
 
       break;
     case TYPE.SPA:
-      if (project.ws.i18n) {
-        await compileI18n();
-      }
-
       await watchAsync(
         livereloadServer,
         getSpaBuildConfig(),
@@ -108,10 +105,6 @@ export default async function watch(options: WatchOptions) {
 
       break;
     case TYPE.BROWSER:
-      if (project.ws.i18n) {
-        await compileI18n();
-      }
-
       await watchAsync(
         livereloadServer,
         getBrowserBuildConfig(),
