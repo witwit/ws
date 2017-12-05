@@ -201,7 +201,7 @@ export function watchAsync(
   let isInitialBuild = true;
   let hash: any;
   return new Promise((resolve, reject) => {
-    compiler.watch({}, (err, stats) => {
+    const watching = compiler.watch({}, (err, stats) => {
       if (isInitialBuild) {
         isInitialBuild = false;
         onBuild(resolve, reject, err, stats);
@@ -215,5 +215,7 @@ export function watchAsync(
         onChange(err, stats, livereloadServer, onChangeSuccess);
       }
     });
+
+    process.once('SIGINT', () => watching.close(() => process.exit()));
   });
 }

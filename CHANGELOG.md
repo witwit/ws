@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.7.4 (2017-12-05)
+
+- Fixed bug with open webpack watchers which aren't closed correctly.
+
 # 2.7.3 (2017-12-01)
 
 - Compile translations for `$ ws watch` in Node projects, too.
