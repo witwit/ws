@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.8.0 (2017-12-18)
+
+- You can now use `module.exports = require('@mercateo/ws/prettier.config.js');` as a `prettier.config.js` in your project root for a shared prettier config. I also added `arrowParens: 'always'` in this step.
+
 # 2.7.4 (2017-12-05)
 
 - Fixed bug with open webpack watchers which aren't closed correctly.

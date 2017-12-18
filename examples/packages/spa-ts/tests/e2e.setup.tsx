@@ -2,10 +2,10 @@ import { Builder } from 'selenium-webdriver';
 
 const SESSION_TIMEOUT = 10000;
 
-const setTimeoutAsync = delay =>
-  new Promise(resolve => setTimeout(resolve, delay));
+const setTimeoutAsync = (delay) =>
+  new Promise((resolve) => setTimeout(resolve, delay));
 
-const waitForSession = driver =>
+const waitForSession = (driver) =>
   Promise.race([
     driver.getSession(),
     setTimeoutAsync(SESSION_TIMEOUT).then(() => {

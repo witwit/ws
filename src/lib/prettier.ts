@@ -1,4 +1,4 @@
-import { format } from 'prettier';
+import { format, resolveConfig, Options } from 'prettier';
 import { readFileAsync, writeFileAsync } from 'fs-extra-promise';
 import globby from 'globby';
 import { error } from 'loglevel';
@@ -7,12 +7,12 @@ import { sourceFilePatterns } from '../project';
 
 const { red } = chalk;
 
-const options = {
-  singleQuote: true,
-  parser: 'typescript'
-};
+const defaultConfig = require('../../prettier.config');
 
 export async function formatAsync(filePatterns = sourceFilePatterns) {
+  const resolvedConfig = await resolveConfig(process.cwd());
+  const config = { ...defaultConfig, ...(resolvedConfig || {}) };
+
   const filePaths = await globby(filePatterns, { absolute: true });
   const contents = await Promise.all(
     filePaths.map(filePath => readFileAsync(filePath, 'utf8'))
@@ -25,7 +25,7 @@ export async function formatAsync(filePatterns = sourceFilePatterns) {
       let formattedContent;
 
       try {
-        formattedContent = format(content, options);
+        formattedContent = format(content, config);
       } catch (err) {
         error(`Couldn't format ${red(filePath)}.`);
         throw err;

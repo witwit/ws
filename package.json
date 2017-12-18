@@ -32,6 +32,7 @@
     "@types/mime": "^2.0.0",
     "@types/mocha": "^2.2.42",
     "@types/node": "^8.0.47",
+    "@types/prettier": "^1.9.0",
     "@types/resolve-from": "0.0.18",
     "@types/semver": "^5.4.0",
     "@types/serve-static": "^1.7.32",

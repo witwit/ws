@@ -18,7 +18,7 @@ export const AppComponent = () => (
 );
 
 const foo: ILazyComponent<{}> = {
-  render: props => <AppComponent {...props} />
+  render: (props) => <AppComponent {...props} />
 };
 
 export default foo;

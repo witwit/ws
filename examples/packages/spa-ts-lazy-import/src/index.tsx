@@ -57,7 +57,7 @@ render(
     <Route path="/" component={Prelude} />
     <Route
       path="/app"
-      component={props => (
+      component={(props) => (
         <LazyComponent
           fetcher={() => _import<ILazyComponent<{}>>('./app')}
           {...props}
