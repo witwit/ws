@@ -50,8 +50,10 @@ async function watchHot(options: WatchOptions) {
     webpackDevMiddleware(compiler, {
       publicPath: project.ws.publicPath,
       stats: getStatsOptions(),
-      noInfo: true
-    }),
+      logLevel: 'warn'
+      // remove as any as soon as this is merged
+      // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22267
+    } as any),
     webpackHotMiddleware(compiler)
   ];
   await listenAsync(middlewares);
