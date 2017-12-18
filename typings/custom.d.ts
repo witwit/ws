@@ -15,7 +15,6 @@ declare module 'glob-to-regexp';
 declare module 'express-history-api-fallback';
 declare module 'eslint';
 declare module 'plur';
-declare module 'commander';
 declare module 'nodemon';
 
 declare module 'parent-dirs' {
@@ -148,55 +147,6 @@ declare module 'webpack-node-externals' {
   export default function WebpackNodeExternals(
     ...params: any[]
   ): webpack.ExternalsFunctionElement;
-}
-
-declare module 'loglevel' {
-  /**
-   * All log levels.
-   */
-  // type LEVEL = 'TRACE' | 'DEBUG' | 'INFO' | 'WARN' | 'ERROR' | 'SILENT';
-  export const levels: { [foo: string]: number };
-
-  /**
-   * Get your log level.
-   */
-  export function getLevel(): number;
-
-  /**
-   * Set your log level.
-   * @param level Your new log level.
-   */
-  export function setLevel(level: number): void;
-
-  /**
-   * Logs a message at `trace` level.
-   * @param msg The message which will be logged.
-   */
-  export function trace(msg: any): void;
-
-  /**
-   * Logs a message at `debug` level.
-   * @param msg The message which will be logged.
-   */
-  export function debug(msg: any): void;
-
-  /**
-   * Logs a message at `info` level.
-   * @param msg The message which will be logged.
-   */
-  export function info(msg: any): void;
-
-  /**
-   * Logs a message at `warn` level.
-   * @param msg The message which will be logged.
-   */
-  export function warn(msg: any): void;
-
-  /**
-   * Logs a message at `error` level.
-   * @param msg The message which will be logged.
-   */
-  export function error(msg: any): void;
 }
 
 declare module 'selenium-webdriver' {

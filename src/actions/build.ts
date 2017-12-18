@@ -14,8 +14,9 @@ import {
   getBrowserBuildConfig
 } from '../lib/webpack/browser';
 import { generateTypings } from '../lib/typescript';
+import { BaseOptions } from '../options';
 
-export interface BuildOptions {
+export interface BuildOptions extends BaseOptions {
   production?: true;
 }
 
@@ -36,27 +37,27 @@ export default async function build(options: BuildOptions) {
   // build
   switch (project.ws.type) {
     case TYPE.NODE:
-      await compileAsync(getNodeBuildConfig(), 'build');
+      await compileAsync(getNodeBuildConfig(options), 'build');
       break;
     case TYPE.ELECTRON:
       if (options.production) {
-        await compileAsync(getElectronReleaseConfig(), 'build -p');
+        await compileAsync(getElectronReleaseConfig(options), 'build -p');
       } else {
-        await compileAsync(getElectronBuildConfig(), 'build');
+        await compileAsync(getElectronBuildConfig(options), 'build');
       }
       break;
     case TYPE.SPA:
       if (options.production) {
-        await compileAsync(getSpaReleaseConfig(), 'build -p');
+        await compileAsync(getSpaReleaseConfig(options), 'build -p');
       } else {
-        await compileAsync(getSpaBuildConfig(), 'build');
+        await compileAsync(getSpaBuildConfig(options), 'build');
       }
       break;
     case TYPE.BROWSER:
       if (options.production) {
-        await compileAsync(getBrowserReleaseConfig(), 'build -p');
+        await compileAsync(getBrowserReleaseConfig(options), 'build -p');
       } else {
-        await compileAsync(getBrowserBuildConfig(), 'build');
+        await compileAsync(getBrowserBuildConfig(options), 'build');
       }
       break;
   }

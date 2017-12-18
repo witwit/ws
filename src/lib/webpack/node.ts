@@ -5,17 +5,18 @@ import {
   getEntryAndOutput,
   getModuleAndPlugins
 } from './options';
+import { BaseOptions } from '../../options';
 
-export const getNodeBuildConfig = (): WebpackConfig => ({
+export const getNodeBuildConfig = (options: BaseOptions): WebpackConfig => ({
   ...baseConfig,
   ...nodeConfig,
   ...getEntryAndOutput('node', 'build'),
-  ...getModuleAndPlugins('node', 'build')
+  ...getModuleAndPlugins('node', 'build', options)
 });
 
-export const getNodeUnitConfig = (): WebpackConfig => ({
+export const getNodeUnitConfig = (options: BaseOptions): WebpackConfig => ({
   ...baseConfig,
   ...nodeConfig,
   ...getEntryAndOutput('node', 'unit'),
-  ...getModuleAndPlugins('node', 'unit')
+  ...getModuleAndPlugins('node', 'unit', options)
 });

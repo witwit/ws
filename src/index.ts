@@ -1,9 +1,10 @@
 import { handleError } from './error';
-import commander from 'commander';
-import { info, setLevel, levels } from 'loglevel';
+import commander, { CommanderStatic } from 'commander';
+import { info, setLevel } from 'loglevel';
 import chalk from 'chalk';
 import { project, TYPE } from './project';
 import { initializeUpdateNotifier } from './lib/update-notifier';
+import { BaseOptions, Env } from './options';
 
 const { yellow, cyan } = chalk;
 
@@ -13,33 +14,39 @@ commander.version(pkg.version);
 commander.usage('<command> [options]');
 
 // global options
-const allowedLogLevels = Object.keys(levels).map((level) =>
-  level.toLocaleLowerCase()
-);
+const LOG_LEVELS = ['trace', 'debug', 'info', 'warn', 'error', 'silent'];
 commander.option(
   '-l, --log-level <level>',
   'set log level',
-  (value: any) => {
-    if (allowedLogLevels.some((allowedValue) => value === allowedValue)) {
+  (value: string) => {
+    if (LOG_LEVELS.includes(value)) {
       return value;
     } else {
-      throw `Your log level ${yellow(
-        value
-      )} doesn't match any of the valid values: ${yellow(
-        allowedLogLevels.join(', ')
-      )}.`;
+      const level = yellow(value);
+      const levels = yellow(LOG_LEVELS.join(', '));
+      throw `Your log level ${level} doesn't match any of the valid values: ${levels}.`;
     }
   },
   'info'
 );
 commander.option('-u, --ignore-updates', 'ignore updates');
+commander.option(
+  '-e, --env [value]',
+  'environment variables which are passed to the build step',
+  (keyValuePair: string, list: Env[]) => {
+    const [key, value = ''] = keyValuePair.split('=');
+    list.push({ key, value });
+    return list;
+  },
+  []
+);
 
 function handleAction(
   importAction: () => Promise<{ default: (options?: any) => Promise<any> }>
 ) {
-  return async (options: any) => {
+  return async (options: BaseOptions & CommanderStatic) => {
     // handle global options
-    setLevel(levels[options.parent.logLevel.toUpperCase()]);
+    setLevel(options.parent.logLevel);
     // handle specific action
     try {
       // update notifier runs parallel to action (if it's not ignored)
@@ -168,9 +175,8 @@ switch (project.ws.type) {
 // handle unknown commands
 commander.on('command:*', (unknownCommand: string) => {
   commander.outputHelp();
-  throw `${yellow(
-    unknownCommand
-  )} is not a known command. You can see all supported commands above.`;
+  const unknown = yellow(unknownCommand);
+  throw `${unknown} is not a known command. You can see all supported commands above.`;
 });
 
 // invoke commands

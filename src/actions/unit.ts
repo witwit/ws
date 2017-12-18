@@ -11,10 +11,15 @@ import { getNodeUnitConfig } from '../lib/webpack/node';
 import { getElectronUnitConfig } from '../lib/webpack/electron';
 import { getSpaUnitConfig } from '../lib/webpack/spa';
 import { getBrowserUnitConfig } from '../lib/webpack/browser';
+import { BaseOptions } from '../options';
 
 const { cyan, yellow } = chalk;
 
-export default async function unit(options: any) {
+export interface UnitOptions extends BaseOptions {
+  grid?: boolean;
+}
+
+export default async function unit(options: UnitOptions) {
   const hasUnitTests = await existsAsync(project.ws.unitEntry);
   if (!hasUnitTests) {
     warn(
@@ -34,21 +39,21 @@ export default async function unit(options: any) {
   let exitCode = 0;
   switch (project.ws.type) {
     case TYPE.NODE:
-      const config = getNodeUnitConfig();
+      const config = getNodeUnitConfig(options);
       await compileAsync(config, 'unit');
       const files = [path.join(config.output.path, 'index.js')];
       exitCode = await mochaTestAsync(files);
       break;
     case TYPE.ELECTRON:
-      await compileAsync(getElectronUnitConfig(), 'unit');
+      await compileAsync(getElectronUnitConfig(options), 'unit');
       exitCode = await karmaTestAsync(options);
       break;
     case TYPE.SPA:
-      await compileAsync(getSpaUnitConfig(), 'unit');
+      await compileAsync(getSpaUnitConfig(options), 'unit');
       exitCode = await karmaTestAsync(options);
       break;
     case TYPE.BROWSER:
-      await compileAsync(getBrowserUnitConfig(), 'unit');
+      await compileAsync(getBrowserUnitConfig(options), 'unit');
       exitCode = await karmaTestAsync(options);
       break;
   }

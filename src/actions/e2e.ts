@@ -16,6 +16,7 @@ import {
 import { compile as compileI18n } from '../lib/i18n';
 import { getSpaE2eConfig } from '../lib/webpack/spa';
 import { compileAsync } from '../lib/webpack/compiler';
+import { BaseOptions } from '../options';
 
 const { cyan, yellow, magenta } = chalk;
 
@@ -62,7 +63,7 @@ function spawnE2e(options: any, { browserName, version, id }: Browser) {
   });
 }
 
-async function init(options: any) {
+async function init(options: BaseOptions) {
   debug(`Init E2E tests.`);
 
   // build
@@ -78,7 +79,7 @@ async function init(options: any) {
   }
 
   await removeAsync(project.ws.distTestsDir);
-  await compileAsync(getSpaE2eConfig(), 'e2e');
+  await compileAsync(getSpaE2eConfig(options), 'e2e');
   debug(`Build E2E tests.`);
 
   // prepare selenium
@@ -126,8 +127,8 @@ async function init(options: any) {
   }
 }
 
-async function run() {
-  const { output } = getSpaE2eConfig();
+async function run(options: BaseOptions) {
+  const { output } = getSpaE2eConfig(options);
   const files = [join(output.path, 'index.js')];
   const exitCode = await testAsync(files);
   if (exitCode !== 0) {
@@ -135,7 +136,7 @@ async function run() {
   }
 }
 
-export default async function e2e(options: any) {
+export default async function e2e(options: BaseOptions) {
   // translations could be needed
   if (project.ws.i18n) {
     await compileI18n();
@@ -144,7 +145,7 @@ export default async function e2e(options: any) {
   const isSpawned = process.env.WS_E2E_IS_SPAWNED;
 
   if (isSpawned) {
-    await run();
+    await run(options);
   } else {
     await init(options);
   }

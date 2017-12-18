@@ -18,6 +18,7 @@ import autoprefixer from 'autoprefixer';
 import { readJsonSync } from 'fs-extra-promise';
 import { resolve as resolveModule } from '../resolve';
 import { project } from '../../project';
+import { BaseOptions } from '../../options';
 
 const HappyPack: any = require('happypack');
 
@@ -497,7 +498,11 @@ export const getEntryAndOutput = (target: Target, command: Command) => {
   return { entry, output };
 };
 
-export const getModuleAndPlugins = (target: Target, command: Command) => {
+export const getModuleAndPlugins = (
+  target: Target,
+  command: Command,
+  options: BaseOptions
+) => {
   const rules: Rule[] = [
     getJsRule(target, command),
     jsonRule,
@@ -513,6 +518,18 @@ export const getModuleAndPlugins = (target: Target, command: Command) => {
     extractCssPlugin,
     loaderOptionsPlugin
   ];
+
+  if (options.parent.env.length) {
+    const definitions = options.parent.env.reduce(
+      (definitions, { key, value }) => {
+        definitions[`process.env.${key}`] = JSON.stringify(value);
+        return definitions;
+      },
+      {} as { [key: string]: string }
+    );
+    const definePlugin = new DefinePlugin(definitions);
+    plugins.push(definePlugin);
+  }
 
   if (project.ws.tsconfig) {
     rules.push(getTsRule(target, command));

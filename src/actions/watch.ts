@@ -22,20 +22,21 @@ import { getSpaBuildConfig } from '../lib/webpack/spa';
 import { getBrowserBuildConfig } from '../lib/webpack/browser';
 import { resolve } from '../lib/resolve';
 import { nodemonAsync } from '../lib/nodemon';
+import { BaseOptions } from '../options';
 
 const { cyan } = chalk;
 
-export interface WatchOptions {
+export interface WatchOptions extends BaseOptions {
   hot?: true;
 }
 
 // only for spa for now via opt-in (experimental feature)
-async function watchHot() {
+async function watchHot(options: WatchOptions) {
   if (project.ws.i18n) {
     await compileI18n();
   }
 
-  const config = getSpaBuildConfig();
+  const config = getSpaBuildConfig(options);
   const { index } = config.entry;
   config.entry.index = [
     'react-hot-loader/patch',
@@ -59,7 +60,7 @@ async function watchHot() {
 export default async function watch(options: WatchOptions) {
   await removeAsync(project.ws.distDir);
 
-  if (options.hot) return watchHot();
+  if (options.hot) return watchHot(options);
 
   const port = await findAsync({
     startingPort: 35729
@@ -81,7 +82,7 @@ export default async function watch(options: WatchOptions) {
     case TYPE.NODE:
       await watchAsync(
         livereloadServer,
-        getNodeBuildConfig(),
+        getNodeBuildConfig(options),
         'build',
         onChangeSuccess
       );
@@ -89,7 +90,7 @@ export default async function watch(options: WatchOptions) {
     case TYPE.ELECTRON:
       await watchAsync(
         livereloadServer,
-        getElectronBuildConfig(),
+        getElectronBuildConfig(options),
         'build',
         onChangeSuccess
       );
@@ -98,7 +99,7 @@ export default async function watch(options: WatchOptions) {
     case TYPE.SPA:
       await watchAsync(
         livereloadServer,
-        getSpaBuildConfig(),
+        getSpaBuildConfig(options),
         'build',
         onChangeSuccess
       );
@@ -107,7 +108,7 @@ export default async function watch(options: WatchOptions) {
     case TYPE.BROWSER:
       await watchAsync(
         livereloadServer,
-        getBrowserBuildConfig(),
+        getBrowserBuildConfig(options),
         'build',
         onChangeSuccess
       );
