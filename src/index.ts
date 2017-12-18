@@ -13,14 +13,14 @@ commander.version(pkg.version);
 commander.usage('<command> [options]');
 
 // global options
-const allowedLogLevels = Object.keys(levels).map(level =>
+const allowedLogLevels = Object.keys(levels).map((level) =>
   level.toLocaleLowerCase()
 );
 commander.option(
   '-l, --log-level <level>',
   'set log level',
   (value: any) => {
-    if (allowedLogLevels.some(allowedValue => value === allowedValue)) {
+    if (allowedLogLevels.some((allowedValue) => value === allowedValue)) {
       return value;
     } else {
       throw `Your log level ${yellow(

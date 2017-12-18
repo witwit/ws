@@ -66,8 +66,8 @@ function collectArgumentsRecursive(ast: any): KeyTypePair[] {
       return [];
     });
 
-  elements.forEach(element => {
-    element.forEach(option => {
+  elements.forEach((element) => {
+    element.forEach((option) => {
       pairs = pairs.concat(option);
     });
   });
@@ -91,7 +91,7 @@ function getDocumentation(translations: ParsedTranslation[], key: string) {
   return `
 /**${translations
     .map(
-      translation => `
+      (translation) => `
  * \`${translation.locale}\`: ${translation.data[key]}`
     )
     .join('')}
@@ -124,7 +124,7 @@ module.exports.COUNTRY_CODE = '${translation.locale.split('_')[1]}';
 var cachedMessages = {};
 ${keys
     .map(
-      key => `
+      (key) => `
 module.exports['${key}'] = function(${
         hasArguments(translation.asts[key]) ? 'data' : ''
       }) {${
@@ -179,7 +179,7 @@ declare interface I18N {
    */
   COUNTRY_CODE: string;${keys
     .map(
-      key =>
+      (key) =>
         `
 ${getDocumentation(translations, key)}
   ${key}: (${
@@ -202,7 +202,7 @@ export async function compile() {
 
   await removeAsync(i18n.distDir);
   await Promise.all(
-    parsedTranslations.map(parsedTranslation =>
+    parsedTranslations.map((parsedTranslation) =>
       writeTranslation(parsedTranslations[0], parsedTranslation)
     )
   );

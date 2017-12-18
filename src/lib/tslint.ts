@@ -30,7 +30,7 @@ export async function tslintAsync() {
   // will be in your files array → that's why we need `.filter(isSourceFile)`
   const files = Linter.getFileNames(program).filter(isSourceFile);
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const fileContents = program.getSourceFile(file).getFullText();
     const conf = Configuration.findConfiguration(configPath, file).results;
     linter.lint(file, fileContents, conf);

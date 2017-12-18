@@ -1,4 +1,4 @@
-import { format, resolveConfig, Options } from 'prettier';
+import { format, resolveConfig } from 'prettier';
 import { readFileAsync, writeFileAsync } from 'fs-extra-promise';
 import globby from 'globby';
 import { error } from 'loglevel';
@@ -15,7 +15,7 @@ export async function formatAsync(filePatterns = sourceFilePatterns) {
 
   const filePaths = await globby(filePatterns, { absolute: true });
   const contents = await Promise.all(
-    filePaths.map(filePath => readFileAsync(filePath, 'utf8'))
+    filePaths.map((filePath) => readFileAsync(filePath, 'utf8'))
   );
 
   const fixedFiles: string[] = [];

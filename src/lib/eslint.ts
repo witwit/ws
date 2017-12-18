@@ -49,7 +49,7 @@ const formatter = async (result: Result) => {
 
   const fileContent = await readFileAsync(result.filePath, 'utf8');
 
-  const messagesOutput = result.messages.map(message => {
+  const messagesOutput = result.messages.map((message) => {
     const ruleId = dim(`(${message.ruleId})`);
     const msg = red(message.message);
 
@@ -71,7 +71,7 @@ export async function eslintAsync(filePatterns = sourceFilePatterns) {
 
   const fixedFiles: string[] = [];
   await Promise.all(
-    stats.results.map(async result => {
+    stats.results.map(async (result) => {
       const wasFixed = result.output !== undefined;
       if (wasFixed) {
         fixedFiles.push(result.filePath);

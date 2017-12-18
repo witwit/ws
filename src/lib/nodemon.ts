@@ -11,5 +11,5 @@ export function nodemonAsync(options = defaultOptions) {
   // exit correctly on ^C
   process.once('SIGINT', () => process.exit(0));
 
-  return new Promise(resolve => nodemon.on('quit', resolve));
+  return new Promise((resolve) => nodemon.on('quit', resolve));
 }

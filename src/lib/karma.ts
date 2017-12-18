@@ -139,8 +139,8 @@ export async function testAsync(options: { grid?: boolean } = {}) {
     }
   }
 
-  return new Promise<number>(resolve => {
-    const server = new Server(karmaConfig, exitCode => {
+  return new Promise<number>((resolve) => {
+    const server = new Server(karmaConfig, (exitCode) => {
       debug(`Karma finished.`);
       if (sauceConnectProcess) {
         debug(`Tries to close Sauce Connect.`);

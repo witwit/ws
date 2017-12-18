@@ -117,7 +117,7 @@ export function queryBrowsers(
 ): Browser[] {
   debug(`Parse browsers from query: ${query}.`);
   const browsers = browserslist(query)
-    .map(browser => {
+    .map((browser) => {
       let [name, version] = browser.split(' ');
       const hasVersionRange = version.includes('-');
       if (hasVersionRange) {
@@ -171,9 +171,7 @@ function convertToValidSemver(version: string) {
       return version;
     } else {
       // more than two dots found
-      throw `${
-        version
-      } can't be converted to valid semver (more than two dots).`;
+      throw `${version} can't be converted to valid semver (more than two dots).`;
     }
   } else {
     if (isNaN(version as any)) {
@@ -204,9 +202,9 @@ async function getAllAvailableBrowsers(): Promise<Browser[]> {
   if (isSauceLabsHost(project.ws.selenium!.host)) {
     debug(`Get available browsers on Sauce Labs.`);
     const platforms: any = await new Promise((resolve, reject) => {
-      get(SAUCE_LABS_PLATFORMS, res => {
+      get(SAUCE_LABS_PLATFORMS, (res) => {
         let body = '';
-        res.on('data', data => (body = body + data));
+        res.on('data', (data) => (body = body + data));
         res.on('end', () => resolve(JSON.parse(body)));
       }).on('error', reject);
     });
@@ -223,7 +221,7 @@ async function getAllAvailableBrowsers(): Promise<Browser[]> {
     // convert status like https://github.com/davglass/selenium-grid-status#usage
     // to a list of unique browsers containing just the `browserName`, `version` and `id`
     const nodes = await getNodes();
-    browsersWithoutId = flatten(nodes.map(node => node.browser)).map(
+    browsersWithoutId = flatten(nodes.map((node) => node.browser)).map(
       ({ browserName, version }) => ({
         // treat 'iphone' like 'ipad' (same browser)
         browserName: browserName === 'iphone' ? 'ipad' : browserName,

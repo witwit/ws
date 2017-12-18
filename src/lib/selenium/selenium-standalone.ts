@@ -8,7 +8,7 @@ const options = {
 
 const installAsync = () =>
   new Promise((resolve, reject) => {
-    install(options, err => {
+    install(options, (err) => {
       if (err) {
         reject(err);
       } else {

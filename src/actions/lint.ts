@@ -63,7 +63,7 @@ export default async function lint() {
         `isn't private`
       )}, but it has the following ${errors(docsErrors.length)}.`
     );
-    docsErrors.forEach(msg => error(`  ${msg}`));
+    docsErrors.forEach((msg) => error(`  ${msg}`));
     error('');
   }
 

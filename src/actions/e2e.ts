@@ -43,10 +43,10 @@ function spawnE2e(options: any, { browserName, version, id }: Browser) {
       { env }
     );
 
-    childProcess.stdout.on('data', data =>
+    childProcess.stdout.on('data', (data) =>
       process.stdout.write(`${childPrefix}${data}`)
     );
-    childProcess.stderr.on('data', data =>
+    childProcess.stderr.on('data', (data) =>
       process.stderr.write(`${childPrefix}${data}`)
     );
 
@@ -89,9 +89,9 @@ async function init(options: any) {
     // at this place we know selenium config is set, no need for null checks
     const selenium = project.ws.selenium as SeleniumGridConfig;
     const { host, port, user, password } = selenium;
-    options.seleniumUrl = `http://${user ? `${user}:${password}@` : ''}${
-      host
-    }:${port}/wd/hub`;
+    options.seleniumUrl = `http://${
+      user ? `${user}:${password}@` : ''
+    }${host}:${port}/wd/hub`;
     browsers = options.browsers
       ? options.browsers.split(',').map(parseBrowser)
       : await getBrowsers();
@@ -111,7 +111,7 @@ async function init(options: any) {
 
   // spawn tests
   // TODO: For now run everything in parallel. We could check `options.sequentially` to run it  sequentially in the future.
-  await Promise.all(browsers.map(browser => spawnE2e(options, browser)));
+  await Promise.all(browsers.map((browser) => spawnE2e(options, browser)));
 
   // ran locally?
   if (seleniumProcess) {

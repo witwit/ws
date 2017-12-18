@@ -38,7 +38,7 @@ function isVerbose(): boolean {
 function optionallyProfile(options: WebpackConfig | WebpackConfig[]) {
   if (isVerbose()) {
     if (Array.isArray(options)) {
-      options.map(option => (option.profile = true));
+      options.map((option) => (option.profile = true));
     } else {
       options.profile = true;
     }
@@ -132,9 +132,9 @@ async function onChange(
   // filter changes for live reloading
   const modules = getModules(stats);
   const changedModules = modules.filter(
-    module => module.built && module.resource
+    (module) => module.built && module.resource
   );
-  const changedStyleModules = changedModules.filter(module =>
+  const changedStyleModules = changedModules.filter((module) =>
     module.resource.match(/\.(css|less|sass)$/)
   );
   const hasOnlyStyleChanges =
@@ -194,7 +194,7 @@ export function watchAsync(
     watching.startTime += timefix;
     callback();
   });
-  compiler.plugin('done', stats => {
+  compiler.plugin('done', (stats) => {
     stats.startTime -= timefix;
   });
 

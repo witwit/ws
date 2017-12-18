@@ -13,9 +13,9 @@ export async function getIntlLocales(): Promise<LocaleMap> {
     const intlPath = await resolve('intl');
     const cwd = join(dirname(intlPath), 'locale-data/jsonp');
     const localeFiles = await globby('*.js', { cwd });
-    const locales = localeFiles.map(file => basename(file, '.js'));
+    const locales = localeFiles.map((file) => basename(file, '.js'));
     cachedLocales = {};
-    locales.forEach(key => (cachedLocales[key] = true));
+    locales.forEach((key) => (cachedLocales[key] = true));
   }
   return cachedLocales;
 }
@@ -32,7 +32,5 @@ export async function toIntlLocale(locale: string): Promise<string> {
     return shortIntlLocale;
   }
 
-  throw `The locale ${
-    locale
-  } can't be converted to a locale which "intl" understands.`;
+  throw `The locale ${locale} can't be converted to a locale which "intl" understands.`;
 }

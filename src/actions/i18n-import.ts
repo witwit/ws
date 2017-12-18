@@ -23,12 +23,12 @@ function importTranslation(locale: string, feature: string, i18n: I18nConfig) {
   debug(`Import from ${url}.`);
 
   return new Promise<void>((resolve, reject) => {
-    get(url, res => {
+    get(url, (res) => {
       let body = '';
-      res.on('data', data => (body = body + data));
-      res.on('error', err => console.log(err));
+      res.on('data', (data) => (body = body + data));
+      res.on('error', (err) => console.log(err));
       res.on('end', () => {
-        if (IGNORED_CONTENTS.some(content => body === content)) {
+        if (IGNORED_CONTENTS.some((content) => body === content)) {
           resolve();
         } else {
           outputFileAsync(outputPath, body)
@@ -50,8 +50,8 @@ export default async function i18nImport() {
 
   await removeAsync(i18n.dir);
   const importPromises: Array<Promise<void>> = [];
-  features.forEach(feature =>
-    localesAndLanguages.forEach(localeOrLanguage => {
+  features.forEach((feature) =>
+    localesAndLanguages.forEach((localeOrLanguage) => {
       importPromises.push(importTranslation(localeOrLanguage, feature, i18n));
     })
   );

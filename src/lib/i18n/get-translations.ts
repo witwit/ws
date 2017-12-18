@@ -53,7 +53,7 @@ async function readTranslation(
 
   const translation: Translation = await readFileAsync(readPath, 'utf8')
     .then(parse)
-    .catch(err => {
+    .catch((err) => {
       if (err.code === 'ENOENT') {
         // translations can be "empty"
         return {};
@@ -62,7 +62,7 @@ async function readTranslation(
       }
     })
     .then(camelCaseKeys)
-    .then(data => ({ data, locale }));
+    .then((data) => ({ data, locale }));
 
   return translation;
 }
@@ -87,13 +87,13 @@ export async function getTranslations() {
 
   // get translations from all deps (this is very dumb right now)
   // we also look into parent directories for workspace based projects
-  const patterns = parentDirs().map(dir =>
+  const patterns = parentDirs().map((dir) =>
     join(dir, 'node_modules/**/package.json')
   );
   const deps = await globby(patterns);
   await Promise.all(
-    deps.map(dep =>
-      readJsonAsync(dep).then(pkg => {
+    deps.map((dep) =>
+      readJsonAsync(dep).then((pkg) => {
         if (pkg.ws && pkg.ws.i18n) {
           translatedModules.push({
             cwd: dirname(dep),
@@ -107,9 +107,9 @@ export async function getTranslations() {
   );
 
   const readPromises: Array<Promise<Translation>> = [];
-  translatedModules.forEach(translatedModule =>
-    translatedModule.features.forEach(feature =>
-      translatedModule.localesAndLanguages.forEach(localeOrLanguage => {
+  translatedModules.forEach((translatedModule) =>
+    translatedModule.features.forEach((feature) =>
+      translatedModule.localesAndLanguages.forEach((localeOrLanguage) => {
         readPromises.push(
           readTranslation(
             translatedModule.cwd,
@@ -124,9 +124,9 @@ export async function getTranslations() {
   const translations: Array<Translation> = await Promise.all(readPromises);
 
   const groupedTranslations: Array<GroupedTranslation> = i18n.locales.map(
-    locale => ({
+    (locale) => ({
       locale,
-      translations: translations.filter(translation =>
+      translations: translations.filter((translation) =>
         isMatchingLocaleOrLanguage(translation.locale, locale)
       )
     })
@@ -145,9 +145,9 @@ export async function getTranslations() {
   );
 
   const parsedTranslations: Array<ParsedTranslation> = mergedTranslations.map(
-    translation => {
+    (translation) => {
       const asts: { [s: string]: any } = {};
-      Object.keys(translation.data).forEach(key => {
+      Object.keys(translation.data).forEach((key) => {
         const ast = parser.parse(translation.data[key]);
         asts[key] = ast;
       });

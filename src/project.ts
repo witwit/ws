@@ -271,7 +271,7 @@ export function validate(pkg: any): PackageConfig {
     )}. This can be any of the following values: ${yellow(TYPES.join(', '))}.`;
   }
 
-  if (!TYPES.some(type => type === pkg.ws.type)) {
+  if (!TYPES.some((type) => type === pkg.ws.type)) {
     throw `Your type ${yellow(
       pkg.ws.type
     )} doesn't match any of the valid values: ${yellow(TYPES.join(', '))}.`;
@@ -372,6 +372,4 @@ export function validate(pkg: any): PackageConfig {
 export const project = validate(unvalidatedProject);
 
 const { srcDir, testsDir } = project.ws;
-export const sourceFilePatterns = `{${srcDir},${
-  testsDir
-}}/**/*.{tsx,ts,jsx,js}`;
+export const sourceFilePatterns = `{${srcDir},${testsDir}}/**/*.{tsx,ts,jsx,js}`;

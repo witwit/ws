@@ -32,13 +32,13 @@ export function handleError(err: Error) {
     err.stack
       .split('\n')
       .filter(
-        line =>
-          !IGNORED_TRACE_LINES.some(ignoredLine => line.includes(ignoredLine))
+        (line) =>
+          !IGNORED_TRACE_LINES.some((ignoredLine) => line.includes(ignoredLine))
       )
       .filter((_, index) => index < 6) // roughly error message + 5 code lines
-      .map(line => line.replace('webpack:///', './'))
-      .map(line => line.replace(`${__dirname}/webpack:/`, './'))
-      .forEach(line => error(line));
+      .map((line) => line.replace('webpack:///', './'))
+      .map((line) => line.replace(`${__dirname}/webpack:/`, './'))
+      .forEach((line) => error(line));
   } else {
     error(err);
   }

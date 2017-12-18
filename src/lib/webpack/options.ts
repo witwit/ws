@@ -144,9 +144,7 @@ const getJsRule = (target: Target, command: Command): Rule => ({
       }
     },
     {
-      loader: `happypack/loader?id=js-${target}-${command}&compilerId=js-${
-        target
-      }-${command}`
+      loader: `happypack/loader?id=js-${target}-${command}&compilerId=js-${target}-${command}`
     }
   ]
 });
@@ -168,9 +166,7 @@ const getTsRule = (target: Target, command: Command): Rule => ({
       }
     },
     {
-      loader: `happypack/loader?id=ts-${target}-${command}&compilerId=ts-${
-        target
-      }-${command}`
+      loader: `happypack/loader?id=ts-${target}-${command}&compilerId=ts-${target}-${command}`
     }
   ]
 });
