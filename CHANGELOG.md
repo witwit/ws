@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.9.1 (2018-01-09)
+
+- Updated some deps and correctly set prettier range to use new `arrowParens` in all cases.
+
 # 2.9.0 (2017-12-18)
 
 - Pass any environment variables to your build step by using the `-e`/`--env` params (e.g. `$ ws build -e FOO=bar`).
