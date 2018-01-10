@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.9.2 (2018-01-10)
+
+- Close webpack correctly in `watch --hot` mode.
+
 # 2.9.1 (2018-01-09)
 
 - Updated some deps and correctly set prettier range to use new `arrowParens` in all cases.

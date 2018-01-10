@@ -46,16 +46,19 @@ async function watchHot(options: WatchOptions) {
   config.plugins.push(new HotModuleReplacementPlugin());
   const compiler = getCompiler(config, 'build');
 
+  const webpackDevHandler = webpackDevMiddleware(compiler, {
+    publicPath: project.ws.publicPath,
+    stats: getStatsOptions(),
+    logLevel: 'warn'
+  });
+
   const middlewares: Array<any> = [
-    webpackDevMiddleware(compiler, {
-      publicPath: project.ws.publicPath,
-      stats: getStatsOptions(),
-      logLevel: 'warn'
-      // remove as any as soon as this is merged
-      // https://github.com/DefinitelyTyped/DefinitelyTyped/pull/22267
-    } as any),
+    webpackDevHandler,
     webpackHotMiddleware(compiler)
   ];
+
+  process.once('SIGINT', () => webpackDevHandler.close(() => process.exit()));
+
   await listenAsync(middlewares);
 }
 
