@@ -37,7 +37,6 @@
     "@types/resolve-from": "0.0.18",
     "@types/semver": "^5.4.0",
     "@types/serve-static": "^1.7.32",
-    "@types/source-map": "^0.5.1",
     "@types/uglify-js": "^2.0.27",
     "@types/url-template": "^2.0.28",
     "@types/webpack": "^3.0.10",
