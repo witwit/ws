@@ -3,8 +3,7 @@ import chalk from 'chalk';
 import moment from 'moment';
 import livereload from 'livereload';
 import livereloadMiddleware from 'connect-livereload';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackHotMiddleware from 'webpack-hot-middleware';
+import hotClient from 'webpack-hot-client';
 import { HotModuleReplacementPlugin } from 'webpack';
 import { removeAsync } from 'fs-extra-promise';
 import { project, TYPE } from '../project';
@@ -37,29 +36,39 @@ async function watchHot(options: WatchOptions) {
   }
 
   const config = getSpaBuildConfig(options);
-  const { index } = config.entry;
-  config.entry.index = [
-    'react-hot-loader/patch',
-    resolve('webpack-hot-middleware/client')
-  ].concat(Array.isArray(index) ? index : [index]);
-  config.plugins = config.plugins || [];
-  config.plugins.push(new HotModuleReplacementPlugin());
   const compiler = getCompiler(config, 'build');
 
-  const webpackDevHandler = webpackDevMiddleware(compiler, {
-    publicPath: project.ws.publicPath,
-    stats: getStatsOptions(),
-    logLevel: 'warn'
-  });
+  const getWebpackServer = require('webpack-serve/lib/server');
+  const history = require('connect-history-api-fallback');
+  const convert = require('koa-connect');
 
-  const middlewares: Array<any> = [
-    webpackDevHandler,
-    webpackHotMiddleware(compiler)
-  ];
+  const { publicPath, distDir: root } = project.ws;
+  const serverOptions = {
+    content: [],
+    dev: { publicPath },
+    host: 'localhost',
+    hot: {},
+    http2: false,
+    https: false,
+    index: 'index.html',
+    logLevel: 'info',
+    logTime: false,
+    open: false,
+    port: 8080,
+    protocol: 'http',
+    compiler,
+    add: (app: any, middleware: any, options: any) => {
+      app.use(convert(history()));
+    }
+  };
 
-  process.once('SIGINT', () => webpackDevHandler.close(() => process.exit()));
+  const { close, server, start } = getWebpackServer(serverOptions);
+  hotClient(compiler, { port: 8082 });
+  start(serverOptions);
 
-  await listenAsync(middlewares);
+  const onClose = () => close(process.exit);
+  process.on('SIGINT', onClose);
+  process.on('SIGTERM', onClose);
 }
 
 export default async function watch(options: WatchOptions) {

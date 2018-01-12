@@ -56,6 +56,7 @@
     "chalk": "^2.1.0",
     "clone": "^2.1.1",
     "commander": "^2.11.0",
+    "connect-history-api-fallback": "^1.5.0",
     "connect-livereload": "^0.6.0",
     "css-loader": "^0.28.7",
     "eslint": "^4.6.1",
@@ -83,6 +84,7 @@
     "karma-mocha-reporter": "^2.2.4",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webdriver-launcher": "^1.0.5",
+    "koa-connect": "^2.0.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
     "livereload": "^0.6.2",
@@ -118,6 +120,7 @@
     "url-template": "^2.0.7",
     "webpack": "^3.5.5",
     "webpack-dev-middleware": "^2.0.1",
+    "webpack-hot-client": "^1.0.5",
     "webpack-hot-middleware": "^2.20.0",
     "webpack-node-externals": "^1.6.0"
   },

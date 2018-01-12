@@ -16,6 +16,8 @@ declare module 'express-history-api-fallback';
 declare module 'eslint';
 declare module 'plur';
 declare module 'nodemon';
+declare module 'webpack-serve/lib/server';
+declare module 'webpack-hot-client';
 
 declare module 'parent-dirs' {
   function parentDirs(cwd?: string): string[];
