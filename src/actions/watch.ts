@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import moment from 'moment';
 import livereload from 'livereload';
 import livereloadMiddleware from 'connect-livereload';
-import hotClient from 'webpack-hot-client';
+// import hotClient from 'webpack-hot-client';
 import { HotModuleReplacementPlugin } from 'webpack';
 import { removeAsync } from 'fs-extra-promise';
 import { project, TYPE } from '../project';
@@ -50,7 +50,7 @@ async function watchHot(options: WatchOptions) {
     hot: {},
     http2: false,
     https: false,
-    index: 'index.html',
+    // index: 'index.html',
     logLevel: 'info',
     logTime: false,
     open: false,
@@ -63,7 +63,7 @@ async function watchHot(options: WatchOptions) {
   };
 
   const { close, server, start } = getWebpackServer(serverOptions);
-  hotClient(compiler, { port: 8082 });
+  // hotClient(compiler, { port: 8082 });
   start(serverOptions);
 
   const onClose = () => close(process.exit);
