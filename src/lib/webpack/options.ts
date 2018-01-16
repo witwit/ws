@@ -453,7 +453,7 @@ export type Target =
 
 export const getEntryAndOutput = (target: Target, command: Command) => {
   const entry: Entry = {
-    index: project.ws.srcEntry
+    index: [project.ws.srcEntry]
   };
 
   const output: StrictOutput = {
