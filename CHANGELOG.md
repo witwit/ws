@@ -1,5 +1,9 @@
 The changelog is currently handwritten.
 
+# 2.9.3 (2018-01-16)
+
+- Try to prevent another hanging running webpack process.
+
 # 2.9.2 (2018-01-10)
 
 - Close webpack correctly in `watch --hot` mode.

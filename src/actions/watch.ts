@@ -57,7 +57,9 @@ async function watchHot(options: WatchOptions) {
     webpackHotMiddleware(compiler)
   ];
 
-  process.once('SIGINT', () => webpackDevHandler.close(() => process.exit()));
+  const onClose = () => webpackDevHandler.close(() => process.exit());
+  process.once('SIGINT', onClose);
+  process.once('SIGTERM', onClose);
 
   await listenAsync(middlewares);
 }
