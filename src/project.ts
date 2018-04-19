@@ -158,7 +158,7 @@ export interface WsConfig {
   /**
    * The pattern that is used to find tests
    */
-  testsPattern: string | string[];
+  testsPattern?: string | string[];
   /**
    * The entry file for your unit tests. This value is set automatically.
    * It could look this: `./tests/unit.ts`.
