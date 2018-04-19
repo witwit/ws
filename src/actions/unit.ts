@@ -1,4 +1,4 @@
-import { warn, info } from 'loglevel';
+import { warn } from 'loglevel';
 import path from 'path';
 import { removeAsync, existsAsync } from 'fs-extra-promise';
 import chalk from 'chalk';

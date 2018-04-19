@@ -9,7 +9,9 @@ import {
 } from './options';
 import { BaseOptions } from '../../options';
 
-export const getBrowserBuildConfig = async (options: BaseOptions): Promise<WebpackConfig> => ({
+export const getBrowserBuildConfig = async (
+  options: BaseOptions
+): Promise<WebpackConfig> => ({
   ...baseConfig,
   ...await getEntryAndOutput('browser', 'build'),
   ...getModuleAndPlugins('browser', 'build', options),
@@ -26,7 +28,9 @@ export const getBrowserReleaseConfig = async (
   externals: externalsBrowser
 });
 
-export const getBrowserUnitConfig = async (options: BaseOptions): Promise<WebpackConfig> => ({
+export const getBrowserUnitConfig = async (
+  options: BaseOptions
+): Promise<WebpackConfig> => ({
   ...baseConfig,
   ...await getEntryAndOutput('browser', 'unit'),
   ...getModuleAndPlugins('browser', 'unit', options),

@@ -54,7 +54,9 @@ export const getElectronReleaseConfig = async (
   return Promise.resolve([mainConfig, rendererConfig]);
 };
 
-export const getElectronUnitConfig = async (options: BaseOptions): Promise<WebpackConfig> => ({
+export const getElectronUnitConfig = async (
+  options: BaseOptions
+): Promise<WebpackConfig> => ({
   ...baseConfig,
   ...electronRendererConfig,
   ...await getEntryAndOutput('electron-renderer', 'unit'),
