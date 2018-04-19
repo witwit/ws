@@ -1,4 +1,4 @@
-import { warn } from 'loglevel';
+import { warn, info } from 'loglevel';
 import path from 'path';
 import { removeAsync, existsAsync } from 'fs-extra-promise';
 import chalk from 'chalk';
@@ -39,21 +39,22 @@ export default async function unit(options: UnitOptions) {
   let exitCode = 0;
   switch (project.ws.type) {
     case TYPE.NODE:
-      const config = getNodeUnitConfig(options);
+      const config = await getNodeUnitConfig(options);
       await compileAsync(config, 'unit');
       const files = [path.join(config.output.path, 'index.js')];
       exitCode = await mochaTestAsync(files);
       break;
     case TYPE.ELECTRON:
-      await compileAsync(getElectronUnitConfig(options), 'unit');
+      await compileAsync(await getElectronUnitConfig(options), 'unit');
       exitCode = await karmaTestAsync(options);
       break;
     case TYPE.SPA:
-      await compileAsync(getSpaUnitConfig(options), 'unit');
+      const conf = await getSpaUnitConfig(options);
+      await compileAsync(conf, 'unit');
       exitCode = await karmaTestAsync(options);
       break;
     case TYPE.BROWSER:
-      await compileAsync(getBrowserUnitConfig(options), 'unit');
+      await compileAsync(await getBrowserUnitConfig(options), 'unit');
       exitCode = await karmaTestAsync(options);
       break;
   }

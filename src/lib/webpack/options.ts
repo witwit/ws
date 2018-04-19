@@ -1,4 +1,6 @@
 import { join } from 'path';
+import { warn, info } from 'loglevel';
+import globby from 'globby';
 import { pull } from 'lodash';
 import webpack, {
   DefinePlugin,
@@ -451,7 +453,7 @@ export type Target =
   | 'electron-main'
   | 'electron-renderer';
 
-export const getEntryAndOutput = (target: Target, command: Command) => {
+export const getEntryAndOutput = async (target: Target, command: Command) => {
   const entry: Entry = {
     index: project.ws.srcEntry
   };
@@ -468,7 +470,11 @@ export const getEntryAndOutput = (target: Target, command: Command) => {
   if (command === 'build -p') {
     output.path = join(process.cwd(), project.ws.distReleaseDir);
   } else if (command === 'unit') {
-    entry.index = project.ws.unitEntry;
+    const pattern = Array.isArray(project.ws.testsPattern) ? project.ws.testsPattern : [project.ws.testsPattern]
+    entry.index = await globby([
+      project.ws.unitEntry,
+      ...pattern
+    ]);
     output.path = join(process.cwd(), project.ws.distTestsDir);
   } else if (command === 'e2e') {
     entry.index = project.ws.e2eEntry;
@@ -495,7 +501,7 @@ export const getEntryAndOutput = (target: Target, command: Command) => {
     output.chunkFilename = '[name].[chunkhash].lazy.js';
   }
 
-  return { entry, output };
+  return Promise.resolve({ entry, output });
 };
 
 export const getModuleAndPlugins = (
